@@ -57,7 +57,7 @@ function ContestTop() {
 
     for (let i = 0; i < noteWindow.length; i++) {
       const img = new Image();
-      img.src = noteImages(noteWindow[i].specific);
+      img.src = noteImages();
       ctx.drawImage(
         img,
         noteWindow[i].start.x - noteWindow[i].size / 2,
