@@ -1,0 +1,76 @@
+@import '../color';
+
+.container {
+  margin: 20px 0;
+  .content {
+    .video {
+      width: 350px;
+      height: 188px;
+      border-radius: 10px;
+      box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .info {
+      width: 330px;
+      padding: 10px;
+      font-size: 12px;
+      color: var(--color-text);
+      .top {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+
+        .name {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          .profileIcon {
+            margin-right: 15px;
+          }
+        }
+        .like {
+          .count {
+            font-size: 14px;
+            color: $main;
+            font-weight: bold;
+            margin-right: 10px;
+          }
+        }
+      }
+      .bottom {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .song {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          .songIcon {
+            margin-right: 15px;
+          }
+        }
+        .likeIcon {
+          cursor: pointer;
+        }
+        .btn {
+          width: 70px;
+          height: 25px;
+          border: 0;
+          border-radius: 6px;
+          background-color: $main;
+          color: $white;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .content:hover .video {
+    transform: scale(110%);
+  }
+}

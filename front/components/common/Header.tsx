@@ -54,7 +54,7 @@ function Header() {
     },
     {
       name: '노래자랑',
-      link: '/',
+      link: 'contest/',
     },
     {
       name: '마이뮤직',
