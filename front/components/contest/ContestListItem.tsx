@@ -20,7 +20,9 @@ function ContestListItem({ info }: VideoProps) {
           preload="metadata"
           controlsList="nodownload"
           controls
-        />
+        >
+          <track kind="captions" />{' '}
+        </video>
         <div className={styles.info}>
           <div className={styles.top}>
             <div className={styles.name}>

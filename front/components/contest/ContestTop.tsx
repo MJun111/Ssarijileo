@@ -120,7 +120,9 @@ function ContestTop() {
           preload="metadata"
           controlsList="nodownload"
           controls
-        />
+        >
+          <track kind="captions" />
+        </video>
         <div className={styles.name}>{item.name}</div>
       </div>
     );
