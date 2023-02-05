@@ -48,8 +48,8 @@ function PerfectScore() {
   };
 
   // 메인 로직
-  const canvasWidth = data.CANVAS_WIDTH;
-  const canvasHeight = data.CANVAS_HEIGHT;
+  const canvasWidth = 950;
+  const canvasHeight = 350;
   const canvasRef = useCanvas(canvasWidth, canvasHeight);
   const play = () => {
     if (
@@ -208,7 +208,7 @@ function PerfectScore() {
     analyser.smoothingTimeConstant = data.SMOOTHING_TIME_CONSTANT;
     analyser.fftSize = data.FFT_SIZE;
 
-    // fetch('sounds/test.mp3')
+    // fetch('sounds/voice.mp3')
     //   .then(response => response.arrayBuffer())
     //   .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
     //   .then(audioBuffer => {
@@ -230,8 +230,8 @@ function PerfectScore() {
     <>
       <canvas
         className={styles.canvas}
-        width={data.CANVAS_WIDTH}
-        height={data.CANVAS_HEIGHT}
+        width={canvasWidth}
+        height={canvasHeight}
         ref={canvasRef}
       />
       <div id="controls">
