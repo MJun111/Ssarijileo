@@ -52,7 +52,7 @@ function OrderSong() {
     const currentTime = Date.now();
     const time = (currentTime - timeRef.current) / 1000;
     if (DUMMY_DATA[1].startTime < time) DUMMY_DATA.shift();
-    DUMMY_DATA.forEach(({ verse, startTime }, idx) => {
+    DUMMY_DATA.forEach(({ verse }, idx) => {
       ctx.fillText(verse, 0, 20 + 20 * idx);
     });
   };
