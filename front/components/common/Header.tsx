@@ -58,7 +58,7 @@ function Header() {
     },
     {
       name: '마이뮤직',
-      link: '/',
+      link: 'like/',
     },
   ];
 
