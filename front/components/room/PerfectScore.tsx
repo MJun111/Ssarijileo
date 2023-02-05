@@ -229,6 +229,7 @@ function PerfectScore() {
   return (
     <>
       <canvas
+        id="screen-screen"
         className={styles.canvas}
         width={canvasWidth}
         height={canvasHeight}
