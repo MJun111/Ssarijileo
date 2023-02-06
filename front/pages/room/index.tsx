@@ -21,7 +21,7 @@ function Index() {
   const myUserName = 'samplename';
 
   // session Info
-  const mySessionId = '11';
+  const mySessionId = '22';
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
@@ -140,10 +140,10 @@ function Index() {
           setSubscribers([...newsubscribers]);
 
           // 화면공유
-        } else if (share && event.stream.typeOfVideo === 'CUSTOM') {
-          console.log('share', share);
-          console.log('화면공유', event);
+        } else if (event.stream.typeOfVideo === 'CUSTOM') {
           const subscreen = myScreen.subscribe(event.stream, undefined);
+          console.log('커스텀 이벤트', event);
+          setShare(true);
           setScreener(subscreen);
         }
       });
@@ -204,15 +204,13 @@ function Index() {
   // 화면 공유 (stream.typeOfVideo === 'CUSTOM')
   const screenShare = () => {
     if (!share) {
-      console.log(share);
       setShare(!share);
-      console.log(!share);
       screenOV
         .getUserMedia({
           audioSource: false,
           videoSource: undefined,
           resolution: '1280x720',
-          frameRate: 10,
+          frameRate: 30,
         })
         .then(() => {
           const canvas = document.getElementById(
@@ -253,9 +251,8 @@ function Index() {
             ||
           </button>
           <div className={styles.singScreen}>
-            {share ? null : <MainScreen streamManager={screener} />}
+            {testOnOff ? null : <MainScreen streamManager={screener} />}
             {testOnOff ? <PerfectScore /> : null}
-            노래방화면!!!
           </div>
         </div>
         <div className={styles.otherScreen}>

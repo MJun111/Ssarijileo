@@ -13,7 +13,7 @@ function MainScreen({ streamManager }: any) {
   }, [screen]);
 
   return (
-    <div className={styles.myScreen}>
+    <div className={styles.modeScreen}>
       <video className={styles.video} autoPlay ref={videoRef}>
         <track kind="captions" />
       </video>
