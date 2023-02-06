@@ -1,5 +1,6 @@
 // Path: 'chart/'
 import Image from 'next/image';
+
 import ChartTop from '@/components/chart/ChartTop';
 import SoundBar from '@/components/common/SoundBar';
 import ChartList from '@/components/chart/ChartList';
@@ -14,6 +15,7 @@ function Chart() {
   const day = date.getDate();
   const firstDay = new Date(year, month, 1).getDay();
   const week = Math.ceil((day + firstDay) / 7);
+
   return (
     <>
       <ChartTop />

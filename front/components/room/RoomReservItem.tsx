@@ -1,8 +1,15 @@
+import Image from 'next/image';
 import classNames from 'classnames';
 import styles from '@/styles/room/RoomReservItem.module.scss';
 
 function RoomReservItem(props: {
-  item: { rank: number; title: string; singer: string; album: string };
+  item: {
+    songId: number;
+    title: string;
+    singer: string;
+    album: string;
+    image: string;
+  };
 }) {
   const { item } = props;
   const titleClassName = classNames({
@@ -19,8 +26,16 @@ function RoomReservItem(props: {
   });
   return (
     <div className={styles.container}>
-      <div className={styles.img}>커버</div>
-      <div className={styles.rank}>{item.rank}</div>
+      <div className={styles.img}>
+        <Image
+          className={styles.albumImg}
+          src={item.image}
+          width={45}
+          height={45}
+          alt="album"
+        />
+      </div>
+      <div className={styles.rank}>{item.songId}</div>
       <div className={styles.titleCover}>
         <div className={titleClassName}>{item.title}</div>
       </div>
