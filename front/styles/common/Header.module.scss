@@ -9,6 +9,12 @@
   grid-template-columns: 2fr 3fr 2fr;
   padding: 0 10%;
 
+  .logo {
+    img {
+      width: auto;
+    }
+  }
+
   .menu {
     display: flex;
     flex-direction: row;

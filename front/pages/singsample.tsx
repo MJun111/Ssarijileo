@@ -2,8 +2,8 @@ import React from 'react';
 
 import OrderSong from '@/components/room/OrderSong';
 
-function singsample() {
+function SingSample() {
   return <OrderSong />;
 }
 
-export default singsample;
+export default SingSample;

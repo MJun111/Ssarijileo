@@ -1,7 +1,7 @@
 // Path: '/'
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Inter } from '@next/font/google';
+// import { Inter } from '@next/font/google';
 
 import MainTop from '@/components/main/MainTop';
 import SoundBar from '@/components/common/SoundBar';
@@ -11,7 +11,7 @@ import Team from '@/components/main/Team';
 
 import styles from '@/styles/Home.module.scss';
 
-const inter = Inter({ subsets: ['latin'] });
+// const inter = Inter({ subsets: ['latin'] });
 
 function Home() {
   const [themeMode, setThemeMode] = useState('light');
@@ -28,7 +28,7 @@ function Home() {
   };
 
   return (
-    <main className={`${styles.main} ${inter.className}`}>
+    <main className={styles.main}>
       <MainTop />
       <div className={styles.container}>
         <SoundBar />
