@@ -2,10 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import { PitchDetector } from 'pitchy';
 import { useCanvas } from '@/hooks/useCanvas';
+import { useAnimation } from '@/hooks/useAnimation';
 import * as data from '@/constants/PerfectScoreData';
+import noteData from '@/fixtures/사건의_지평선.json';
 
 import styles from '@/styles/MakeSample.module.scss';
-import { useAnimation } from '@/hooks/useAnimation';
 
 function MakeSample() {
   const [volume, setVolume] = useState(0.5);
@@ -17,19 +18,34 @@ function MakeSample() {
   const analyserRef = useRef<AnalyserNode>();
   const gainRef = useRef<GainNode>();
   const sourceRef = useRef<AudioBufferSourceNode>();
+  const startRef = useRef<number>(0);
   const noteWindowRef = useRef<number[]>([]);
+  const drawRef = useRef<number[]>([]);
+  const dbRef = useRef<
+    {
+      note: number;
+      time: number;
+      cnt: number;
+    }[]
+  >([]);
   const [isReady, setIsReady] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+
+  const save = () => {
+    const jsonData = JSON.stringify(dbRef.current);
+    console.log(jsonData);
+  };
 
   const start = () => {
     setIsStarted(true);
     sourceRef.current?.start();
+    startRef.current = performance.now();
   };
 
   const stop = () => {
     sourceRef.current?.stop();
     setIsStarted(false);
-    console.log(noteWindowRef.current);
+    save();
   };
 
   const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +66,28 @@ function MakeSample() {
     return Math.sqrt(ret / buffer.length) < data.SILENCE_THRESHOLD;
   };
 
+  // 테스트
+  const newNoteData = [];
+  for (const note of noteData) {
+    if (note.cnt > 3) {
+      newNoteData.push(note);
+    }
+  }
+  const test = () => {
+    if (
+      !dataArrayRef.current ||
+      !pitchDetectorRef.current ||
+      !analyserRef.current ||
+      !isStarted
+    )
+      return;
+    // console.log(((performance.now() - startRef.current) / 1000).toFixed(2));
+    const ctx = canvasRef.current?.getContext('2d');
+    if (!ctx) return;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  };
+
   // 메인 로직
   const canvasWidth = 10000;
   const canvasHeight = data.CANVAS_HEIGHT;
@@ -62,6 +100,7 @@ function MakeSample() {
       !isStarted
     )
       return;
+    // console.log(((performance.now() - startRef.current) / 1000).toFixed(2));
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.fillStyle = '#000';
@@ -85,14 +124,30 @@ function MakeSample() {
     let note = freqToNote(pitch);
     if (note < 40 || note > 90) note = -1;
     const noteWindow = noteWindowRef.current;
+    const drawWindow = drawRef.current;
+    if (note == undefined || Number.isNaN(note)) note = -1;
+    if (note !== noteWindow[noteWindow.length - 1]) {
+      const deltaTime = parseFloat(
+        ((performance.now() - startRef.current) / 1000).toFixed(2),
+      );
+      const data = {
+        note: noteWindow[noteWindow.length - 1] || -1,
+        time: deltaTime,
+        cnt: noteWindow.length,
+      };
+      console.log(data);
+      dbRef.current.push(data);
+      noteWindow.splice(0, noteWindow.length);
+    }
     noteWindow.push(note);
+    drawWindow.push(note);
 
     // 음정 출력
     let x = 0;
     const barWidth = 0.5;
-    for (let i = 0; i < noteWindow.length; i++) {
+    for (let i = 0; i < drawWindow.length; i++) {
       const barHeight = 10;
-      const y = canvasHeight - noteWindow[i] * 5;
+      const y = canvasHeight - drawWindow[i] * 5;
       if (!Number.isNaN(y)) {
         const gradient = ctx.createLinearGradient(
           x,
@@ -108,16 +163,16 @@ function MakeSample() {
       ctx.beginPath();
       if (
         i !== 0 &&
-        i !== noteWindow.length - 1 &&
-        noteWindow[i] !== noteWindow[i - 1] &&
-        noteWindow[i] !== noteWindow[i + 1]
+        i !== drawWindow.length - 1 &&
+        drawWindow[i] !== drawWindow[i - 1] &&
+        drawWindow[i] !== drawWindow[i + 1]
       ) {
         ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 5, 5, 5]);
-      } else if (i !== 0 && noteWindow[i] !== noteWindow[i - 1]) {
+      } else if (i !== 0 && drawWindow[i] !== drawWindow[i - 1]) {
         ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 0, 0, 5]);
       } else if (
-        i !== noteWindow.length - 1 &&
-        noteWindow[i] !== noteWindow[i + 1]
+        i !== drawWindow.length - 1 &&
+        drawWindow[i] !== drawWindow[i + 1]
       ) {
         ctx.roundRect(x, y, barWidth + 1, barHeight, [0, 5, 5, 0]);
       } else {
@@ -128,12 +183,12 @@ function MakeSample() {
     }
   };
 
-  useAnimation(play, 0, [
-    dataArrayRef,
-    pitchDetectorRef,
-    analyserRef,
-    isStarted,
-  ]);
+  // useAnimation(play, 0, [
+  //   dataArrayRef,
+  //   pitchDetectorRef,
+  //   analyserRef,
+  //   isStarted,
+  // ]);
 
   // analyser 세팅
   useEffect(() => {
@@ -156,9 +211,10 @@ function MakeSample() {
         source.connect(analyser);
         source.connect(gainNode);
         gainNode.connect(audioCtx.destination);
+
         sourceRef.current = source;
         source.onended = () => {
-          console.log(noteWindowRef.current);
+          save();
         };
         setIsReady(sourceRef.current !== undefined);
       });
@@ -168,8 +224,8 @@ function MakeSample() {
     <>
       <canvas
         className={styles.canvas}
-        width={10000}
-        height={data.CANVAS_HEIGHT}
+        width={canvasWidth}
+        height={canvasHeight}
         ref={canvasRef}
       />
       <div id="controls">
