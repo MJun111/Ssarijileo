@@ -67,10 +67,18 @@ function MakeSample() {
   };
 
   // 테스트
-  const newNoteData = [];
+  const ifTest = true;
+  let i = 0;
+  const newNoteData = useRef<
+    {
+      note: number;
+      time: number;
+      cnt: number;
+    }[]
+  >([]);
   for (const note of noteData) {
     if (note.cnt > 3) {
-      newNoteData.push(note);
+      newNoteData.current.push(note);
     }
   }
   const test = () => {
@@ -86,6 +94,53 @@ function MakeSample() {
     if (!ctx) return;
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    const noteWindow = noteWindowRef.current;
+
+    const noteTime = newNoteData.current[i].time;
+    const currentTime = (performance.now() - startRef.current) / 1000;
+    if (currentTime > noteTime) i += 1;
+    const noteData = newNoteData.current[i];
+    noteWindow.push(noteData.note);
+
+    let x = 0;
+    const barWidth = 0.5;
+    for (let i = 0; i < noteWindow.length; i++) {
+      const barHeight = 10;
+      const y = canvasHeight - noteWindow[i] * 5;
+      if (!Number.isNaN(y)) {
+        const gradient = ctx.createLinearGradient(
+          x,
+          y,
+          x + barWidth,
+          y + barHeight,
+        );
+        gradient.addColorStop(0, data.NOTE_COLOR.skyblue);
+        gradient.addColorStop(1, '#fff5f5');
+        ctx.fillStyle = gradient;
+      }
+
+      ctx.beginPath();
+      if (
+        i !== 0 &&
+        i !== noteWindow.length - 1 &&
+        noteWindow[i] !== noteWindow[i - 1] &&
+        noteWindow[i] !== noteWindow[i + 1]
+      ) {
+        ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 5, 5, 5]);
+      } else if (i !== 0 && noteWindow[i] !== noteWindow[i - 1]) {
+        ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 0, 0, 5]);
+      } else if (
+        i !== noteWindow.length - 1 &&
+        noteWindow[i] !== noteWindow[i + 1]
+      ) {
+        ctx.roundRect(x, y, barWidth + 1, barHeight, [0, 5, 5, 0]);
+      } else {
+        ctx.rect(x, y, barWidth + 1, barHeight);
+      }
+      ctx.fill();
+      x += barWidth;
+    }
   };
 
   // 메인 로직
@@ -183,12 +238,12 @@ function MakeSample() {
     }
   };
 
-  // useAnimation(play, 0, [
-  //   dataArrayRef,
-  //   pitchDetectorRef,
-  //   analyserRef,
-  //   isStarted,
-  // ]);
+  useAnimation(ifTest ? test : play, 0, [
+    dataArrayRef,
+    pitchDetectorRef,
+    analyserRef,
+    isStarted,
+  ]);
 
   // analyser 세팅
   useEffect(() => {
