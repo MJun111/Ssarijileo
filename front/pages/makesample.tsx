@@ -4,23 +4,20 @@ import { PitchDetector } from 'pitchy';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 import * as data from '@/constants/PerfectScoreData';
-import noteData from '@/fixtures/사건의_지평선.json';
 
 import styles from '@/styles/MakeSample.module.scss';
 
 function MakeSample() {
-  const [volume, setVolume] = useState(0.5);
-  const [tempo, setTempo] = useState(1);
-  const dataArrayRef = useRef<Float32Array>(new Float32Array(data.BUFFER_SIZE));
+  const dataArrayRef = useRef<Float32Array>(new Float32Array(8192));
   const pitchDetectorRef = useRef<PitchDetector<Float32Array>>(
-    PitchDetector.forFloat32Array(data.BUFFER_SIZE),
+    PitchDetector.forFloat32Array(8192),
   );
   const analyserRef = useRef<AnalyserNode>();
   const gainRef = useRef<GainNode>();
   const sourceRef = useRef<AudioBufferSourceNode>();
-  const startRef = useRef<number>(0);
+  const startTimeRef = useRef<number>(0);
   const noteWindowRef = useRef<number[]>([]);
-  const drawRef = useRef<number[]>([]);
+  const drawWindowRef = useRef<number[]>([]);
   const dbRef = useRef<
     {
       note: number;
@@ -39,7 +36,7 @@ function MakeSample() {
   const start = () => {
     setIsStarted(true);
     sourceRef.current?.start();
-    startRef.current = performance.now();
+    startTimeRef.current = performance.now();
   };
 
   const stop = () => {
@@ -48,108 +45,18 @@ function MakeSample() {
     save();
   };
 
-  const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(Number(e.target.value));
-    gainRef.current?.gain.setValueAtTime(Number(e.target.value), 0);
-  };
-
-  const changeTempo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTempo(Number(e.target.value));
-    sourceRef.current?.playbackRate.setValueAtTime(Number(e.target.value), 0);
-  };
-
   const isSilentBuffer = (buffer: Float32Array) => {
     let ret = 0;
     for (let i = 0; i < buffer.length; i++) {
       ret += buffer[i] * buffer[i];
     }
-    return Math.sqrt(ret / buffer.length) < data.SILENCE_THRESHOLD;
+    return Math.sqrt(ret / buffer.length) < 0.01;
   };
 
-  // 테스트
-  const ifTest = true;
-  let pointer = 0;
-  const newNoteData = useRef<
-    {
-      note: number;
-      time: number;
-      cnt: number;
-    }[]
-  >([]);
-  for (let i = 0; i < noteData.length; i++) {
-    const note = noteData[i];
-    if (note.cnt > 3) {
-      newNoteData.current.push(note);
-    }
-  }
-  console.log(newNoteData.current.st
-
   const canvasWidth = 10000;
-  const canvasHeight = data.CANVAS_HEIGHT;
+  const canvasHeight = 600;
   const canvasRef = useCanvas(canvasWidth, canvasHeight);
-
-  // const test = () => {
-  //   if (
-  //     !dataArrayRef.current ||
-  //     !pitchDetectorRef.current ||
-  //     !analyserRef.current ||
-  //     !isStarted
-  //   )
-  //     return;
-  //   const ctx = canvasRef.current?.getContext('2d');
-  //   if (!ctx) return;
-  //   ctx.fillStyle = '#000';
-  //   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  //
-  //   const noteWindow = noteWindowRef.current;
-  //
-  //   const noteTime = newNoteData.current[pointer].time;
-  //   const currentTime = (performance.now() - startRef.current) / 1000;
-  //   if (currentTime > noteTime) pointer += 1;
-  //   const noteData = newNoteData.current[pointer];
-  //   noteWindow.push(noteData.note);
-  //
-  //   let x = 0;
-  //   const barWidth = 0.5;
-  //   for (let i = 0; i < noteWindow.length; i++) {
-  //     const barHeight = 10;
-  //     const y = canvasHeight - noteWindow[i] * 5;
-  //     if (!Number.isNaN(y)) {
-  //       const gradient = ctx.createLinearGradient(
-  //         x,
-  //         y,
-  //         x + barWidth,
-  //         y + barHeight,
-  //       );
-  //       gradient.addColorStop(0, data.NOTE_COLOR.skyblue);
-  //       gradient.addColorStop(1, '#fff5f5');
-  //       ctx.fillStyle = gradient;
-  //     }
-  //
-  //     ctx.beginPath();
-  //     if (
-  //       i !== 0 &&
-  //       i !== noteWindow.length - 1 &&
-  //       noteWindow[i] !== noteWindow[i - 1] &&
-  //       noteWindow[i] !== noteWindow[i + 1]
-  //     ) {
-  //       ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 5, 5, 5]);
-  //     } else if (i !== 0 && noteWindow[i] !== noteWindow[i - 1]) {
-  //       ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 0, 0, 5]);
-  //     } else if (
-  //       i !== noteWindow.length - 1 &&
-  //       noteWindow[i] !== noteWindow[i + 1]
-  //     ) {
-  //       ctx.roundRect(x, y, barWidth + 1, barHeight, [0, 5, 5, 0]);
-  //     } else {
-  //       ctx.rect(x, y, barWidth + 1, barHeight);
-  //     }
-  //     ctx.fill();
-  //     x += barWidth;
-  //   }
-  // };
-  // 메인 로직
-  const play = () => {
+  const changeToJson = () => {
     if (
       !dataArrayRef.current ||
       !pitchDetectorRef.current ||
@@ -157,7 +64,7 @@ function MakeSample() {
       !isStarted
     )
       return;
-    // console.log(((performance.now() - startRef.current) / 1000).toFixed(2));
+
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.fillStyle = '#000';
@@ -181,19 +88,18 @@ function MakeSample() {
     let note = freqToNote(pitch);
     if (note < 40 || note > 90) note = -1;
     const noteWindow = noteWindowRef.current;
-    const drawWindow = drawRef.current;
-    if (note == undefined || Number.isNaN(note)) note = -1;
+    const drawWindow = drawWindowRef.current;
+    if (note === undefined || Number.isNaN(note)) note = -1;
     if (note !== noteWindow[noteWindow.length - 1]) {
       const deltaTime = parseFloat(
-        ((performance.now() - startRef.current) / 1000).toFixed(2),
+        ((performance.now() - startTimeRef.current) / 1000).toFixed(2),
       );
-      const data = {
+      const noteData = {
         note: noteWindow[noteWindow.length - 1] || -1,
         time: deltaTime,
         cnt: noteWindow.length,
       };
-      console.log(data);
-      dbRef.current.push(data);
+      dbRef.current.push(noteData);
       noteWindow.splice(0, noteWindow.length);
     }
     noteWindow.push(note);
@@ -240,7 +146,7 @@ function MakeSample() {
     }
   };
 
-  useAnimation(ifTest ? test : play, 0, [
+  useAnimation(changeToJson, 0, [
     dataArrayRef,
     pitchDetectorRef,
     analyserRef,
@@ -255,8 +161,8 @@ function MakeSample() {
     analyserRef.current = analyser;
     gainRef.current = gainNode;
 
-    analyser.minDecibels = data.MIN_DB;
-    analyser.smoothingTimeConstant = data.SMOOTHING_TIME_CONSTANT;
+    analyser.minDecibels = -90;
+    analyser.smoothingTimeConstant = 0.5;
     analyser.fftSize = 8192;
 
     fetch('sounds/voice.mp3')
@@ -302,24 +208,6 @@ function MakeSample() {
           value="Stop"
           onClick={stop}
           disabled={!isStarted}
-        />
-        <input
-          type="range"
-          min={0}
-          max={1}
-          color="gray"
-          step={0.01}
-          value={volume}
-          onChange={changeVolume}
-        />
-        <input
-          className="playback-rate-control"
-          type="range"
-          min="0.25"
-          max="3"
-          step="0.05"
-          value={tempo}
-          onChange={changeTempo}
         />
       </div>
     </>
