@@ -95,5 +95,8 @@
     top: 140px;
     right: 210px;
     z-index: 999;
+    @include _1024 {
+      display: none;
+    }
   }
 }

@@ -105,7 +105,7 @@ function OrderSong() {
   for (let i = 0; i < trimData.length; i++) {
     const randomIdx = Math.floor(Math.random() * randomCanvas.length);
     if (isUsed[randomIdx]) {
-      i--;
+      i -= 1;
       continue;
     }
     isUsed[randomIdx] = true;
@@ -130,8 +130,8 @@ function OrderSong() {
     const time = (currentTime - timeRef.current) / 1000;
     if (dataArray.length > 1) {
       if (dataArray[1].startTime < time) dataArray.shift();
-    } else {
-      if (dataArray[0].startTime < time) return;
+    } else if (dataArray[0].startTime < time) {
+      return;
     }
     dataArray.forEach(data => {
       ctx.fillText(data.verse, data.x, data.y);

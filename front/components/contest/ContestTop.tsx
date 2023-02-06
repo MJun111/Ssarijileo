@@ -26,30 +26,31 @@ function ContestTop() {
 
   const noteImages = () => 'img/contest/contest_sparkle_image.svg';
   const noteWindow: {
-    speed: {
-      x: number;
-      y: number;
-    };
     start: {
       x: number;
       y: number;
     };
-    specific: number;
     size: number;
     life: number;
+    flag: number;
   }[] = [];
 
+  const dy = [2, 1.5, 0, -1.5, -2, -1.5, 0, 1.5, 2];
+  const dx = [0, -1.5, -2, -1.5, 0, 1.5, 2, 1.5, 0];
+
   const animate = () => {
-    if (!canvasRef.current) return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     for (let i = 0; i < noteWindow.length; i++) {
-      noteWindow[i].start.x += noteWindow[i].speed.x * 0.7;
-      noteWindow[i].start.y += noteWindow[i].speed.y * 0.7;
       noteWindow[i].life -= 1;
-      noteWindow[i].size += 0.1;
+      noteWindow[i].size += noteWindow[i].flag;
+      if (noteWindow[i].size > 50) {
+        noteWindow[i].flag = -1;
+      } else if (noteWindow[i].size < 30) {
+        noteWindow[i].flag = 1;
+      }
       if (noteWindow[i].life < 0) {
         noteWindow.splice(i, 1);
       }
@@ -71,23 +72,24 @@ function ContestTop() {
   const onClickParticle = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-    for (let i = 0; i < 3; i++) {
+    if (noteWindow.length > 100) return;
+    const particle = setInterval(() => {
+      const dir = Math.floor(Math.random() * 9);
       const note = {
-        speed: {
-          x: Math.random() - 0.5,
-          y: -1,
-        },
         start: {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
+          x: e.clientX - rect.left + dx[dir] * (20 + Math.random() * 30),
+          y: e.clientY - rect.top + dy[dir] * (20 + Math.random() * 30),
         },
-        specific: Math.floor(Math.random() * 3) + 1,
-        life: Math.random() * 50 + 50,
-        size: 0,
+        life: 30,
+        size: 40,
+        flag: 1,
       };
-      note.size = Math.random() * 10 + 15;
       noteWindow.push(note);
-    }
+    }, 100);
+
+    setTimeout(() => {
+      clearInterval(particle);
+    }, 300);
   };
 
   useAnimation(animate, 0);
@@ -118,7 +120,7 @@ function ContestTop() {
           src={item.img}
           className={styles.video}
           preload="metadata"
-          controlsList="nodownload"
+          controlsList="noDownload"
           controls
         >
           <track kind="captions" />
