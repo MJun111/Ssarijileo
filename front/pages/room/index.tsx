@@ -210,35 +210,37 @@ function Index() {
         .getUserMedia({
           audioSource: undefined,
           videoSource: undefined,
-          resolution: '1280x720',
+          resolution: '950x350',
           frameRate: 30,
         })
         .then(async () => {
           const testAudio = new Audio('/sounds/mr.mp3');
-
+          // const testAudio2 = new Audio('/sounds/mr.mp3');
           const audioContext = new AudioContext();
           const mp3AudioSource =
             audioContext.createMediaElementSource(testAudio);
           const mp3AudioDestination =
             audioContext.createMediaStreamDestination();
           mp3AudioSource.connect(mp3AudioDestination);
+          mp3AudioSource.connect(audioContext.destination);
 
-          const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
           await testAudio.play();
-          console.log('재생시작?');
+          // await testAudio2.play();
+          const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
+
+          // const test2AudioTrack = testAudio.captureStream().getAudioTracks()[0];
 
           const canvas = document.getElementById(
             'screen-screen',
           ) as HTMLCanvasElement | null;
 
-          const testVideoTrack = canvas?.captureStream(10).getVideoTracks()[0];
+          const testVideoTrack = canvas?.captureStream(30).getVideoTracks()[0];
           const newScreenPublisher = screenOV.initPublisher(undefined, {
+            // audioSource: test2AudioTrack,
             audioSource: testAudioTrack,
             // audioSource: false,
             videoSource: testVideoTrack,
           });
-          console.log('testAudioTrack이야', testAudioTrack);
-          console.log('testVideoTrack이야', testVideoTrack);
           setScreenPublisher(newScreenPublisher);
           screenSession.publish(newScreenPublisher);
         });
