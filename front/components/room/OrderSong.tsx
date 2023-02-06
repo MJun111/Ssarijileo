@@ -66,56 +66,6 @@ function OrderSong() {
       startTime: 58,
     },
     {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
       lyricsId: 31,
       verse: '',
       startTime: 62,
