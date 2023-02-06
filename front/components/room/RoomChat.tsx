@@ -68,8 +68,8 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
         <div className={styles.top}>
           <Image
             src="img/common/common_close_image.svg"
-            width={25}
-            height={25}
+            width={20}
+            height={20}
             alt="close"
             onClick={() => {
               setModalOpen(false);
