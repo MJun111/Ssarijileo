@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 import styles from '@/styles/room/RoomReserv.module.scss';
 import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
 
+interface SongData {
+  songId: number;
+  title: string;
+  singer: string;
+  album: string;
+  image: string;
+  // releaseDate: string;
+}
+
 function RoomReserv({ setModalOpen }: any) {
-  // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
   const [themeMode, setThemeMode] = useState('light');
 
   const storeTheme = useSelector<any>(state => state.theme);
@@ -19,196 +28,21 @@ function RoomReserv({ setModalOpen }: any) {
   //  노래 목록이 보일 개수
   const limit = 5;
 
-  const chartList = [
-    {
-      rank: 1,
-      title: 'Ditto',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 2,
-      title: '사건의 지평선',
-      singer: '윤하',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 3,
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 4,
-      title: 'OMG',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 5,
-      title: 'After LIKE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 6,
-      title: 'ANTIFRAGILE',
-      singer: 'LE SSERAFIM (르세라핌)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 7,
-      title: 'Attention',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 8,
-      title: 'LOVE DIVE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 9,
-      title: 'Nxde',
-      singer: '여자(아이들)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 10,
-      title: 'NOT SORRY (Feat. pH-1) (Prod. by Slom)333333333333333',
-      singer: '이영지',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 11,
-      title: 'Ditto',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 12,
-      title: '사건의 지평선',
-      singer: '윤하',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 13,
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 14,
-      title: 'OMG',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 15,
-      title: 'After LIKE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 16,
-      title: 'ANTIFRAGILE',
-      singer: 'LE SSERAFIM (르세라핌)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 17,
-      title: 'Attention',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 18,
-      title: 'LOVE DIVE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 19,
-      title: 'Nxde',
-      singer: '여자(아이들)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 20,
-      title: 'NOT SORRY (Feat. pH-1) (Prod. by Slom)',
-      singer: '이영지',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 21,
-      title: 'Ditto',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 22,
-      title: '사건의 지평선',
-      singer: '윤하',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 23,
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 24,
-      title: 'OMG',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 25,
-      title: 'After LIKE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 26,
-      title: 'ANTIFRAGILE',
-      singer: 'LE SSERAFIM (르세라핌)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 27,
-      title: 'Attention',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 28,
-      title: 'LOVE DIVE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 29,
-      title: 'Nxde',
-      singer: '여자(아이들)',
-      album: 'NewJeans ‘OMG’',
-    },
-    {
-      rank: 30,
-      title: 'NOT SORRY (Feat. pH-1) (Prod. by Slom)',
-      singer: '이영지',
-      album: 'NewJeans ‘OMG’',
-    },
-  ];
-  // 게시할 부분만 잘라서 전달
-  const offset = (page - 1) * limit;
+  const [musicList, setState] = useState<SongData[]>([]);
 
-  const [musicList, setState] = useState(chartList);
+  let chartList: SongData[] = [];
+  useEffect(() => {
+    axios.get('api/v1/song').then(res => {
+      chartList = [...res.data];
+      setState(chartList);
+    });
+  }, []);
+
+  const offset = (page - 1) * limit;
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
-    const arr: any[] = [];
+    const arr: SongData[] = [];
     chartList.forEach((item, idx) => {
       if (
         item.title.includes(eventTarget.value) ||
@@ -220,6 +54,7 @@ function RoomReserv({ setModalOpen }: any) {
 
     setState(arr);
   };
+
   const postData = musicList.slice(offset, offset + limit);
 
   return (
@@ -265,7 +100,7 @@ function RoomReserv({ setModalOpen }: any) {
         <div className={styles.chart}>
           {postData.map(item => {
             return (
-              <div className={styles.item} key={item.rank}>
+              <div className={styles.item} key={item.songId}>
                 <RoomReservItem item={item} />
               </div>
             );
@@ -283,5 +118,19 @@ function RoomReserv({ setModalOpen }: any) {
     </div>
   );
 }
+
+// export async function getStaticProps() {
+//   try {
+//     const response = await axios.get<SongData>('api/v1/song');
+//     const data = response.data;
+//     return {
+//       props: {
+//         songGetgata: data,
+//       },
+//     };
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
 export default RoomReserv;
