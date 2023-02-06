@@ -13,7 +13,7 @@ function Header() {
   if (window.location.pathname === '/room') return null;
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [themeMode, setThemeMode] = useState('');
+  const [themeMode, setThemeMode] = useState('light');
   const [checked, setChecked] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dispatch = useDispatch();
@@ -94,7 +94,13 @@ function Header() {
     <header className={styles.header}>
       {modalOpen && <LoginModal setModalOpen={setModalOpen} />}
       <Link href="/">
-        <Image src={icons.logo} alt="logoFail" width={70} height={70} />
+        <Image
+          src={icons.logo}
+          alt="logoFail"
+          width={70}
+          height={70}
+          priority
+        />
       </Link>
       <div className={styles.menu}>{headerMenus}</div>
       <div className={styles.dropdown}>

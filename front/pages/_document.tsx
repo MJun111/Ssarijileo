@@ -15,6 +15,10 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Miniver&display=swap"
           rel="stylesheet"
         />
+        <link
+          href="https://webfontworld.github.io/goodchoice/Jalnan.css"
+          rel="stylesheet"
+        />
       </Head>
       <body>
         <Main />

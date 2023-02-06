@@ -53,7 +53,13 @@ function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.logo}>
-          <Image src={icons.logo} alt="home" width={300} height={200} />
+          <Image
+            src={icons.logo}
+            alt="home"
+            width={300}
+            height={200}
+            priority
+          />
         </div>
         <div className={styles.item}>
           <div className={styles.upper}>

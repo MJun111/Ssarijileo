@@ -21,6 +21,7 @@
     .point {
       font-family: 'Miniver', cursive;
       color: $main;
+      margin-bottom: 10px;
     }
 
     .line {
@@ -34,9 +35,9 @@
 
   .main {
     font-size: 44px;
-    font-weight: bold;
+    //font-weight: bold;
     color: var(--color-text);
-    font-family: 'Inter', sans-serif;
+    //font-family: 'Inter', sans-serif;
     z-index: 1;
     white-space: pre-line;
   }

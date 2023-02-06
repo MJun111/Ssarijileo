@@ -1,9 +1,10 @@
 import React from 'react';
 
 import OrderSong from '@/components/room/OrderSong';
+// import PerfectScore from '@/components/room/PerfectScore';
 
-function singsample() {
+function SingSample() {
   return <OrderSong />;
 }
 
-export default singsample;
+export default SingSample;
