@@ -76,7 +76,7 @@ function OrderSong() {
   return (
     <>
       <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
-      <button onClick={start} disabled={!isReady || isStarted}>
+      <button onClick={start} disabled={!isReady || isStarted} type="button">
         Start
       </button>
     </>
