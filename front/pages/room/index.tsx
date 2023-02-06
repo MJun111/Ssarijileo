@@ -134,6 +134,7 @@ function Index() {
       mySession.on('streamCreated', (event: any) => {
         // 카메라 추가
         if (event.stream.typeOfVideo === 'CAMERA') {
+          console.log('카메라 이벤트', event);
           const subscriber = mySession.subscribe(event.stream, undefined);
           const newsubscribers = subscribers;
           newsubscribers.push(subscriber);
@@ -207,21 +208,37 @@ function Index() {
       setShare(!share);
       screenOV
         .getUserMedia({
-          audioSource: false,
+          audioSource: undefined,
           videoSource: undefined,
           resolution: '1280x720',
           frameRate: 30,
         })
-        .then(() => {
+        .then(async () => {
+          const testAudio = new Audio('/sounds/mr.mp3');
+
+          const audioContext = new AudioContext();
+          const mp3AudioSource =
+            audioContext.createMediaElementSource(testAudio);
+          const mp3AudioDestination =
+            audioContext.createMediaStreamDestination();
+          mp3AudioSource.connect(mp3AudioDestination);
+
+          const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
+          await testAudio.play();
+          console.log('재생시작?');
+
           const canvas = document.getElementById(
             'screen-screen',
           ) as HTMLCanvasElement | null;
 
-          const grayVideoTrack = canvas?.captureStream(10).getVideoTracks()[0];
+          const testVideoTrack = canvas?.captureStream(10).getVideoTracks()[0];
           const newScreenPublisher = screenOV.initPublisher(undefined, {
-            audioSource: false,
-            videoSource: grayVideoTrack,
+            audioSource: testAudioTrack,
+            // audioSource: false,
+            videoSource: testVideoTrack,
           });
+          console.log('testAudioTrack이야', testAudioTrack);
+          console.log('testVideoTrack이야', testVideoTrack);
           setScreenPublisher(newScreenPublisher);
           screenSession.publish(newScreenPublisher);
         });
