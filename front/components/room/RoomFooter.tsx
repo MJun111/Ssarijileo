@@ -5,10 +5,12 @@ import styles from '@/styles/room/RoomFooter.module.scss';
 import RoomController from './RoomController';
 import RoomFriend from './RoomFriend';
 import RoomChat from './RoomChat';
+import RoomReserv from './RoomReserv';
 
 function RoomFooter({ session }: any) {
   const [controllerModalOpen, setControllerModalOpen] = useState(false);
   const [friendModalOpen, setFriendModalOpen] = useState(false);
+  const [reservModalOpen, setReservModalOpen] = useState(false);
   const [chatModalOpen, setChatModalOpen] = useState(false);
   const [chatList, setChatList] = useState([
     {
@@ -64,7 +66,7 @@ function RoomFooter({ session }: any) {
       {controllerModalOpen && (
         <RoomController setModalOpen={setControllerModalOpen} />
       )}
-      {}
+      {reservModalOpen && <RoomReserv setModalOpen={setReservModalOpen} />}
       <div className={styles.section}>
         <div className={styles.btnList}>
           {/* 노래 중에는 버튼 바꾸기 !!! */}
@@ -77,7 +79,13 @@ function RoomFooter({ session }: any) {
           >
             친구초대
           </button>
-          <button type="button" className={styles.reserv}>
+          <button
+            type="button"
+            className={styles.reserv}
+            onClick={() => {
+              setReservModalOpen(!reservModalOpen);
+            }}
+          >
             예약하기
           </button>
         </div>
