@@ -134,6 +134,7 @@ function Index() {
       mySession.on('streamCreated', (event: any) => {
         // 카메라 추가
         if (event.stream.typeOfVideo === 'CAMERA') {
+          console.log('카메라 이벤트', event);
           const subscriber = mySession.subscribe(event.stream, undefined);
           const newsubscribers = subscribers;
           newsubscribers.push(subscriber);
@@ -207,20 +208,38 @@ function Index() {
       setShare(!share);
       screenOV
         .getUserMedia({
-          audioSource: false,
+          audioSource: undefined,
           videoSource: undefined,
-          resolution: '1280x720',
+          resolution: '950x350',
           frameRate: 30,
         })
-        .then(() => {
+        .then(async () => {
+          const testAudio = new Audio('/sounds/mr.mp3');
+          // const testAudio2 = new Audio('/sounds/mr.mp3');
+          const audioContext = new AudioContext();
+          const mp3AudioSource =
+            audioContext.createMediaElementSource(testAudio);
+          const mp3AudioDestination =
+            audioContext.createMediaStreamDestination();
+          mp3AudioSource.connect(mp3AudioDestination);
+          mp3AudioSource.connect(audioContext.destination);
+
+          await testAudio.play();
+          // await testAudio2.play();
+          const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
+
+          // const test2AudioTrack = testAudio.captureStream().getAudioTracks()[0];
+
           const canvas = document.getElementById(
             'screen-screen',
           ) as HTMLCanvasElement | null;
 
-          const grayVideoTrack = canvas?.captureStream(10).getVideoTracks()[0];
+          const testVideoTrack = canvas?.captureStream(30).getVideoTracks()[0];
           const newScreenPublisher = screenOV.initPublisher(undefined, {
-            audioSource: false,
-            videoSource: grayVideoTrack,
+            // audioSource: test2AudioTrack,
+            audioSource: testAudioTrack,
+            // audioSource: false,
+            videoSource: testVideoTrack,
           });
           setScreenPublisher(newScreenPublisher);
           screenSession.publish(newScreenPublisher);
