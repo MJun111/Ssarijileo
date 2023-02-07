@@ -2,7 +2,7 @@
 import styles from '@/styles/room/Nomal.module.scss';
 
 function Nomal() {
-  const member = 1;
+  //   const member = 1;
   return (
     <canvas className={styles.container}>
       <div className={styles.main}>
