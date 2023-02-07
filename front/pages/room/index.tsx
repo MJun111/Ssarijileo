@@ -8,8 +8,7 @@ import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
 import Loading from '@/components/room/Loading';
-import PerfectScore from '@/components/room/PerfectScore';
-// import OtherScreen from '@/components/room/OtherScreen';
+
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
@@ -39,7 +38,7 @@ function Index() {
 
   // 화면공유 상태값
   const [share, setShare] = useState(false);
-  const [testOnOff, setTest] = useState(false);
+  // const [testOnOff, setTest] = useState(false);
 
   // api
   async function createSession(sessionId: string | string[] | undefined) {
@@ -83,9 +82,9 @@ function Index() {
     setInit(true);
   };
 
-  const testOn = () => {
-    setTest(!testOnOff);
-  };
+  // const testOn = () => {
+  //   setTest(!testOnOff);
+  // };
 
   // 화면 공유 끄기
   const leaveScreen = () => {
@@ -250,6 +249,9 @@ function Index() {
     }
   };
 
+  // 임의로 mode 선언
+  const mode = 'nomal';
+
   // 로딩중 return
   if (loading)
     return (
@@ -266,12 +268,17 @@ function Index() {
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
           <MyScreen />
-          <button type="button" onClick={testOn}>
+          {/* <button type="button" onClick={testOn}>
             ||
-          </button>
+          </button> */}
           <div className={styles.singScreen}>
-            {testOnOff ? null : <MainScreen streamManager={screener} />}
-            {testOnOff ? <PerfectScore /> : null}
+            <MainScreen
+              streamManager={screener}
+              singMode={mode}
+              subscribers={subscribers}
+            />
+            {/* {testOnOff ? null : <MainScreen streamManager={screener} />} */}
+            {/* {testOnOff ? <PerfectScore /> : null} */}
           </div>
         </div>
         <div className={styles.otherScreen}>

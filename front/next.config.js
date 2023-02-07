@@ -8,7 +8,7 @@ const nextConfig = {
     return [
       {
         source: '/:path*',
-        destination: 'http://i8b302.p.ssafy.io:8080/:path*',
+        destination: 'http://i8b302.p.ssafy.io:8000/:path*',
       },
     ];
   },
