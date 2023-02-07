@@ -36,7 +36,10 @@ function VideoItem({ info }: VideoProps) {
                 {title}-{singer}
               </div>
             </div>
-            <button type="button" className={styles.btn}>
+            <button type="button" className={styles.addBtn}>
+              글작성
+            </button>
+            <button type="button" className={styles.deleteBtn}>
               삭제
             </button>
           </div>

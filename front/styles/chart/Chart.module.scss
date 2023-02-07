@@ -10,6 +10,10 @@
       font-weight: bold;
       color: var(--color-text);
       margin: 20px 0;
+
+      .icon {
+        filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
+      }
     }
 
     .context {

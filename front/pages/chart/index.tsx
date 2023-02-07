@@ -29,6 +29,7 @@ function Chart() {
               width={50}
               height={50}
               alt="rank"
+              className={styles.icon}
             />
           </div>
           <ChartList />
@@ -44,6 +45,7 @@ function Chart() {
               width={50}
               height={50}
               alt="rank"
+              className={styles.icon}
             />
           </div>
           <ChartList />
@@ -59,6 +61,7 @@ function Chart() {
               width={50}
               height={50}
               alt="rank"
+              className={styles.icon}
             />
           </div>
           <ChartList />

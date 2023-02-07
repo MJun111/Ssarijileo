@@ -7,11 +7,11 @@ function ChartListItem(props: {
   const { item } = props;
   const titleClassName = classNames({
     [styles.title]: true,
-    [styles.isLong]: item.title.length > 38,
+    [styles.isLong]: item.title.length > 30,
   });
   const singerClassName = classNames({
     [styles.singer]: true,
-    [styles.isLong]: item.singer.length > 20,
+    [styles.isLong]: item.singer.length > 15,
   });
   const albumClassName = classNames({
     [styles.album]: true,

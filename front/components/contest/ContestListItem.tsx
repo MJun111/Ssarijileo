@@ -63,7 +63,7 @@ function ContestListItem({ info }: VideoProps) {
               />
             )}
             {name === myName && (
-              <button type="button" className={styles.btn}>
+              <button type="button" className={styles.deleteBtn}>
                 글삭제
               </button>
             )}

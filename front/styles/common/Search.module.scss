@@ -42,7 +42,7 @@
       display: none;
       position: absolute;
       top: 43px;
-      left: 90px;
+      left: 100px;
       z-index: 99;
 
       width: 200px;
@@ -93,9 +93,11 @@
       background: var(--color-background);
       color: var(--color-text);
       outline: none;
+      font-family: 'Jalnan', sans-serif;
     }
     .input::placeholder {
       color: var(--color-text);
+      font-family: 'Jalnan', sans-serif;
     }
     .find {
       cursor: pointer;

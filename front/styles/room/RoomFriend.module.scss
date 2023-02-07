@@ -58,6 +58,8 @@
           background: var(--color-background);
           color: var(--color-text);
           outline: none;
+          font-family: 'Jalnan', sans-serif;
+          font-size: 12px;
         }
         .input::placeholder {
           color: var(--color-text);
@@ -108,6 +110,7 @@
             color: var(--color-text);
             background: var(--color-background);
             cursor: pointer;
+            font-family: 'Jalnan', sans-serif;
           }
         }
         .item:hover {
