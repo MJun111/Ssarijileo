@@ -43,10 +43,10 @@ function Nomal(props: { setState: any; reserv: any }) {
         {lyricB}
         <video
           className={styles.discoA}
-          autoPlay={true}
-          loop={true}
-          muted={true}
-          playsInline={true}
+          autoPlay
+          loop
+          muted
+          playsInline
           width={73}
           height={73}
           src="video/disco-ball.mp4"
@@ -55,10 +55,10 @@ function Nomal(props: { setState: any; reserv: any }) {
         </video>
         <video
           className={styles.discoB}
-          autoPlay={true}
-          loop={true}
-          muted={true}
-          playsInline={true}
+          autoPlay
+          loop
+          muted
+          playsInline
           width={73}
           height={73}
           src="video/disco-ball.mp4"
@@ -67,10 +67,10 @@ function Nomal(props: { setState: any; reserv: any }) {
         </video>
         <video
           className={styles.mic}
-          autoPlay={true}
-          loop={true}
-          muted={true}
-          playsInline={true}
+          autoPlay
+          loop
+          muted
+          playsInline
           width={73}
           height={73}
           src="video/microphone.mp4"
@@ -79,10 +79,10 @@ function Nomal(props: { setState: any; reserv: any }) {
         </video>
         <video
           className={styles.speaker}
-          autoPlay={true}
-          loop={true}
-          muted={true}
-          playsInline={true}
+          autoPlay
+          loop
+          muted
+          playsInline
           width={73}
           height={73}
           src="video/speakers.mp4"
