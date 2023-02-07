@@ -251,7 +251,7 @@ function MainScreen(props: {
       {/* 일반 노래방 */}
       {/* 대기 상태 */}
       {state === 2 && (
-        <CommonState setState={setState} state={state} title={''} />
+        <CommonState setState={setState} state={state} title={title[0]} />
       )}
       {/* 진행 상태 */}
       {state === 3 && singMode === 'nomal' && myName === mainName && (
