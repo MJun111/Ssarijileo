@@ -43,7 +43,7 @@ function Index() {
 
   // 화면공유 상태값
   const [share, setShare] = useState(false);
-  const [testOnOff, setTest] = useState(false);
+  // const [testOnOff, setTest] = useState(false);
 
   // api
   async function createSession(sessionId: string | string[] | undefined) {
@@ -91,9 +91,9 @@ function Index() {
     setInit(true);
   };
 
-  const testOn = () => {
-    setTest(!testOnOff);
-  };
+  // const testOn = () => {
+  //   setTest(!testOnOff);
+  // };
 
   // 화면 공유 끄기
   const leaveScreen = () => {
@@ -341,15 +341,16 @@ function Index() {
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
           <MyScreen streamManager={singer} />
-          <button type="button" onClick={testOn}>
-            |PSon|
-          </button>
-          <button type="button" onClick={onStage}>
-            sw
-          </button>
+          // <button type="button" onClick={testOn}>
+          //   |PSon|
+          // </button>
+          // <button type="button" onClick={onStage}>
+          //   sw
+          // </button>
           <div className={styles.singScreen}>
-            {testOnOff ? null : <MainScreen streamManager={screenSubscriber} />}
-            {testOnOff ? <PerfectScore /> : null}
+            <MainScreen streamManager={singer} singMode={mode} subscribers={subscribers} />
+            // {testOnOff ? null : <MainScreen streamManager={screenSubscriber} />}
+            // {testOnOff ? <PerfectScore /> : null}
           </div>
         </div>
         <div className={styles.otherScreen}>
