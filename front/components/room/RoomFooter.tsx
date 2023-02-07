@@ -26,8 +26,8 @@ function RoomFooter({ session }: any) {
         message: event.data,
         name: '이수민',
       };
-      const newChatList = [...chatList, newChat];
-      setChatList(newChatList);
+      chatList.push(newChat);
+      setChatList([...chatList]);
     });
   };
 
