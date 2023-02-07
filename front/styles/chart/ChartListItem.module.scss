@@ -51,10 +51,10 @@
     overflow: hidden;
 
     .singer {
+      @include truncate;
       font-size: 20px;
       width: 100%;
       // max-width: 200px;
-      //   @include truncate;
       //   max-width: 200px;
       //   @include _1024 {
       //     max-width: 150px;
@@ -67,14 +67,14 @@
       //   }
     }
   }
-  .alnumCover {
+  .albumCover {
     width: 20%;
     overflow: hidden;
-  }
-  .album {
-    @include truncate;
-    font-size: 20px;
-    width: 100%;
+    .album {
+      @include truncate;
+      font-size: 20px;
+      width: 100%;
+    }
   }
 }
 .container:hover {

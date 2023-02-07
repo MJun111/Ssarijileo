@@ -37,7 +37,7 @@ function FriendModal({ setModalOpen, friend }: RoomProps) {
         </div>
         <div className={styles.name}>{item.name}</div>
         <Image
-          src="img/mypage/mypage_add_friend_image.svg"
+          src="img/profile/profile_add_friend_image.svg"
           width={20}
           height={20}
           alt="add-friend"

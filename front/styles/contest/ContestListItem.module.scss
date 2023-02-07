@@ -1,5 +1,17 @@
 @import '../color';
 
+@mixin btn {
+  width: 70px;
+  height: 25px;
+  border: 0;
+  border-radius: 6px;
+  background-color: $main;
+  color: $white;
+  cursor: pointer;
+  font-family: 'Jalnan', sans-serif;
+  font-size: 12px;
+}
+
 .container {
   margin: 20px 0;
   .content {
@@ -59,13 +71,14 @@
           cursor: pointer;
         }
         .btn {
-          width: 70px;
-          height: 25px;
-          border: 0;
-          border-radius: 6px;
-          background-color: $main;
-          color: $white;
-          cursor: pointer;
+          @include btn();
+        }
+        .addBtn {
+          @include btn();
+        }
+        .deleteBtn {
+          @include btn();
+          background: #ea9800;
         }
       }
     }
