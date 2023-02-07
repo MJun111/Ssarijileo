@@ -43,7 +43,7 @@ function Index() {
 
   // 화면공유 상태값
   const [share, setShare] = useState(false);
-  // const [testOnOff, setTest] = useState(false);
+  const [testOnOff, setTest] = useState(false);
 
   // api
   async function createSession(sessionId: string | string[] | undefined) {
@@ -91,9 +91,9 @@ function Index() {
     setInit(true);
   };
 
-  // const testOn = () => {
-  //   setTest(!testOnOff);
-  // };
+  const testOn = () => {
+    setTest(!testOnOff);
+  };
 
   // 화면 공유 끄기
   const leaveScreen = () => {
