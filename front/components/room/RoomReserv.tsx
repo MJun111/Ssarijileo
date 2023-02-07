@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import styles from '@/styles/room/RoomReserv.module.scss';
 import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
+
+import styles from '@/styles/room/RoomReserv.module.scss';
 
 interface SongData {
   songId: number;
@@ -28,13 +29,13 @@ function RoomReserv({ setModalOpen }: any) {
   //  노래 목록이 보일 개수
   const limit = 5;
 
-  const [musicList, setState] = useState<SongData[]>([]);
+  const [allMusicList, setAllMusicList] = useState<SongData[]>([]);
+  const [musicList, setMusicList] = useState<SongData[]>([]);
 
-  let chartList: SongData[] = [];
   useEffect(() => {
     axios.get('api/v1/song').then(res => {
-      chartList = [...res.data];
-      setState(chartList);
+      setAllMusicList(res.data);
+      setMusicList(res.data);
     });
   }, []);
 
@@ -43,16 +44,16 @@ function RoomReserv({ setModalOpen }: any) {
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
     const arr: SongData[] = [];
-    chartList.forEach((item, idx) => {
+    console.log(musicList);
+    allMusicList.forEach((item, idx) => {
       if (
         item.title.includes(eventTarget.value) ||
         item.singer.includes(eventTarget.value)
       ) {
-        arr.push(chartList[idx]);
+        arr.push(allMusicList[idx]);
       }
     });
-
-    setState(arr);
+    setMusicList(arr);
   };
 
   const postData = musicList.slice(offset, offset + limit);

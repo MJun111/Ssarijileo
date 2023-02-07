@@ -8,9 +8,9 @@ import * as data from '@/constants/PerfectScoreData';
 import styles from '@/styles/MakeSample.module.scss';
 
 function MakeSample() {
-  const dataArrayRef = useRef<Float32Array>(new Float32Array(8192));
+  const dataArrayRef = useRef<Float32Array>(new Float32Array(2048));
   const pitchDetectorRef = useRef<PitchDetector<Float32Array>>(
-    PitchDetector.forFloat32Array(8192),
+    PitchDetector.forFloat32Array(2048),
   );
   const analyserRef = useRef<AnalyserNode>();
   const gainRef = useRef<GainNode>();
@@ -163,7 +163,7 @@ function MakeSample() {
 
     analyser.minDecibels = -90;
     analyser.smoothingTimeConstant = 0.5;
-    analyser.fftSize = 8192;
+    analyser.fftSize = 2048;
 
     fetch('sounds/voice.mp3')
       .then(response => response.arrayBuffer())
