@@ -16,7 +16,7 @@ interface SongData {
   // releaseDate: string;
 }
 
-function RoomReserv({ setModalOpen }: any, { charList }: any) {
+function RoomReserv({ setModalOpen }: any) {
   const [themeMode, setThemeMode] = useState('light');
 
   const storeTheme = useSelector<any>(state => state.theme);
@@ -32,10 +32,8 @@ function RoomReserv({ setModalOpen }: any, { charList }: any) {
   const [allMusicList, setAllMusicList] = useState<SongData[]>([]);
   const [musicList, setMusicList] = useState<SongData[]>([]);
 
-  let chartList: SongData[] = [];
   useEffect(() => {
     axios.get('api/v1/song').then(res => {
-      chartList = res.data;
       setAllMusicList(res.data);
       setMusicList(res.data);
     });
