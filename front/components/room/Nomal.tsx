@@ -30,7 +30,6 @@ function Nomal(props: { setState: any; reserv: any }) {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-
     fetch('sounds/가을아침MR.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
