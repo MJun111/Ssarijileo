@@ -1,23 +1,14 @@
 import Image from 'next/image';
+import type { ChartItem } from '@/pages';
 import TodayChartItem from '@/components/main/TodayChartItem';
 
 import styles from '@/styles/main/TodayChart.module.scss';
 
 function TodayChart(props: {
-  data: {
-    chartItemA: {
-      rank: number;
-      title: string;
-      singer: string;
-    }[];
-    chartItemB: {
-      rank: number;
-      title: string;
-      singer: string;
-    }[];
-  };
+  chartItemA: ChartItem[];
+  chartItemB: ChartItem[];
 }) {
-  const { chartItemA, chartItemB } = props.data;
+  const { chartItemA, chartItemB } = props;
 
   const chartListA = chartItemA.map(item => {
     return <TodayChartItem key={item.rank} item={item} />;

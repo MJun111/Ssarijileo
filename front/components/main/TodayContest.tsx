@@ -1,21 +1,10 @@
 import Image from 'next/image';
+import type { RankingItem } from '@/pages';
 
 import styles from '@/styles/main/TodayContest.module.scss';
 
-function TodayContest(props: {
-  data: {
-    ranking: {
-      rank: number;
-      medal: string;
-      profile: string;
-      name: string;
-      title: string;
-      singer: string;
-      like: string;
-    }[];
-  };
-}) {
-  const { ranking } = props.data;
+function TodayContest(props: { ranking: RankingItem[] }) {
+  const { ranking } = props;
 
   const rank = ranking.map(item => (
     <tr className={styles.item} key={item.rank}>

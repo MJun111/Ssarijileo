@@ -12,6 +12,22 @@ import Team from '@/components/main/Team';
 import styles from '@/styles/Home.module.scss';
 
 // 데이터
+export interface ChartItem {
+  rank: number;
+  title: string;
+  singer: string;
+}
+
+export interface RankingItem {
+  rank: number;
+  medal: string;
+  profile: string;
+  name: string;
+  title: string;
+  singer: string;
+  like: string;
+}
+
 export async function getServerSideProps() {
   // const chartRes = await axios.get('api/v1/chart');
   // const { chartItemA, chartItemB } = chartRes.data;
@@ -107,7 +123,11 @@ export async function getServerSideProps() {
   };
 }
 
-function Home(props: any) {
+function Home(props: {
+  chartItemA: ChartItem[];
+  chartItemB: ChartItem[];
+  ranking: RankingItem[];
+}) {
   const { chartItemA, chartItemB, ranking } = props;
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme: any = useSelector<any>(state => state.theme);
@@ -127,9 +147,9 @@ function Home(props: any) {
       <MainTop />
       <div className={styles.container}>
         <SoundBar />
-        <TodayChart data={{ chartItemA, chartItemB }} />
+        <TodayChart chartItemA={chartItemA} chartItemB={chartItemB} />
         <SoundBar />
-        <TodayContest data={{ ranking }} />
+        <TodayContest ranking={ranking} />
         <SoundBar />
         <Team img={img} />
       </div>
