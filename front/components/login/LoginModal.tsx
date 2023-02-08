@@ -9,9 +9,11 @@ function LoginModal({ setModalOpen }: any) {
 
   // 카카오 로그인 함수 .. 간편 로그인 요청
   const loginFormWithKakao = () => {
+    // 현재 창에 로그인 창 띄우기 -> 인가코드 전달
     window.Kakao.Auth.authorize({
       redirectUri: process.env.NEXT_PUBLIC_KAKAO_REDIRECTURI,
     });
+    // 로그인 요청 (백엔드 redirect URI로 연결)
     if (process.env.NEXT_PUBLIC_LOGIN_REDIRECTURI) {
       window.location.href = process.env.NEXT_PUBLIC_LOGIN_REDIRECTURI;
     }

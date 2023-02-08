@@ -37,16 +37,6 @@ function MyPage() {
               width={100}
               height={100}
             />
-            <label htmlFor="inputFile" className={styles.editBtn}>
-              <Image
-                src="/img/profile/profile_edit_image.svg"
-                alt="profile"
-                className={styles.edit}
-                width={20}
-                height={20}
-              />
-            </label>
-            <input type="file" id="inputFile" className={styles.inputFile} />
           </div>
           <div className={styles.name}>{DUMMY_DATA.nickname}님</div>
           <button
