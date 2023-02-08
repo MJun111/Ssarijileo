@@ -4,10 +4,11 @@ import Image from 'next/image';
 import { useSelector } from 'react-redux';
 
 import styles from '@/styles/common/Footer.module.scss';
+import { RootState } from '@/redux/store';
 
 function Footer() {
   const [themeMode, setThemeMode] = useState('light');
-  const storeTheme: any = useSelector<any>(state => state.theme);
+  const storeTheme = useSelector((state: RootState) => state.theme);
 
   useEffect(() => {
     setThemeMode(storeTheme.theme);

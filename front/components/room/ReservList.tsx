@@ -122,6 +122,7 @@ function ReservList() {
           height={12}
           alt="toggle"
           className={styles.toggleIcon}
+          priority
         />
       </button>
     </div>

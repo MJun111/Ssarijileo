@@ -65,6 +65,7 @@ function RoomModal({ setModalOpen }: any) {
 
     return (
       <button
+        key={str}
         className={btnClass}
         type="button"
         onClick={() => {

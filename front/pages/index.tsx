@@ -1,6 +1,7 @@
 // Path: '/'
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+
 // import axios from 'axios';
 
 import MainTop from '@/components/main/MainTop';
@@ -11,7 +12,6 @@ import Team from '@/components/main/Team';
 
 import styles from '@/styles/Home.module.scss';
 
-// 데이터
 export interface ChartItem {
   rank: number;
   title: string;
