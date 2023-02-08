@@ -2,36 +2,21 @@ import Image from 'next/image';
 
 import styles from '@/styles/main/TodayContest.module.scss';
 
-function TodayContest() {
-  const ranking = [
-    {
-      rank: 1,
-      medal: 'img/main/main_medal_gold_image.svg',
-      profile: 'icon/header/light/light_profile_icon.svg',
-      name: '나는이수민',
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      like: '4k',
-    },
-    {
-      rank: 2,
-      medal: 'img/main/main_medal_sliver_image.svg',
-      profile: 'icon/header/light/light_profile_icon.svg',
-      name: '김맹준',
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      like: '4k',
-    },
-    {
-      rank: 3,
-      medal: 'img/main/main_medal_bronze_image.svg',
-      profile: 'icon/header/light/light_profile_icon.svg',
-      name: 'zㅣ존예지',
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      like: '4k',
-    },
-  ];
+function TodayContest(props: {
+  data: {
+    ranking: {
+      rank: number;
+      medal: string;
+      profile: string;
+      name: string;
+      title: string;
+      singer: string;
+      like: string;
+    }[];
+  };
+}) {
+  const { ranking } = props.data;
+
   const rank = ranking.map(item => (
     <tr className={styles.item} key={item.rank}>
       <td className={styles.medal}>
