@@ -43,7 +43,7 @@ function PerfectScore() {
   };
 
   const stop = () => {
-    musicRef.current?.stop();
+    musicRef.current?.stop(0);
     setIsStarted(false);
   };
 

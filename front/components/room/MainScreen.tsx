@@ -214,7 +214,6 @@ function MainScreen(props: {
   ];
 
   useEffect(() => {
-    console.log(subscribers);
     if (subscribers.length !== 0 && reserv.length === 0) {
       setState(1);
     } else if (subscribers.length !== 0 && reserv.length !== 0) {

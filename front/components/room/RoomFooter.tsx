@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import styles from '@/styles/room/RoomFooter.module.scss';
 
 import RoomController from './RoomController';
 import RoomFriend from './RoomFriend';
 import RoomChat from './RoomChat';
 import RoomReserv from './RoomReserv';
+
+import styles from '@/styles/room/RoomFooter.module.scss';
 
 function RoomFooter({ session }: any) {
   const [controllerModalOpen, setControllerModalOpen] = useState(false);

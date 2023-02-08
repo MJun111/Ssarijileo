@@ -85,7 +85,12 @@ function CommonState(props: { title: any; setState: any; state: number }) {
           className={styles.icon}
         />
         <div className={styles.bar}>
-          <input className={styles.input} type="range" value={time / 6} />
+          <input
+            className={styles.input}
+            type="range"
+            value={time / 6}
+            readOnly
+          />
         </div>
         <div className={styles.value}>
           <div>
