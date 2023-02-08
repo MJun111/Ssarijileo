@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import html2canvas from 'html2canvas';
 import CommonState from '@/components/room/CommonState';
 
 import styles from '@/styles/room/Screen.module.scss';

@@ -24,7 +24,7 @@ function Title(props: { main: string; sub: string }) {
             if (storeLogin.login) {
               window.location.replace('sing/');
             } else {
-              confirm('로그인 후 이용하세요🎤🎵');
+              window.confirm('로그인 후 이용하세요🎤🎵');
             }
           }}
         >
@@ -37,7 +37,7 @@ function Title(props: { main: string; sub: string }) {
             if (storeLogin.login) {
               window.location.replace('chart/');
             } else {
-              confirm('로그인 후 이용하세요🎤🎵');
+              window.confirm('로그인 후 이용하세요🎤🎵');
             }
           }}
         >

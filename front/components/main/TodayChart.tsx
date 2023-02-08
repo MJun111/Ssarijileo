@@ -88,12 +88,13 @@ function TodayChart() {
       </div>
       <div className={styles.moreView}>
         <button
+          type="button"
           className={styles.context}
           onClick={() => {
             if (storeLogin.login) {
               window.location.replace('chart/');
             } else {
-              confirm('로그인 후 이용하세요🎤🎵');
+              window.confirm('로그인 후 이용하세요🎤🎵');
             }
           }}
         >

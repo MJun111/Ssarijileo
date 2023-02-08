@@ -63,7 +63,7 @@ function Nomal(props: { setState: any; reserv: any }) {
           width={canvasWidth}
           height={canvasHeight}
           ref={canvasRef}
-        ></canvas>
+        />
         <video
           className={styles.discoA}
           autoPlay

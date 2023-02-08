@@ -41,7 +41,7 @@ function TodayContest() {
         if (storeLogin.login) {
           window.location.replace('contest/');
         } else {
-          confirm('로그인 후 이용하세요🎤🎵');
+          window.confirm('로그인 후 이용하세요🎤🎵');
         }
       }}
     >
@@ -74,7 +74,7 @@ function TodayContest() {
           if (storeLogin.login) {
             window.location.replace('contest/');
           } else {
-            confirm('로그인 후 이용하세요🎤🎵');
+            window.confirm('로그인 후 이용하세요🎤🎵');
           }
         }}
       >

@@ -82,13 +82,14 @@ function Header() {
   // menu 리스트 요소에 대한 태그 생성
   const headerMenus = headerMenu.map(menu => (
     <button
+      type="button"
       key={menu.name}
       className={styles.pages}
       onClick={() => {
         if (storeLogin.login) {
           window.location.replace(menu.link);
         } else {
-          confirm('로그인 후 이용하세요🎤🎵');
+          window.confirm('로그인 후 이용하세요🎤🎵');
         }
       }}
     >
@@ -99,13 +100,14 @@ function Header() {
   const dropDownMenu = headerMenu.map(menu => (
     <li key={menu.name}>
       <button
+        type="button"
         key={menu.name}
         className={styles.pages}
         onClick={() => {
           if (storeLogin.login) {
             window.location.replace(menu.link);
           } else {
-            confirm('로그인 후 이용하세요🎤🎵');
+            window.confirm('로그인 후 이용하세요🎤🎵');
           }
         }}
       >
