@@ -7,6 +7,8 @@ import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
+
+// import PerfectScore from '@/components/room/PerfectScore';
 import Loading from '@/components/room/Loading';
 
 // import RoomController from '@/components/room/RoomController';
@@ -277,8 +279,14 @@ function Index() {
               singMode={mode}
               subscribers={subscribers}
             />
-            {/* {testOnOff ? null : <MainScreen streamManager={screener} />} */}
-            {/* {testOnOff ? <PerfectScore /> : null} */}
+            {/* {testOnOff ? null : (
+              <MainScreen
+                streamManager={screener}
+                singMode={mode}
+                subscribers={subscribers}
+              />
+            )}
+            {testOnOff ? <PerfectScore /> : null} */}
           </div>
         </div>
         <div className={styles.otherScreen}>

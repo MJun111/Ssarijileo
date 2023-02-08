@@ -1,10 +1,13 @@
 import React from 'react';
-import Link from 'next/link';
+import { useSelector } from 'react-redux';
 
 import styles from '@/styles/common/Title.module.scss';
 
 function Title(props: { main: string; sub: string }) {
   const { main, sub } = props;
+
+  const storeLogin: any = useSelector<any>(state => state.login);
+
   return (
     <div className={styles.title}>
       <div className={styles.top}>
@@ -14,16 +17,32 @@ function Title(props: { main: string; sub: string }) {
       <div className={styles.main}>{main}</div>
       <div className={styles.sub}>{sub}</div>
       <div className={styles.btn}>
-        <Link href="sing/" key="sing" className={styles.pages}>
-          <button className={styles.singBtn} type="button">
-            노래 부르러 GO
-          </button>
-        </Link>
-        <Link href="chart/" key="chart" className={styles.pages}>
-          <button className={styles.chartBtn} type="button">
-            실시간 인기곡
-          </button>
-        </Link>
+        <button
+          className={styles.singBtn}
+          type="button"
+          onClick={() => {
+            if (storeLogin.login) {
+              window.location.replace('sing/');
+            } else {
+              confirm('로그인 후 이용하세요🎤🎵');
+            }
+          }}
+        >
+          노래 부르러 GO
+        </button>
+        <button
+          className={styles.chartBtn}
+          type="button"
+          onClick={() => {
+            if (storeLogin.login) {
+              window.location.replace('chart/');
+            } else {
+              confirm('로그인 후 이용하세요🎤🎵');
+            }
+          }}
+        >
+          실시간 인기곡
+        </button>
       </div>
     </div>
   );

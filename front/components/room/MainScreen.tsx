@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-
+import html2canvas from 'html2canvas';
 import CommonState from '@/components/room/CommonState';
 
 import styles from '@/styles/room/Screen.module.scss';
@@ -20,18 +20,9 @@ function MainScreen(props: {
   // 공통
   // 0 : 인원이 1명일 때 (현재 인원수)
   // 1 : 예약목록이 비었을 때 (예약곡 수)
+  // 2 : 대기 상태
+  // 3 : 진행 상태 (mode 별로 컴포넌트 분리)
 
-  // 일반 노래방
-  // 2 : 일반 노래방 대기상태
-  // 3 : 일반 노래방 진행상태
-
-  // 퍼펙트 스코어
-  // 4 : 퍼펙트 스코어 대기 상태
-  // 5 : 퍼펙트 스코어 진행 상태
-
-  // 가사 맞추기
-  // 6 : 가사 맞추기 대기 상태
-  // 7 : 가사 맞추기 진행 상태
   const [state, setState] = useState(2);
 
   // props로 받아야 할 데이터 ---> 현재 노래부르는 사람 id, 예약 개수, 참가자 수
@@ -248,11 +239,11 @@ function MainScreen(props: {
       {state === 1 && (
         <CommonState setState={setState} state={state} title={title[1]} />
       )}
-      {/* 일반 노래방 */}
       {/* 대기 상태 */}
       {state === 2 && (
         <CommonState setState={setState} state={state} title={title[0]} />
       )}
+      {/* 일반 노래방 */}
       {/* 진행 상태 */}
       {state === 3 && singMode === 'nomal' && myName === mainName && (
         <Nomal setState={setState} reserv={reserv[0]} />
@@ -262,6 +253,9 @@ function MainScreen(props: {
           <track kind="captions" />
         </video>
       )}
+      {/* <video className={styles.video} autoPlay ref={videoRef}>
+        <track kind="captions" />
+      </video> */}
     </div>
   );
 }

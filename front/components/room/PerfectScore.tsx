@@ -82,7 +82,8 @@ function PerfectScore() {
     if (!ctx) return;
     const backgroundImage = new Image();
     backgroundImage.src = 'img/perfectscore/backgound.jpeg';
-    ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+    // ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // 음정 분석
     const dataArray = dataArrayRef.current;
