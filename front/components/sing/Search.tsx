@@ -10,10 +10,10 @@ import styles from '@/styles/common/Search.module.scss';
 
 function Search(props: {
   optionItem: OptionItem[];
-  data: RoomInfo[];
-  setFilteredData: React.Dispatch<React.SetStateAction<RoomInfo[]>>;
+  rooms: RoomInfo[];
+  setFilteredRoom: React.Dispatch<React.SetStateAction<RoomInfo[]>>;
 }) {
-  const { optionItem, data, setFilteredData } = props;
+  const { optionItem, rooms, setFilteredRoom } = props;
   // 다크모드 상태 관리
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -32,25 +32,27 @@ function Search(props: {
     setSortType(eventTarget.innerText);
     const sortedData =
       eventTarget.innerText !== 'Default'
-        ? data.filter(d => d.type === eventTarget.innerText)
-        : data;
+        ? rooms.filter(room => room.type === eventTarget.innerText)
+        : rooms;
     const filteredData =
       searchText !== ''
-        ? sortedData.filter(d =>
-            d.title.toLowerCase().includes(searchText.toLowerCase()),
+        ? sortedData.filter(room =>
+            room.title.toLowerCase().includes(searchText.toLowerCase()),
           )
         : sortedData;
-    setFilteredData(filteredData);
+    setFilteredRoom(filteredData);
   };
 
   const changeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
     const sortedData =
-      sortType !== 'Default' ? data?.filter(d => d.type === sortType) : data;
-    const filteredData = sortedData?.filter(d =>
-      d.title.toLowerCase().includes(e.target.value.toLowerCase()),
+      sortType !== 'Default'
+        ? rooms.filter(room => room.type === sortType)
+        : rooms;
+    const filteredData = sortedData.filter(room =>
+      room.title.toLowerCase().includes(e.target.value.toLowerCase()),
     );
-    setFilteredData(filteredData);
+    setFilteredRoom(filteredData);
   };
 
   const optionList = optionItem.map((item: OptionItem) => (

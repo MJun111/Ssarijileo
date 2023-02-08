@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
-import Search from '../common/Search';
 import ContestListItem from './ContestListItem';
 import Pagination from '../common/Pagination';
 
@@ -63,11 +62,6 @@ function ContestList() {
             className={styles.icon}
           />
         </div>
-        <Search
-          optionItem={sortType}
-          data={video}
-          setFilteredData={setFilteredVideo}
-        />
       </div>
       <div className={styles.addBtn}>
         <button type="button" className={styles.btn}>
