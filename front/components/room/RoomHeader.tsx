@@ -1,6 +1,8 @@
 import Image from 'next/image';
-import styles from '@/styles/room/RoomHeader.module.scss';
+
 import ReservList from './ReservList';
+
+import styles from '@/styles/room/RoomHeader.module.scss';
 
 function RoomHeader({ leaveRoom, screenShare }: any) {
   return (

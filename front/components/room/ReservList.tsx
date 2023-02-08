@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
+
 import styles from '@/styles/room/ReservList.module.scss';
 
 function ReservList() {
@@ -34,31 +35,37 @@ function ReservList() {
   // 데이터 localStorage에 저장 ..?
   const arr = [
     {
+      id: 1,
       title: 'OMG11111111111',
       singer: 'NewJeans111111111111111',
       name: '김태학',
     },
     {
+      id: 2,
       title: 'OMG2',
       singer: 'NewJeansssss',
       name: '길상욱',
     },
     {
+      id: 3,
       title: 'OMG3',
       singer: 'NewJeansssss',
       name: '김명준',
     },
     {
+      id: 4,
       title: 'OMG4',
       singer: 'NewJeansssss',
       name: '김소윤',
     },
     {
+      id: 5,
       title: 'OMG5',
       singer: 'NewJeansssss',
       name: '서예지',
     },
     {
+      id: 6,
       title: 'OMG6',
       singer: 'NewJeansssss',
       name: '이수민',
@@ -72,7 +79,7 @@ function ReservList() {
     <div className={styles.container}>
       <div className={modalClass}>
         {reservList.map((item, idx) => (
-          <div className={styles.modalItem}>
+          <div className={styles.modalItem} key={item.id}>
             <div className={styles.number}>{idx + 2}</div>
             <div className={styles.title}>{item.title}</div>
             <div className={styles.singer}>{item.singer}</div>
@@ -101,7 +108,7 @@ function ReservList() {
           <div className={styles.out}>
             <div className={styles.listItem}>
               {reservList.map(item => (
-                <div className={styles.item}>
+                <div className={styles.item} key={item.id}>
                   {item.title}-{item.singer}
                 </div>
               ))}
@@ -115,6 +122,7 @@ function ReservList() {
           height={12}
           alt="toggle"
           className={styles.toggleIcon}
+          priority
         />
       </button>
     </div>

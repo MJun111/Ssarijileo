@@ -256,7 +256,7 @@ function Index() {
       mySession.on('streamCreated', (event: any) => {
         // 카메라 추가
         if (event.stream.typeOfVideo === 'CAMERA') {
-          console.log('카메라 이벤트', event);
+          // console.log('카메라 이벤트', event);
           const subscriber = mySession.subscribe(event.stream, undefined);
           const newsubscribers = subscribers;
           newsubscribers.push(subscriber);
@@ -265,7 +265,7 @@ function Index() {
           // 화면공유
         } else if (event.stream.typeOfVideo === 'CUSTOM') {
           const subscreen = myScreen.subscribe(event.stream, undefined);
-          console.log('커스텀 이벤트', event);
+          // console.log('커스텀 이벤트', event);
           setShare(true);
           setScreener(subscreen);
         }
@@ -310,7 +310,7 @@ function Index() {
             publisher.push(newpublisher);
             setPublisher([...publisher]);
             setLoading(false);
-            console.log('done##');
+            // console.log('done##');
           })
           .catch((error: any) => {
             console.log(
@@ -324,14 +324,13 @@ function Index() {
 
       // 화면 공유 connect
       getToken().then(tokenScreen => {
-        myScreen
-          .connect(tokenScreen, { cliendData: myUserName })
-          .then(() => {
-            console.log('화면공유 세션 연결됨');
-          })
-          .catch((error: any) => {
-            console.log('화면 공유 세션 연결 실패', error.code, error.message);
-          });
+        myScreen.connect(tokenScreen, { cliendData: myUserName });
+        // .then(() => {
+        //   console.log('화면공유 세션 연결됨');
+        // })
+        // .catch((error: any) => {
+        //   console.log('화면 공유 세션 연결 실패', error.code, error.message);
+        // });
       });
     }
   }, [init]);
@@ -428,7 +427,7 @@ function Index() {
             return <MyScreen streamManager={pub} />;
           })}
           {subscribers.map(sub => {
-            return <MyScreen streamManager={sub} />;
+            return <MyScreen streamManager={sub} key={sub.stream.streamId} />;
           })}
         </div>
       </div>

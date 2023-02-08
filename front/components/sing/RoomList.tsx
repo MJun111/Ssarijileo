@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+
 import axios from 'axios';
-import styles from '@/styles/sing/RoomList.module.scss';
-import Search from '@/components/common/Search';
-import RoomListItem from '@/components/sing/RoomListItem';
+
 import RoomModal from './RoomModal';
+import Search from '@/components/sing/Search';
+import RoomListItem from '@/components/sing/RoomListItem';
 import Pagination from '@/components/common/Pagination';
 
+import styles from '@/styles/sing/RoomList.module.scss';
+
 export interface RoomInfo {
+  id: number;
   title: string;
   type: string;
   lock: boolean;
   member: number;
+}
+
+export interface OptionItem {
+  mode: string;
 }
 
 const GET_SESSIONS_URL =
@@ -25,12 +33,12 @@ function RoomList() {
     setModalOpen(true);
   };
 
-  //  페이지
+  // 페이지
   const [page, setPage] = useState(1);
-  //  방 목록이 보일 개수
+  // 방 목록이 보일 개수
   const limit = 12;
 
-  //  방 목록
+  // 방 종류
   const sortType = [
     { mode: 'Default' },
     { mode: '일반모드' },
@@ -39,7 +47,8 @@ function RoomList() {
     { mode: '가사 맞추기' },
   ];
 
-  const roomInfo: any[] = [];
+  // 방 목록
+  const currentRoom: RoomInfo[] = [];
   for (let i = 0; i < 100; i++) {
     const num = Math.floor(Math.random() * 4) + 1;
     const room = {
@@ -49,17 +58,18 @@ function RoomList() {
       lock: i % 2 === 0,
       member: i % 2 === 0 ? 2 : 1,
     };
-    roomInfo.push(room);
+    currentRoom.push(room);
   }
 
   // 방 목록 (23.02.02 : openvidu와 직접 api 수신중, 콘솔에 결과 출력)
-  const [rooms, setRooms] = useState<any>(null);
+  const [rooms] = useState<RoomInfo[]>(currentRoom);
 
+  // 태학님 수정 예정
   async function getRoomsInfo() {
     const response = await axios.get(GET_SESSIONS_URL, {
       headers: { Authorization: GET_SESSIONS_HEADER },
     });
-    setRooms(response.data);
+    // setRooms(response.data);
     console.log('response success, roomList : ', response.data);
   }
 
@@ -68,15 +78,21 @@ function RoomList() {
     getRoomsInfo();
   }, []);
 
+  const [filteredRoom, setFilteredRoom] = useState<RoomInfo[]>(rooms);
+
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
-  const postData = roomInfo.slice(offset, offset + limit);
+  const postData = filteredRoom.slice(offset, offset + limit);
 
   return (
     <div className={styles.container}>
       {modalOpen && <RoomModal setModalOpen={setModalOpen} />}
       <div className={styles.search}>
-        <Search optionItem={sortType} />
+        <Search
+          optionItem={sortType}
+          rooms={rooms}
+          setFilteredRoom={setFilteredRoom}
+        />
       </div>
       <div className={styles.addBtn}>
         <button type="button" className={styles.btn} onClick={showModal}>
@@ -98,7 +114,7 @@ function RoomList() {
       <Pagination
         limit={limit}
         page={page}
-        totalPosts={roomInfo.length}
+        totalPosts={currentRoom.length}
         setPage={setPage}
       />
     </div>

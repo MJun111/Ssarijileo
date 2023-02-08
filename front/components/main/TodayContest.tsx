@@ -1,38 +1,14 @@
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+
+import type { RankingItem } from '@/pages';
+
 import styles from '@/styles/main/TodayContest.module.scss';
 
-function TodayContest() {
+function TodayContest(props: { ranking: RankingItem[] }) {
+  const { ranking } = props;
   const storeLogin: any = useSelector<any>(state => state.login);
-  const ranking = [
-    {
-      rank: 1,
-      medal: 'img/main/main_medal_gold_image.svg',
-      profile: 'icon/header/light/light_profile_icon.svg',
-      name: '나는이수민',
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      like: '4k',
-    },
-    {
-      rank: 2,
-      medal: 'img/main/main_medal_sliver_image.svg',
-      profile: 'icon/header/light/light_profile_icon.svg',
-      name: '김맹준',
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      like: '4k',
-    },
-    {
-      rank: 3,
-      medal: 'img/main/main_medal_bronze_image.svg',
-      profile: 'icon/header/light/light_profile_icon.svg',
-      name: 'zㅣ존예지',
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      like: '4k',
-    },
-  ];
+
   const rank = ranking.map(item => (
     <tr
       className={styles.item}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 import { useCanvas } from '@/hooks/useCanvas';
@@ -11,6 +11,7 @@ function Nomal(props: { setState: any; reserv: any }) {
   const [time, setTime] = useState(0);
   const [lyricA, setTextA] = useState('간주중');
   const [lyricB, setTextB] = useState('...');
+  const sourceRef = useRef<AudioBufferSourceNode>();
 
   const canvasWidth = 950;
   const canvasHeight = 174;
@@ -28,31 +29,42 @@ function Nomal(props: { setState: any; reserv: any }) {
 
   useAnimation(drawLyrics, 0);
 
-  const audio = new Audio('sounds/가을아침MR.mp3');
   useEffect(() => {
-    audio.play();
-    const interval = setInterval(() => {
-      setTime(prev => {
-        if (prev === reserv.time) {
-          audio.pause();
-          //   audio.load();
-          setState(1);
-        }
-        if (
-          reserv.lyricsList.length &&
-          reserv.lyricsList[0].time === prev + 1
-        ) {
-          setTextA(reserv.lyricsList[0].verse);
-          reserv.lyricsList.shift();
-          if (reserv.lyricsList.length > 0) {
-            setTextB(reserv.lyricsList[0].verse);
-            reserv.lyricsList.shift();
-          }
-        }
-        return prev + 1;
+
+    fetch('sounds/가을아침MR.mp3')
+      .then(response => response.arrayBuffer())
+      .then(arrayBuffer => {
+        const audioContext = new AudioContext();
+        audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
+          const source = audioContext.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(audioContext.destination);
+          source.start();
+          sourceRef.current = source;
+        });
+      })
+      .then(() => {
+        const interval = setInterval(() => {
+          setTime(prev => {
+            if (prev === reserv.time) {
+              setState(1);
+            }
+            if (
+              reserv.lyricsList.length &&
+              reserv.lyricsList[0].time === prev + 1
+            ) {
+              setTextA(reserv.lyricsList[0].verse);
+              reserv.lyricsList.shift();
+              if (reserv.lyricsList.length > 0) {
+                setTextB(reserv.lyricsList[0].verse);
+                reserv.lyricsList.shift();
+              }
+            }
+            return prev + 1;
+          });
+        }, 1000);
+        return () => clearInterval(interval);
       });
-    }, 1000);
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -151,8 +163,7 @@ function Nomal(props: { setState: any; reserv: any }) {
         <button
           type="button"
           onClick={() => {
-            audio.pause();
-            // audio.load();
+            sourceRef.current?.stop(0);
             setState(2);
           }}
           className={styles.nextBtn}

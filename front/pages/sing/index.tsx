@@ -1,9 +1,9 @@
 import Image from 'next/image';
 
-import SingTop from '@/components/sing/SingTop';
-import SoundBar from '@/components/common/SoundBar';
-import RoomList from '@/components/sing/RoomList';
 import TopImg from '@/components/common/TopImg';
+import SingTop from '@/components/sing/SingTop';
+import RoomList from '@/components/sing/RoomList';
+import SoundBar from '@/components/common/SoundBar';
 
 import styles from '@/styles/sing/Sing.module.scss';
 

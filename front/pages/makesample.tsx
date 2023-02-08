@@ -40,7 +40,7 @@ function MakeSample() {
   };
 
   const stop = () => {
-    sourceRef.current?.stop();
+    sourceRef.current?.stop(0);
     setIsStarted(false);
     save();
   };

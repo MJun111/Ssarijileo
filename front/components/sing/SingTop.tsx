@@ -1,10 +1,11 @@
+import Image from 'next/image';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper';
-import Image from 'next/image';
+import 'swiper/swiper.min.css';
 
 import Title from '@/components/common/Title';
 
-import 'swiper/swiper.min.css';
 import styles from '@/styles/sing/SingTop.module.scss';
 
 function SingTop() {

@@ -20,7 +20,13 @@ function Loading() {
     <div className={styles.container}>
       <div className={styles.loading}>
         <div className={styles.loadImg}>
-          <Image src={img.loading} alt="load img" width={200} height={200} />
+          <Image
+            src={img.loading}
+            alt="load img"
+            width={200}
+            height={200}
+            priority
+          />
         </div>
         <div className={styles.loadContext}>
           방을 만드는 중입니다. 잠시만 기다려 주세요.
