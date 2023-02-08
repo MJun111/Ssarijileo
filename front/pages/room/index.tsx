@@ -156,6 +156,22 @@ function Index() {
     }
   };
 
+  // 예약정보 공유 JSON.stringify(reservationList)
+  const shareReservationList = () => {
+    session
+      .signal({
+        data: JSON.stringify(reservationList), // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'reservationList', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`노래 예약 정보 송신 성공`);
+      })
+      .catch((error: any) => {
+        console.error('노래 예약 정보 송신 실패', error);
+      });
+  };
+
   // singer 화면 위치 바꾸기
   const changeSinger = (from: any) => {
     const nextsinger = from.stream.streamManager;
@@ -262,6 +278,12 @@ function Index() {
       // 다음 singer
       mySession.on('signal:nextSinger', (event: any) => {
         changeSinger(event.from);
+      });
+
+      // 노래 정보 수신
+      mySession.on('signal:reservationList', (event: any) => {
+        const getReserveData = JSON.parse(event.data);
+        console.log(getReserveData);
       });
 
       // 내 캠 connect
@@ -379,6 +401,9 @@ function Index() {
           })}
           <button type="button" onClick={nextSinger}>
             ||
+          </button>
+          <button type="button" onClick={shareReservationList}>
+            list
           </button>
           <div className={styles.singScreen}>
             <MainScreen
