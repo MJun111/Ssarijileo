@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import styles from '@/styles/contest/ContestList.module.scss';
+
 import Search from '../common/Search';
 import ContestListItem from './ContestListItem';
 import Pagination from '../common/Pagination';
+
+import styles from '@/styles/contest/ContestList.module.scss';
 
 export interface videoInfo {
   url: string;
@@ -36,6 +38,8 @@ function ContestList() {
     };
     videoList.push(video);
   }
+  const [video] = useState(videoList);
+  const [filteredVideo, setFilteredVideo] = useState(video);
   //  페이지
   const [page, setPage] = useState(1);
   //  방 목록이 보일 개수
@@ -44,7 +48,7 @@ function ContestList() {
   const sortType = [{ mode: 'Default' }, { mode: 'Like' }, { mode: 'Newest' }];
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
-  const postData = videoList.slice(offset, offset + limit);
+  const postData = filteredVideo.slice(offset, offset + limit);
 
   return (
     <div className={styles.container}>
@@ -59,7 +63,11 @@ function ContestList() {
             className={styles.icon}
           />
         </div>
-        <Search optionItem={sortType} />
+        <Search
+          optionItem={sortType}
+          data={video}
+          setFilteredData={setFilteredVideo}
+        />
       </div>
       <div className={styles.addBtn}>
         <button type="button" className={styles.btn}>

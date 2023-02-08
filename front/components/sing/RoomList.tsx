@@ -90,8 +90,8 @@ function RoomList() {
       <div className={styles.search}>
         <Search
           optionItem={sortType}
-          rooms={rooms}
-          setFilteredRoom={setFilteredRoom}
+          data={rooms}
+          setFilteredData={setFilteredRoom}
         />
       </div>
       <div className={styles.addBtn}>
