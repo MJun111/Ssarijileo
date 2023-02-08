@@ -65,18 +65,18 @@ function RoomList() {
   const [rooms] = useState<RoomInfo[]>(currentRoom);
 
   // 태학님 수정 예정
-  // async function getRoomsInfo() {
-  //   const response = await axios.get(GET_SESSIONS_URL, {
-  //     headers: { Authorization: GET_SESSIONS_HEADER },
-  //   });
-  //   setRooms(response.data);
-  //   console.log('response success, roomList : ', response.data);
-  // }
-  //
-  // useEffect(() => {
-  //   console.log('RoomList 입장, 초기 roomList : ', rooms);
-  //   getRoomsInfo();
-  // }, []);
+  async function getRoomsInfo() {
+    const response = await axios.get(GET_SESSIONS_URL, {
+      headers: { Authorization: GET_SESSIONS_HEADER },
+    });
+    // setRooms(response.data);
+    console.log('response success, roomList : ', response.data);
+  }
+
+  useEffect(() => {
+    console.log('RoomList 입장, 초기 roomList : ', rooms);
+    getRoomsInfo();
+  }, []);
 
   const [filteredRoom, setFilteredRoom] = useState<RoomInfo[]>(rooms);
 
