@@ -1,9 +1,11 @@
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
 import TodayChartItem from '@/components/main/TodayChartItem';
 
 import styles from '@/styles/main/TodayChart.module.scss';
 
 function TodayChart() {
+  const storeLogin: any = useSelector<any>(state => state.login);
   const chartItemA = [
     {
       rank: 1,
@@ -85,7 +87,19 @@ function TodayChart() {
         />
       </div>
       <div className={styles.moreView}>
-        <div className={styles.context}>실시간 TOP 100</div>
+        <button
+          type="button"
+          className={styles.context}
+          onClick={() => {
+            if (storeLogin.login) {
+              window.location.replace('chart/');
+            } else {
+              window.confirm('로그인 후 이용하세요🎤🎵');
+            }
+          }}
+        >
+          실시간 TOP 100
+        </button>
         <Image
           src="img/common/common_more_view_image.svg"
           width={30}

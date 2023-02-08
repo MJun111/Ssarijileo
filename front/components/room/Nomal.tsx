@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+
+import { useCanvas } from '@/hooks/useCanvas';
+import { useAnimation } from '@/hooks/useAnimation';
+
 import styles from '@/styles/room/Nomal.module.scss';
 
 function Nomal(props: { setState: any; reserv: any }) {
@@ -8,16 +12,30 @@ function Nomal(props: { setState: any; reserv: any }) {
   const [lyricA, setTextA] = useState('간주중');
   const [lyricB, setTextB] = useState('...');
 
-  // let lyricA = '';
-  // let lyricB = '';
+  const canvasWidth = 950;
+  const canvasHeight = 174;
+  const canvasRef = useCanvas(canvasWidth, canvasHeight);
+  const drawLyrics = () => {
+    const ctx = canvasRef.current?.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = '#1f5c7d';
+    ctx.textAlign = 'center';
+    ctx.font = '32px Jalnan';
+    ctx.fillText(lyricA, canvasWidth / 2, canvasHeight - 94);
+    ctx.fillText(lyricB, canvasWidth / 2, canvasHeight - 42);
+  };
+
+  useAnimation(drawLyrics, 0);
+
+  const audio = new Audio('sounds/가을아침MR.mp3');
   useEffect(() => {
-    const audio = new Audio('sounds/가을아침MR.mp3');
     audio.play();
     const interval = setInterval(() => {
       setTime(prev => {
         if (prev === reserv.time) {
           audio.pause();
-          audio.load();
+          //   audio.load();
           setState(1);
         }
         if (
@@ -36,11 +54,16 @@ function Nomal(props: { setState: any; reserv: any }) {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {lyricA} <br />
-        {lyricB}
+        <canvas
+          id="screen-screen"
+          width={canvasWidth}
+          height={canvasHeight}
+          ref={canvasRef}
+        />
         <video
           className={styles.discoA}
           autoPlay
@@ -128,7 +151,7 @@ function Nomal(props: { setState: any; reserv: any }) {
         <button
           type="button"
           onClick={() => {
-            // audio.pause();
+            audio.pause();
             // audio.load();
             setState(2);
           }}

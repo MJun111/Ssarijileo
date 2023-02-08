@@ -33,6 +33,7 @@
     cursor: pointer;
 
     .context {
+      all: unset;
       font-size: 20px;
       font-weight: bold;
       color: var(--color-text);
