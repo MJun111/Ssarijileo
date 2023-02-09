@@ -26,53 +26,51 @@ function ContentForm(props: { theme: string; DUMMY_DATA: any }) {
   };
 
   return (
-    <>
-      <form onSubmit={saveProfile} className={styles.contentForm}>
-        <label htmlFor="nickname">
-          <p>
-            <span>*</span>&nbsp;&nbsp;닉네임
-          </p>
-          <Image
-            src={images.nickname}
-            alt=""
-            width={16}
-            height={16}
-            className={styles.img}
-          />
-          <input
-            id="nickname"
-            type="text"
-            className={styles.nickname}
-            value={nickname}
-            onChange={nickNameChange}
-          />
-          <button type="button" className={styles.checkBtn}>
-            중복검사
-          </button>
-        </label>
-        <div className={styles.scrollBox}>
-          <label htmlFor="micVolume">
-            <p>
-              <span>*</span>&nbsp;&nbsp;마이크 볼륨
-            </p>
-            <div className={styles.ctlBox}>
-              <MicControlBar />
-            </div>
-          </label>
-          <label htmlFor="echo">
-            <p>
-              <span>*</span>&nbsp;&nbsp;에코
-            </p>
-            <div className={styles.ctlBox}>
-              <EchoControlBar />
-            </div>
-          </label>
-        </div>
-        <button type="submit" className={styles.submitBtn}>
-          저장
+    <form onSubmit={saveProfile} className={styles.contentForm}>
+      <label htmlFor="nickname">
+        <p>
+          <span>*</span>&nbsp;&nbsp;닉네임
+        </p>
+        <Image
+          src={images.nickname}
+          alt=""
+          width={16}
+          height={16}
+          className={styles.img}
+        />
+        <input
+          id="nickname"
+          type="text"
+          className={styles.nickname}
+          value={nickname}
+          onChange={nickNameChange}
+        />
+        <button type="button" className={styles.checkBtn}>
+          중복검사
         </button>
-      </form>
-    </>
+      </label>
+      <div className={styles.scrollBox}>
+        <label htmlFor="micVolume">
+          <p>
+            <span>*</span>&nbsp;&nbsp;마이크 볼륨
+          </p>
+          <div className={styles.ctlBox}>
+            <MicControlBar />
+          </div>
+        </label>
+        <label htmlFor="echo">
+          <p>
+            <span>*</span>&nbsp;&nbsp;에코
+          </p>
+          <div className={styles.ctlBox}>
+            <EchoControlBar />
+          </div>
+        </label>
+      </div>
+      <button type="submit" className={styles.submitBtn}>
+        저장
+      </button>
+    </form>
   );
 }
 
