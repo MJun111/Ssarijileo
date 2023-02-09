@@ -2,19 +2,18 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import styles from '@/styles/room/Loading.module.scss';
+import { RootState } from '@/redux/store';
 
 function Loading() {
   const [themeMode, setThemeMode] = useState('light');
+  const storeTheme = useSelector((state: RootState) => state.theme);
 
-  const storeTheme = useSelector<any>(state => state.theme);
   useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
-  }, [themeMode, storeTheme]);
+    setThemeMode(storeTheme.theme);
+  }, [storeTheme]);
 
   const img = {
-    loading: `img/ssari/${themeMode || 'light'}/${
-      themeMode || 'light'
-    }_ssari_loading_image.svg`,
+    loading: `img/ssari/${themeMode}/${themeMode}_ssari_loading_image.svg`,
   };
   return (
     <div className={styles.container}>

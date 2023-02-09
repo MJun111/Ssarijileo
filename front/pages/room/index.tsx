@@ -1,5 +1,7 @@
 // Path: '/room'
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 
@@ -10,7 +12,6 @@ import RoomFooter from '@/components/room/RoomFooter';
 
 // import PerfectScore from '@/components/room/PerfectScore';
 import Loading from '@/components/room/Loading';
-
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
@@ -18,7 +19,7 @@ import styles from '@/styles/Room.module.scss';
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
 function Index() {
-  // user name
+  // username
   const myUserName = 'samplename';
 
   // session Info
@@ -42,6 +43,12 @@ function Index() {
   // 화면공유 상태값
   const [share, setShare] = useState(false);
   // const [testOnOff, setTest] = useState(false);
+
+  //테마모드
+  const storeTheme = useSelector((state: RootState) => state.theme);
+  useEffect(() => {
+    document.body.dataset.theme = storeTheme.theme || 'light';
+  }, [storeTheme]);
 
   // api
   async function createSession(sessionId: string | string[] | undefined) {

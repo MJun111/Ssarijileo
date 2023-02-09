@@ -6,6 +6,7 @@ import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
 
 import styles from '@/styles/room/RoomReserv.module.scss';
+import { RootState } from '@/redux/store';
 
 interface SongData {
   songId: number;
@@ -19,10 +20,10 @@ interface SongData {
 function RoomReserv({ setModalOpen }: any) {
   const [themeMode, setThemeMode] = useState('light');
 
-  const storeTheme = useSelector<any>(state => state.theme);
+  const storeTheme = useSelector((state: RootState) => state.theme);
   useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
-  }, [themeMode, storeTheme]);
+    setThemeMode(storeTheme.theme);
+  }, [storeTheme]);
 
   //  페이지
   const [page, setPage] = useState(1);

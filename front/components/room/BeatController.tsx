@@ -1,5 +1,6 @@
-import styles from '@/styles/room/BeatController.module.scss';
 import MicControlBar from '../common/MicControlBar';
+
+import styles from '@/styles/room/BeatController.module.scss';
 
 function BeatController({ setBeatModal }: any) {
   return (

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
+import { RootState } from '@/redux/store';
 
 import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
@@ -20,13 +21,13 @@ function Header() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const dispatch = useDispatch();
 
-  const storeLogin: any = useSelector<any>(state => state.login);
+  const storeLogin = useSelector((state: RootState) => state.login);
+  const storeTheme = useSelector((state: RootState) => state.theme);
 
   const changeMode = useCallback(() => {
     setChecked(!checked);
     const theme = themeMode === 'light' ? 'dark' : 'light';
     setThemeMode(theme);
-    localStorage.setItem('theme', theme);
     dispatch(setTheme(theme));
   }, [checked, themeMode]);
 
@@ -35,7 +36,7 @@ function Header() {
   }, [themeMode]);
 
   useEffect(() => {
-    const theme = localStorage.getItem('theme') || 'light';
+    const theme = storeTheme.theme || 'light';
     setThemeMode(theme);
     dispatch(setTheme(theme));
     setChecked(theme === 'dark');
