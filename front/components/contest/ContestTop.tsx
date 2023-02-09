@@ -32,11 +32,17 @@ function ContestTop() {
     };
     size: number;
     life: number;
-    flag: number;
+    delta: number;
   }[] = [];
 
-  const dy = [2, 1.5, 0, -1.5, -2, -1.5, 0, 1.5, 2];
-  const dx = [0, -1.5, -2, -1.5, 0, 1.5, 2, 1.5, 0];
+  // const dy = [2, 1.5, 0, -1.5, -2, -1.5, 0, 1.5, 2];
+  // const dx = [0, -1.5, -2, -1.5, 0, 1.5, 2, 1.5, 0];
+  const dy = [
+    2.5, 1.7, 1, 0, -1, -1.7, -1.7, -1, -1.7, -1.7, -1, 0, 1, 1.7, 2.5,
+  ];
+  const dx = [
+    0, -1, -1.7, -2.5, -2, -1.2, -0.5, 0, 0.5, 1.2, 2, 2.5, 1.7, 1, 0,
+  ];
 
   const animate = () => {
     const ctx = canvasRef.current?.getContext('2d');
@@ -45,12 +51,7 @@ function ContestTop() {
 
     for (let i = 0; i < noteWindow.length; i++) {
       noteWindow[i].life -= 1;
-      noteWindow[i].size += noteWindow[i].flag;
-      if (noteWindow[i].size > 50) {
-        noteWindow[i].flag = -1;
-      } else if (noteWindow[i].size < 30) {
-        noteWindow[i].flag = 1;
-      }
+      noteWindow[i].size += noteWindow[i].delta;
       if (noteWindow[i].life < 0) {
         noteWindow.splice(i, 1);
       }
@@ -72,24 +73,27 @@ function ContestTop() {
   const onClickParticle = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
-    if (noteWindow.length > 100) return;
+    // if (noteWindow.length > 100) return;
+    let dir = 0;
     const particle = setInterval(() => {
-      const dir = Math.floor(Math.random() * 9);
       const note = {
         start: {
-          x: e.clientX - rect.left + dx[dir] * (20 + Math.random() * 30),
-          y: e.clientY - rect.top + dy[dir] * (20 + Math.random() * 30),
+          // x: e.clientX - rect.left + dx[dir] * (20 + Math.random() * 30),
+          // y: e.clientY - rect.top + dy[dir] * (20 + Math.random() * 30),
+          x: e.clientX - rect.left + dx[dir] * 15,
+          y: e.clientY - rect.top + dy[dir] * 15,
         },
         life: 30,
-        size: 40,
-        flag: 1,
+        size: 10,
+        delta: 0.3,
       };
       noteWindow.push(note);
-    }, 100);
+      dir += 1;
+    }, 30);
 
     setTimeout(() => {
       clearInterval(particle);
-    }, 300);
+    }, 300 * dy.length);
   };
 
   useAnimation(animate, 0);
