@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['i1.sndcdn.com', 'image.genie.co.kr', 'image.bugsm.co.kr'],
+    domains: [
+      'i1.sndcdn.com',
+      'image.genie.co.kr',
+      'image.bugsm.co.kr',
+      'k.kakaocdn.net',
+    ],
   },
   reactStrictMode: false,
   async rewrites() {

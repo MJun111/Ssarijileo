@@ -1,4 +1,4 @@
-import MicControlBar from '../common/MicControlBar';
+import BeatControlBar from '../common/BeatControlBar';
 
 import styles from '@/styles/room/BeatController.module.scss';
 
@@ -16,7 +16,7 @@ function BeatController({ setBeatModal }: any) {
         <div className={styles.context}>
           <div className={styles.title}>박자 조절</div>
           <div className={styles.bar}>
-            <MicControlBar />
+            <BeatControlBar />
           </div>
           <div className={styles.beat}>
             <div className={styles.text}>느리게</div>

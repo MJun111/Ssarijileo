@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 import styles from '@/styles/like/Like.module.scss';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setLike } from '@/redux/store/likeSlice';
+import { RootState } from '@/redux/store';
 
 import Music from '@/components/like/Music';
 import Video from '@/components/like/Video';
@@ -16,6 +20,11 @@ function Like() {
     [styles.video]: true,
     [styles.isSelect]: type === '녹화본',
   });
+  const dispatch = useDispatch();
+  const storeLike = useSelector((state: RootState) => state.like);
+  useEffect(() => {
+    setType(storeLike.like);
+  });
   return (
     <>
       <div className={styles.container}>
@@ -26,6 +35,7 @@ function Like() {
               type="button"
               onClick={() => {
                 setType('찜목록');
+                dispatch(setLike('찜목록'));
               }}
               className={musicClass}
             >
@@ -35,6 +45,7 @@ function Like() {
               type="button"
               onClick={() => {
                 setType('녹화본');
+                dispatch(setLike('녹화본'));
               }}
               className={videoClass}
             >
