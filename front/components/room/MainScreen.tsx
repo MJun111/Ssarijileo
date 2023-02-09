@@ -55,22 +55,27 @@ export function MainScreen(props: {
       title: '가을 아침',
       singer: '아이유',
       src: 'sounds/가을아침MR.mp3',
-      time: 226,
+      time: 28,
       lyricsList: [
         {
           lyricsId: 1,
           verse: '이른 아침 작은 새들 노랫소리 들려오면',
-          time: 6,
+          time: 0,
         },
         {
           lyricsId: 2,
-          verse: '언제나 그랬듯 아쉽게 잠을 깬다',
-          time: 12,
+          verse: '',
+          time: 4,
         },
         {
           lyricsId: 3,
           verse: '창문 하나 햇살 가득 눈부시게 비쳐오고',
-          time: 18,
+          time: 8,
+        },
+        {
+          lyricsId: 4,
+          verse: '',
+          time: 12,
         },
       ],
     },

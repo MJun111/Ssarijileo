@@ -3,16 +3,16 @@ import Image from 'next/image';
 
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
+import { NormalSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
-import { NormalSong } from '@/components/room/MainScreen';
 
 function Nomal(props: { setState: any; reserv: NormalSong }) {
   const { setState, reserv } = props;
   const [time, setTime] = useState(0);
+  const [isPlay, setIsPlay] = useState(false);
   const sourceRef = useRef<AudioBufferSourceNode>();
   const lyrics = reserv.lyricsList;
-  console.log(lyrics);
   const startTime = useRef<number>(Date.now());
 
   const canvasWidth = 950;
@@ -26,7 +26,11 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     const deltaTime = (Date.now() - startTime.current) / 1000;
     setTime(Math.floor(deltaTime));
-    console.log(deltaTime, lyrics[0].time);
+    if (reserv.time < deltaTime) {
+      setState(2);
+      sourceRef.current?.stop(0);
+      return;
+    }
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
       lyrics.shift();
       flag.current = !flag.current;
@@ -36,24 +40,35 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
     if (lyrics.length > 1) {
       lyricA = flag.current ? lyrics[0].verse : lyrics[1].verse;
       lyricB = flag.current ? lyrics[1].verse : lyrics[0].verse;
+    } else if (lyrics.length === 1) {
+      lyricA = flag.current ? lyrics[0].verse : ' ';
+      lyricB = flag.current ? ' ' : lyrics[0].verse;
     } else {
-      lyricA = lyrics[0].verse;
+      lyricA = ' ';
       lyricB = ' ';
     }
-    if (lyricA === '' || lyricA === '') lyricA = '간주중';
-    if (lyricB === '' || lyricB === '') lyricB = '...';
-    ctx.textAlign = 'center';
-    ctx.font = '32px Jalnan';
-    if (flag.current) {
+    if (lyrics.length === 1 && lyrics[0].time < deltaTime) {
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    } else if (lyrics[0].verse === '') {
+      lyricA = '간주중';
+      lyricB = '...';
       ctx.fillStyle = '#1f5c7d';
       ctx.fillText(lyricA, canvasWidth / 2, canvasHeight - 94);
-      ctx.fillStyle = '#969696';
       ctx.fillText(lyricB, canvasWidth / 2, canvasHeight - 42);
     } else {
-      ctx.fillStyle = '#969696';
-      ctx.fillText(lyricA, canvasWidth / 2, canvasHeight - 94);
-      ctx.fillStyle = '#1f5c7d';
-      ctx.fillText(lyricB, canvasWidth / 2, canvasHeight - 42);
+      ctx.textAlign = 'center';
+      ctx.font = '32px Jalnan';
+      if (flag.current) {
+        ctx.fillStyle = '#1f5c7d';
+        ctx.fillText(lyricA, canvasWidth / 2, canvasHeight - 94);
+        ctx.fillStyle = '#969696';
+        ctx.fillText(lyricB, canvasWidth / 2, canvasHeight - 42);
+      } else {
+        ctx.fillStyle = '#969696';
+        ctx.fillText(lyricA, canvasWidth / 2, canvasHeight - 94);
+        ctx.fillStyle = '#1f5c7d';
+        ctx.fillText(lyricB, canvasWidth / 2, canvasHeight - 42);
+      }
     }
   };
 
@@ -71,6 +86,7 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
           source.start();
           sourceRef.current = source;
           startTime.current = Date.now();
+          setIsPlay(true);
         });
       });
   }, []);
@@ -94,7 +110,7 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
           height={73}
           src="video/disco-ball.mp4"
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
         <video
           className={styles.discoB}
@@ -106,7 +122,7 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
           height={73}
           src="video/disco-ball.mp4"
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
         <video
           className={styles.mic}
@@ -118,7 +134,7 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
           height={73}
           src="video/microphone.mp4"
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
         <video
           className={styles.speaker}
@@ -130,7 +146,7 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
           height={73}
           src="video/speakers.mp4"
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
       </div>
       <div className={styles.timeLine}>
@@ -173,9 +189,11 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
           type="button"
           onClick={() => {
             sourceRef.current?.stop(0);
+            console.log(sourceRef.current);
             setState(2);
           }}
           className={styles.nextBtn}
+          disabled={!isPlay}
         >
           다음 곡으로
         </button>
