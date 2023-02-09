@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
-import { videoInfo } from './ContestList';
+import { VideoInfo } from './ContestList';
 import styles from '@/styles/contest/ContestListItem.module.scss';
 import { RootState } from '@/redux/store';
 
 type VideoProps = {
-  info: videoInfo;
+  info: VideoInfo;
 };
 
 function ContestListItem({ info }: VideoProps) {
@@ -39,7 +39,7 @@ function ContestListItem({ info }: VideoProps) {
           controlsList="nodownload"
           controls
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
         <div className={styles.info}>
           <div className={styles.top}>

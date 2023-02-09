@@ -6,9 +6,9 @@ import { setLike } from '@/redux/store/likeSlice';
 
 import ContestListItem from './ContestListItem';
 import Pagination from '../common/Pagination';
+import ContestSearch from '@/components/contest/ContestSearch';
 
 import styles from '@/styles/contest/ContestList.module.scss';
-import ContestSearch from '@/components/contest/ContestSearch';
 
 export interface VideoInfo {
   id: number;
@@ -48,6 +48,7 @@ function ContestList() {
   }
   const [video] = useState(videoList);
   const [filteredVideo, setFilteredVideo] = useState(video);
+  const [selectType, setSelectType] = useState('Default');
 
   //  페이지
   const [page, setPage] = useState(1);
@@ -63,8 +64,7 @@ function ContestList() {
   let postData = filteredVideo.slice(offset, offset + limit);
   useEffect(() => {
     postData = filteredVideo.slice(offset, offset + limit);
-    console.log(postData);
-  }, [filteredVideo]);
+  }, [selectType, filteredVideo]);
 
   const dispatch = useDispatch();
   return (
@@ -85,6 +85,8 @@ function ContestList() {
         optionItem={sortType}
         videos={video}
         setFilteredVideo={setFilteredVideo}
+        selectType={selectType}
+        setSelectType={setSelectType}
       />
       <div className={styles.addBtn}>
         <button
