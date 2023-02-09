@@ -1,13 +1,26 @@
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+
 import type { RankingItem } from '@/pages';
 
 import styles from '@/styles/main/TodayContest.module.scss';
 
 function TodayContest(props: { ranking: RankingItem[] }) {
   const { ranking } = props;
+  const storeLogin: any = useSelector<any>(state => state.login);
 
   const rank = ranking.map(item => (
-    <tr className={styles.item} key={item.rank}>
+    <tr
+      className={styles.item}
+      key={item.rank}
+      onClick={() => {
+        if (storeLogin.login) {
+          window.location.replace('contest/');
+        } else {
+          window.confirm('로그인 후 이용하세요🎤🎵');
+        }
+      }}
+    >
       <td className={styles.medal}>
         <Image
           src={item.medal}
@@ -30,7 +43,17 @@ function TodayContest(props: { ranking: RankingItem[] }) {
   ));
   const simpleRank = ranking.map(item => {
     return (
-      <tr className={styles.simpleItem} key={item.rank}>
+      <tr
+        className={styles.simpleItem}
+        key={item.rank}
+        onClick={() => {
+          if (storeLogin.login) {
+            window.location.replace('contest/');
+          } else {
+            window.confirm('로그인 후 이용하세요🎤🎵');
+          }
+        }}
+      >
         <td className={styles.simpleMedal}>
           <Image
             src={item.medal}

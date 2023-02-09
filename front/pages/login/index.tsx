@@ -1,8 +1,13 @@
 import React from 'react';
-import Spinner from '@/components/common/Spinner';
+import { useDispatch } from 'react-redux';
+import { setLogin } from '@/redux/store/loginSlice';
 import { setCookie } from '@/util/cookie';
 
+import Spinner from '@/components/common/Spinner';
+
 function kakao() {
+  const dispatch = useDispatch();
+
   const ACCESS_TOKEN = new URL(window.location.href).searchParams.get(
     'Authorization',
   );
@@ -10,18 +15,13 @@ function kakao() {
     'refreshToken',
   );
 
-  // console.log(ACCESS_TOKEN);
-  // console.log(REFRESH_TOKEN);
-
   // 쿠키 util을 사용해 쿠키에 토큰 저장
-
   if (ACCESS_TOKEN) {
     setCookie('Authorization', ACCESS_TOKEN, {
       path: '/',
       secure: true,
       sameSite: 'none',
     });
-    // localStorage.setItem('accessToken', ACCESS_TOKEN);
   }
   if (REFRESH_TOKEN) {
     setCookie('refreshToken', REFRESH_TOKEN, {
@@ -29,8 +29,14 @@ function kakao() {
       secure: true,
       sameSite: 'none',
     });
-    // localStorage.setItem('refreshToken', REFRESH_TOKEN);
   }
+
+  if (ACCESS_TOKEN && REFRESH_TOKEN) {
+    const login = true;
+    dispatch(setLogin(login));
+  }
+
+  window.location.replace('/');
 
   return <Spinner />;
 }

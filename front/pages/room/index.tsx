@@ -1,14 +1,17 @@
 // Path: '/room'
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
+import { RootState } from '@/redux/store';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
-import Loading from '@/components/room/Loading';
 
+// import PerfectScore from '@/components/room/PerfectScore';
+import Loading from '@/components/room/Loading';
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
@@ -16,21 +19,22 @@ import styles from '@/styles/Room.module.scss';
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
 function Index() {
-  // user name
+  // username
   const myUserName = 'samplename';
 
   // session Info
-  const mySessionId = '22';
+  const mySessionId = '33';
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
   const [screenSession, setScreenSession] = useState<any>(undefined);
 
   // 화면
-  const [publisher, setPublisher] = useState<any>(undefined);
+  const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [screenPublisher, setScreenPublisher] = useState<any>();
-  const [screener, setScreener] = useState<any>(undefined);
+  const [screener, setScreener] = useState<any>([]);
+  const [singer, setSinger] = useState<any[]>([]);
 
   // 초기 상태값
   const [loading, setLoading] = useState(true);
@@ -39,6 +43,12 @@ function Index() {
   // 화면공유 상태값
   const [share, setShare] = useState(false);
   // const [testOnOff, setTest] = useState(false);
+
+  // 테마모드
+  const storeTheme = useSelector((state: RootState) => state.theme);
+  useEffect(() => {
+    document.body.dataset.theme = storeTheme.theme || 'light';
+  }, [storeTheme]);
 
   // api
   async function createSession(sessionId: string | string[] | undefined) {
@@ -55,7 +65,11 @@ function Index() {
   async function createToken(sessionId: string) {
     const response = await axios.post(
       `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
-      {},
+      {
+        kurentoOptions: {
+          allowedFilters: ['GStreamerFilter'],
+        },
+      },
       {
         headers: { 'Content-Type': 'application/json' },
       },
@@ -86,6 +100,121 @@ function Index() {
   //   setTest(!testOnOff);
   // };
 
+  // 오디오 스트림 filterss
+  // const [delay, setDelay] = useState(50000000);
+  // const [intensity, setIntensity] = useState(0.6);
+  // const [feedback, setFeedback] = useState(0.4);
+  // const [amplify, setAmplify] = useState(1.5);
+  // `audioamplify amplification=${amplify} clipping-method=wrap-positive`
+
+  // const delay = 50000000;
+  // const intensity = 0.6;
+  // const feedback = 0.4;
+
+  // const audioFilter = () => [
+  //   publisher.stream
+  //     .applyFilter('GStreamerFilter', {
+  //       command: `audioecho delay=${delay} intensity=${intensity} feedback=${feedback}`,
+  //     })
+  //     .then(() => {
+  //       console.log('Filter activate');
+  //     })
+  //     .catch((error: any) => {
+  //       console.error(error);
+  //     }),
+  // ];
+
+  // const audioFilterOff = () => {
+  //   publisher.stream
+  //     .removeFilter()
+  //     .then(() => {
+  //       console.log('Filter removed');
+  //     })
+  //     .catch((error: any) => {
+  //       console.error(error);
+  //     });
+  // };
+
+  // 다음 singer로 화면 전환
+  // 임시 예약 리스트
+  const reservationList = [
+    {
+      user: 'samplename',
+      title: '가을 아침',
+      singer: '아이유',
+      src: 'sounds/가을아침MR.mp3',
+      time: 226,
+      lyricsList: [],
+    },
+  ];
+
+  const nextSinger = () => {
+    if (reservationList[0].user === myUserName) {
+      session
+        .signal({
+          data: '', // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: 'nextSinger', // The type of message (optional)
+        })
+        .then(() => {
+          console.log(`"${myUserName}"가 싱어, 시그널 성공`);
+        })
+        .catch((error: any) => {
+          console.error('다음 싱어 시그널 에러', error);
+        });
+    }
+  };
+
+  // 예약정보 공유 JSON.stringify(reservationList)
+  const shareReservationList = () => {
+    session
+      .signal({
+        data: JSON.stringify(reservationList), // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'reservationList', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`노래 예약 정보 송신 성공`);
+      })
+      .catch((error: any) => {
+        console.error('노래 예약 정보 송신 실패', error);
+      });
+  };
+
+  // singer 화면 위치 바꾸기
+  const changeSinger = (from: any) => {
+    const nextsinger = from.stream.streamManager;
+    if (singer[0] === nextsinger) {
+      console.log('똑같은 사람이 부름');
+    } else if (nextsinger === publisher[0]) {
+      if (singer[0] !== undefined) {
+        subscribers.push(singer.pop());
+        setSubscribers([...subscribers]);
+      }
+      singer.push(nextsinger);
+      publisher.pop();
+      setSinger([...singer]);
+      setPublisher([...publisher]);
+    } else if (publisher[0] === undefined) {
+      publisher.push(singer.pop());
+      setPublisher([...publisher]);
+      const singerIdx = subscribers.indexOf(nextsinger, 0);
+      if (singerIdx > -1) {
+        singer.push(subscribers.splice(singerIdx, 1)[0]);
+        setSinger([...singer]);
+        setSubscribers([...subscribers]);
+      }
+    } else {
+      const singerIdx = subscribers.indexOf(nextsinger, 0);
+      singer.push(subscribers.splice(singerIdx, 1)[0]);
+      if (singer.length > 1) {
+        subscribers.push(singer.shift());
+      }
+      setSinger([...singer]);
+      setSubscribers([...subscribers]);
+    }
+  };
+
   // 화면 공유 끄기
   const leaveScreen = () => {
     screenSession.unpublish(screenPublisher);
@@ -112,8 +241,9 @@ function Index() {
     setSession(undefined);
     setScreenSession(undefined);
     setScreenPublisher(undefined);
-    setPublisher(undefined);
+    setPublisher([]);
     setSubscribers([]);
+    setSinger([]);
 
     window.close();
   };
@@ -154,6 +284,17 @@ function Index() {
         deleteSubscriber(event.stream.streamManager);
       });
 
+      // 다음 singer
+      mySession.on('signal:nextSinger', (event: any) => {
+        changeSinger(event.from);
+      });
+
+      // 노래 정보 수신
+      mySession.on('signal:reservationList', (event: any) => {
+        const getReserveData = JSON.parse(event.data);
+        console.log(getReserveData);
+      });
+
       // 내 캠 connect
       getToken().then(token => {
         mySession
@@ -173,7 +314,8 @@ function Index() {
             // --- Publish your stream ---
             mySession.publish(newpublisher);
 
-            setPublisher(newpublisher);
+            publisher.push(newpublisher);
+            setPublisher([...publisher]);
             setLoading(false);
             // console.log('done##');
           })
@@ -212,8 +354,8 @@ function Index() {
           frameRate: 30,
         })
         .then(async () => {
+          // audioSource
           const testAudio = new Audio('/sounds/mr.mp3');
-          // const testAudio2 = new Audio('/sounds/mr.mp3');
           const audioContext = new AudioContext();
           const mp3AudioSource =
             audioContext.createMediaElementSource(testAudio);
@@ -221,24 +363,20 @@ function Index() {
             audioContext.createMediaStreamDestination();
           mp3AudioSource.connect(mp3AudioDestination);
           mp3AudioSource.connect(audioContext.destination);
-
           await testAudio.play();
-          // await testAudio2.play();
           const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
 
-          // const test2AudioTrack = testAudio.captureStream().getAudioTracks()[0];
-
+          // videoSource
           const canvas = document.getElementById(
             'screen-screen',
           ) as HTMLCanvasElement | null;
 
           const testVideoTrack = canvas?.captureStream(30).getVideoTracks()[0];
           const newScreenPublisher = screenOV.initPublisher(undefined, {
-            // audioSource: test2AudioTrack,
             audioSource: testAudioTrack,
-            // audioSource: false,
             videoSource: testVideoTrack,
           });
+
           setScreenPublisher(newScreenPublisher);
           screenSession.publish(newScreenPublisher);
         });
@@ -266,22 +404,35 @@ function Index() {
       <RoomHeader leaveRoom={leaveSession} screenShare={screenShare} />
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
-          <MyScreen />
-          {/* <button type="button" onClick={testOn}>
+          {singer.map(person => {
+            return <MyScreen streamManager={person} />;
+          })}
+          <button type="button" onClick={nextSinger}>
             ||
-          </button> */}
+          </button>
+          <button type="button" onClick={shareReservationList}>
+            list
+          </button>
           <div className={styles.singScreen}>
             <MainScreen
-              streamManager={screener}
+              streamManager={screener[0]}
               singMode={mode}
               subscribers={subscribers}
             />
-            {/* {testOnOff ? null : <MainScreen streamManager={screener} />} */}
-            {/* {testOnOff ? <PerfectScore /> : null} */}
+            {/* {testOnOff ? null : (
+              <MainScreen
+                streamManager={screener}
+                singMode={mode}
+                subscribers={subscribers}
+              />
+            )}
+            {testOnOff ? <PerfectScore /> : null} */}
           </div>
         </div>
         <div className={styles.otherScreen}>
-          <MyScreen streamManager={publisher} />
+          {publisher.map(pub => {
+            return <MyScreen streamManager={pub} />;
+          })}
           {subscribers.map(sub => {
             return <MyScreen streamManager={sub} key={sub.stream.streamId} />;
           })}

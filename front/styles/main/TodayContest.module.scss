@@ -53,6 +53,7 @@
           transition: all 1s;
           background: var(--color-today-contest);
           @include truncate;
+          cursor: pointer;
 
           td {
             padding: 20px;
@@ -108,6 +109,7 @@
 
       .simpleRank {
         display: none;
+        cursor: pointer;
 
         @include _768 {
           display: grid;

@@ -4,11 +4,17 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 import styles from '@/styles/room/ReservList.module.scss';
+import { RootState } from '@/redux/store';
 
 function ReservList() {
   const [themeMode, setThemeMode] = useState('light');
-  const [modalOpen, setModalOpen] = useState(false);
+  // 다크모드 관리
+  const storeTheme = useSelector((state: RootState) => state.theme);
+  useEffect(() => {
+    setThemeMode(storeTheme.theme);
+  }, [storeTheme]);
 
+  const [modalOpen, setModalOpen] = useState(false);
   // 예약목록 모달 관리
   const showModal = () => {
     setModalOpen(!modalOpen);
@@ -18,12 +24,6 @@ function ReservList() {
     [styles.modal]: true,
     [styles.modalOpen]: modalOpen,
   });
-
-  // 다크모드 관리
-  const storeTheme = useSelector<any>(state => state.theme);
-  useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
-  }, [themeMode, storeTheme]);
 
   // 다크모드에 따라 아이콘 경로 변경
   const toggleIcon = `img/ssari/${themeMode}/${themeMode}_ssari_toggle_image.svg`;

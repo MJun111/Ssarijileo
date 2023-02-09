@@ -75,7 +75,7 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    fetch('sounds/가을아침 보컬.mp3')
+    fetch('sounds/가을아침MR.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
         const audioContext = new AudioContext();

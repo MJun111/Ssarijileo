@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 
+import { useDispatch } from 'react-redux';
+import { setLike } from '@/redux/store/likeSlice';
+
 import ContestListItem from './ContestListItem';
 import Pagination from '../common/Pagination';
 
@@ -53,6 +56,7 @@ function ContestList() {
   const offset = (page - 1) * limit;
   const postData = filteredVideo.slice(offset, offset + limit);
 
+  const dispatch = useDispatch();
   return (
     <div className={styles.container}>
       <div className={styles.search}>
@@ -68,7 +72,14 @@ function ContestList() {
         </div>
       </div>
       <div className={styles.addBtn}>
-        <button type="button" className={styles.btn}>
+        <button
+          type="button"
+          className={styles.btn}
+          onClick={() => {
+            dispatch(setLike('녹화본'));
+            window.location.replace('like/');
+          }}
+        >
           <Image
             src="img/common/common_write_image.svg"
             width={20}
