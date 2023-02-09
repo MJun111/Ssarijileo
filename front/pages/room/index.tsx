@@ -1,9 +1,9 @@
 // Path: '/room'
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
+import { RootState } from '@/redux/store';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
@@ -44,7 +44,7 @@ function Index() {
   const [share, setShare] = useState(false);
   // const [testOnOff, setTest] = useState(false);
 
-  //테마모드
+  // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
   useEffect(() => {
     document.body.dataset.theme = storeTheme.theme || 'light';

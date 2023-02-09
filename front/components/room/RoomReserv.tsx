@@ -18,13 +18,6 @@ interface SongData {
 }
 
 function RoomReserv({ setModalOpen }: any) {
-  const [themeMode, setThemeMode] = useState('light');
-
-  const storeTheme = useSelector((state: RootState) => state.theme);
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
-
   //  페이지
   const [page, setPage] = useState(1);
   //  노래 목록이 보일 개수
