@@ -47,8 +47,12 @@ function RoomReservItem(props: {
         <div className={albumClassName}>{item.album}</div>
       </div>
       <div className={styles.btnList}>
-        <button className={styles.firstReserv}>우선예약</button>
-        <button className={styles.nomalReserv}>일반예약</button>
+        <button type="button" className={styles.firstReserv}>
+          우선예약
+        </button>
+        <button type="button" className={styles.nomalReserv}>
+          일반예약
+        </button>
       </div>
     </div>
   );

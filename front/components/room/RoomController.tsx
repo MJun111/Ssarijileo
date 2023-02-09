@@ -62,23 +62,23 @@ function RoomController({ setModalOpen }: any) {
         </div>
         <div className={styles.musicNote}>
           <Image
-            src="img/ssari/ssari_music_note_image.svg"
+            src="img/ssari/ssari_camera_image.svg"
             width={72}
             height={72}
-            alt="musicNote"
+            alt="camera"
             className={styles.icon}
           />
-          <div className={styles.context}>악보 표출</div>
+          <div className={styles.context}>카메라 ON/OFF</div>
         </div>
         <div className={styles.jump}>
           <Image
-            src="img/ssari/ssari_jump_image.svg"
+            src="img/ssari/ssari_mic_image.svg"
             width={72}
             height={72}
-            alt="jump"
+            alt="mic"
             className={styles.icon}
           />
-          <div className={styles.context}>간주점프</div>
+          <div className={styles.context}>마이크 ON/OFF</div>
         </div>
         <Image
           src="img/ssari/ssari_setting_image.svg"
