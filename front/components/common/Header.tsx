@@ -190,6 +190,7 @@ function Header() {
               onClick={() => {
                 setNowLogin(false);
                 dispatch(setLogin(false));
+                window.location.replace('/');
               }}
             />
             <Link href="profile/" key="profile">

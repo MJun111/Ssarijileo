@@ -1,15 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setEcho } from '@/redux/store/echoSlice';
+import { RootState } from '@/redux/store';
 
 import styles from '@/styles/common/ControlBar.module.scss';
 
 function EchoControlBar() {
-  const [volume, setVolume] = useState(0.5);
-  const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVolume(Number(e.target.value));
+  const [echo, setState] = useState(0.5);
+  const dispatch = useDispatch();
+  const storeEcho = useSelector((state: RootState) => state.echo);
+
+  useEffect(() => {
+    setState(storeEcho.echo);
+  }, [storeEcho]);
+
+  const changeEcho = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setState(Number(e.target.value));
+    dispatch(setEcho(Number(e.target.value)));
     e.target.style.background = `linear-gradient(to right, #00AADF 0%, #00AADF ${Math.round(
-      volume * 100,
+      echo * 100,
     )}%, rgb(236, 236, 236) ${Math.round(
-      volume * 100,
+      echo * 100,
     )}%, rgb(236, 236, 236) 100%)`;
   };
   return (
@@ -20,11 +32,11 @@ function EchoControlBar() {
         min={0}
         max={1}
         step={0.01}
-        value={volume}
-        onChange={changeVolume}
+        value={echo}
+        onChange={changeEcho}
         className={styles.echoBar}
       />
-      <div className={styles.number}>{Math.round(volume * 100)}%</div>
+      <div className={styles.number}>{Math.round(echo * 100)}%</div>
     </div>
   );
 }
