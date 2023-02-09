@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
 
 import styles from '@/styles/room/RoomReserv.module.scss';
-import { RootState } from '@/redux/store';
 
 interface SongData {
   songId: number;
@@ -17,7 +15,10 @@ interface SongData {
   // releaseDate: string;
 }
 
-function RoomReserv({ setModalOpen }: any) {
+function RoomReserv(props: {
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { setModalOpen } = props;
   //  페이지
   const [page, setPage] = useState(1);
   //  노래 목록이 보일 개수
