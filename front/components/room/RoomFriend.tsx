@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import * as hangul from 'hangul-js';
+
 import styles from '@/styles/room/RoomFriend.module.scss';
 
 function RoomFriend({ setModalOpen }: any) {
@@ -29,18 +31,22 @@ function RoomFriend({ setModalOpen }: any) {
       name: 'syg9272',
     },
   ];
-  const [friendList, setState] = useState(friend);
+  const [allFriendList] = useState(friend);
+  const [friendList, setFriendList] = useState(friend);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const eventTarget = e.target as HTMLInputElement;
-    const arr: any[] = [];
-    friend.forEach((item, idx) => {
-      if (item.name.includes(eventTarget.value)) {
-        arr.push(friend[idx]);
-      }
+    if (e.target.value === '') {
+      setFriendList(allFriendList);
+      return;
+    }
+    const userInput = hangul.disassemble(e.target.value).join('');
+    const searchData = allFriendList.filter(item => {
+      return (
+        hangul.search(item.name, userInput) !== -1 ||
+        item.name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
     });
-
-    setState(arr);
+    setFriendList(searchData);
   };
 
   const listItems = friendList.map(item => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import * as hangul from 'hangul-js';
 
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -8,7 +9,7 @@ import type { OptionItem, RoomInfo } from '@/components/sing/RoomList';
 
 import styles from '@/styles/common/Search.module.scss';
 
-function Search(props: {
+function RoomSearch(props: {
   optionItem: OptionItem[];
   rooms: RoomInfo[];
   setFilteredRoom: React.Dispatch<React.SetStateAction<RoomInfo[]>>;
@@ -36,8 +37,10 @@ function Search(props: {
         : rooms;
     const filteredData =
       searchText !== ''
-        ? sortedData.filter(room =>
-            room.title.toLowerCase().includes(searchText.toLowerCase()),
+        ? sortedData.filter(
+            room =>
+              hangul.search(room.title, searchText) !== -1 ||
+              room.title.toLowerCase().includes(searchText.toLowerCase()),
           )
         : sortedData;
     setFilteredRoom(filteredData);
@@ -45,12 +48,15 @@ function Search(props: {
 
   const changeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
+
     const sortedData =
       sortType !== 'Default'
         ? rooms.filter(room => room.type === sortType)
         : rooms;
-    const filteredData = sortedData.filter(room =>
-      room.title.toLowerCase().includes(e.target.value.toLowerCase()),
+    const filteredData = sortedData.filter(
+      room =>
+        hangul.search(room.title, searchText) !== -1 ||
+        room.title.toLowerCase().includes(searchText.toLowerCase()),
     );
     setFilteredRoom(filteredData);
   };
@@ -99,4 +105,4 @@ function Search(props: {
   );
 }
 
-export default Search;
+export default RoomSearch;

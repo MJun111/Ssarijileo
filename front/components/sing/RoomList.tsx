@@ -4,7 +4,7 @@ import Image from 'next/image';
 import axios from 'axios';
 
 import RoomModal from './RoomModal';
-import Search from '@/components/sing/Search';
+import RoomSearch from '@/components/sing/RoomSearch';
 import RoomListItem from '@/components/sing/RoomListItem';
 import Pagination from '@/components/common/Pagination';
 
@@ -88,7 +88,7 @@ function RoomList() {
     <div className={styles.container}>
       {modalOpen && <RoomModal setModalOpen={setModalOpen} />}
       <div className={styles.search}>
-        <Search
+        <RoomSearch
           optionItem={sortType}
           rooms={rooms}
           setFilteredRoom={setFilteredRoom}

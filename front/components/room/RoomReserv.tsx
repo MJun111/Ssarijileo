@@ -3,6 +3,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
+import * as hangul from 'hangul-js';
 
 import styles from '@/styles/room/RoomReserv.module.scss';
 
@@ -27,28 +28,117 @@ function RoomReserv(props: {
   const [allMusicList, setAllMusicList] = useState<SongData[]>([]);
   const [musicList, setMusicList] = useState<SongData[]>([]);
 
+  const Dummy_data = [
+    {
+      songId: 1,
+      title: 'Ditto',
+      singer: 'NewJeans',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 2,
+      title: '사건의 지평선',
+      singer: '윤하',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 3,
+      title: 'Hype boy',
+      singer: 'NewJeans',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 4,
+      title: 'OMG',
+      singer: 'NewJeans',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 5,
+      title: 'After LIKE',
+      singer: 'IVE(아이브)',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 6,
+      title: 'ANTIFRAGILE',
+      singer: 'LE SSERAFIM (르세라핌)',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 7,
+      title: 'Attention',
+      singer: 'NewJeans',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 8,
+      title: 'LOVE DIVE',
+      singer: 'IVE(아이브)',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 9,
+      title: 'Nxde',
+      singer: '여자(아이들)',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+    {
+      songId: 10,
+      title: 'NOT SORRY (Feat. pH-1) (Prod. by Slom)333333333333333',
+      singer: '이영지',
+      album: 'NewJeans ‘OMG’',
+      image: '',
+    },
+  ];
+
   useEffect(() => {
     axios.get('api/v1/song').then(res => {
-      setAllMusicList(res.data);
-      setMusicList(res.data);
+      setAllMusicList(Dummy_data);
+      setMusicList(Dummy_data);
     });
   }, []);
 
   const offset = (page - 1) * limit;
 
-  const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const eventTarget = e.target as HTMLInputElement;
-    const arr: SongData[] = [];
-    console.log(musicList);
-    allMusicList.forEach((item, idx) => {
-      if (
-        item.title.includes(eventTarget.value) ||
-        item.singer.includes(eventTarget.value)
-      ) {
-        arr.push(allMusicList[idx]);
-      }
+  const searchMusic = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === '') {
+      setMusicList(allMusicList);
+      return;
+    }
+    const userInput = hangul.disassemble(e.target.value).join('');
+    const searchData = allMusicList.filter(item => {
+      const title = hangul.disassemble(item.title, true);
+      const singer = hangul.disassemble(item.singer, true);
+      const titleInitial = title
+        .map((item: string[]) => {
+          return item[0];
+        })
+        .join('');
+      const singerInitial = singer
+        .map((item: string[]) => {
+          return item[0];
+        })
+        .join('');
+      return (
+        hangul.search(item.title, userInput) !== -1 ||
+        hangul.search(item.singer, userInput) !== -1 ||
+        titleInitial.startsWith(userInput) ||
+        singerInitial.startsWith(userInput) ||
+        item.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.singer.toLowerCase().includes(e.target.value.toLowerCase())
+      );
     });
-    setMusicList(arr);
+    setMusicList(searchData);
   };
 
   const postData = musicList.slice(offset, offset + limit);
@@ -82,7 +172,7 @@ function RoomReserv(props: {
               className={styles.input}
               type="text"
               placeholder="검색어를 입력하세요..."
-              onChange={searchFriend}
+              onChange={searchMusic}
             />
             <Image
               src="img/common/light/light_common_find_image.svg"
@@ -114,19 +204,5 @@ function RoomReserv(props: {
     </div>
   );
 }
-
-// export async function getStaticProps() {
-//   try {
-//     const response = await axios.get<SongData>('api/v1/song');
-//     const data = response.data;
-//     return {
-//       props: {
-//         songGetgata: data,
-//       },
-//     };
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
 
 export default RoomReserv;
