@@ -7,17 +7,17 @@ import { RootState } from '@/redux/store';
 import styles from '@/styles/common/ControlBar.module.scss';
 
 function MicControlBar() {
-  const [volume, setState] = useState(1);
+  const [volume, setState] = useState(0.5);
   const dispatch = useDispatch();
   const storeVolume = useSelector((state: RootState) => state.volume);
   useEffect(() => {
-    setState(storeVolume.volume);
+    setState(storeVolume.volume / 2);
   }, [storeVolume]);
 
   const changeVolume = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setState(Number(e.target.value));
-      dispatch(setVolume(Number(e.target.value)));
+      dispatch(setVolume(Number(e.target.value) * 2));
       e.target.style.background = `
       linear-gradient(to right, #FFE283 0%, #FFE283 ${Math.round(
         volume * 100,
