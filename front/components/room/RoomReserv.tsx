@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
+import * as hangul from 'hangul-js';
+
 import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
-import * as hangul from 'hangul-js';
 
 import styles from '@/styles/room/RoomReserv.module.scss';
 
@@ -28,7 +29,7 @@ function RoomReserv(props: {
   const [allMusicList, setAllMusicList] = useState<SongData[]>([]);
   const [musicList, setMusicList] = useState<SongData[]>([]);
 
-  const Dummy_data = [
+  const dummyData = [
     {
       songId: 1,
       title: 'Ditto',
@@ -103,8 +104,9 @@ function RoomReserv(props: {
 
   useEffect(() => {
     axios.get('api/v1/song').then(res => {
-      setAllMusicList(Dummy_data);
-      setMusicList(Dummy_data);
+      console.log(res.data);
+      setAllMusicList(dummyData);
+      setMusicList(dummyData);
     });
   }, []);
 
@@ -120,13 +122,13 @@ function RoomReserv(props: {
       const title = hangul.disassemble(item.title, true);
       const singer = hangul.disassemble(item.singer, true);
       const titleInitial = title
-        .map((item: string[]) => {
-          return item[0];
+        .map((t: string[]) => {
+          return t[0];
         })
         .join('');
       const singerInitial = singer
-        .map((item: string[]) => {
-          return item[0];
+        .map((t: string[]) => {
+          return t[0];
         })
         .join('');
       return (

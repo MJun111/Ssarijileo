@@ -33,7 +33,6 @@ function ContestSearch(props: {
   const changeMode = (e: React.MouseEvent<HTMLElement>) => {
     const eventTarget = e.target as HTMLElement;
     setSelectType(eventTarget.innerText);
-    console.log(eventTarget.innerText);
     const filteredData =
       searchText !== ''
         ? videos.filter(
