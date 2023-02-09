@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import * as hangul from 'hangul-js';
+import { useDrag } from 'react-use-gesture';
+import { useSpring, animated } from 'react-spring';
 
 import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
@@ -21,6 +23,7 @@ function RoomReserv(props: {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { setModalOpen } = props;
+
   //  페이지
   const [page, setPage] = useState(1);
   //  노래 목록이 보일 개수
@@ -145,16 +148,35 @@ function RoomReserv(props: {
 
   const postData = musicList.slice(offset, offset + limit);
 
+  const resevBox = useSpring({ x: 0, y: 0 });
+
+  const moveReservBox = useDrag(params => {
+    const { movement } = params;
+    if (movement[0] <= 0 || movement[1] <= 0) {
+      return;
+    }
+    console.log(movement);
+    resevBox.x.set(movement[0] - 50);
+    resevBox.y.set(movement[1] - 50);
+  });
+
   return (
     <div className={styles.layout}>
       <input
         type="button"
         className={styles.back}
-        onClick={() => {
-          setModalOpen(false);
-        }}
+        // onClick={() => {
+        //   setModalOpen(false);
+        // }}
       />
-      <div className={styles.container}>
+      <animated.div
+        {...moveReservBox()}
+        style={{
+          x: resevBox.x,
+          y: resevBox.y,
+        }}
+        className={styles.container}
+      >
         <div className={styles.title}>
           <div>노래 검색</div>
           <Image
@@ -202,7 +224,7 @@ function RoomReserv(props: {
             setPage={setPage}
           />
         </div>
-      </div>
+      </animated.div>
     </div>
   );
 }
