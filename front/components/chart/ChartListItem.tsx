@@ -3,18 +3,22 @@ import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import classNames from 'classnames';
 import styles from '@/styles/chart/ChartListItem.module.scss';
+import { RootState } from '@/redux/store';
 
 function ChartListItem(props: {
   item: { rank: number; title: string; singer: string; album: string };
 }) {
   // 다크모드 상태관리
   const [themeMode, setThemeMode] = useState('light');
-
-  const storeTheme = useSelector<any>(state => state.theme);
-  useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
-  }, [themeMode, storeTheme]);
   const [likeMode, setLikeMode] = useState(false);
+
+  const storeTheme = useSelector((state: RootState) => state.theme);
+
+  useEffect(() => {
+    const theme = storeTheme.theme || 'light';
+    setThemeMode(theme);
+  }, [storeTheme]);
+
   const heartIcon = likeMode
     ? `img/chart/${themeMode}/${themeMode}_like_image.svg`
     : `img/chart/${themeMode}/${themeMode}_chart_unlike_image.svg`;
