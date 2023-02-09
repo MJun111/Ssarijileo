@@ -85,7 +85,7 @@ function ContestTop() {
         },
         life: 30,
         size: 10,
-        delta: 0.5,
+        delta: 0.3,
       };
       noteWindow.push(note);
       dir += 1;
