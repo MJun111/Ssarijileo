@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import classnames from 'classnames';
-import styles from '@/styles/like/Like.module.scss';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setLike } from '@/redux/store/likeSlice';
 import { RootState } from '@/redux/store';
 
+import classnames from 'classnames';
+import styles from '@/styles/like/Like.module.scss';
 import Music from '@/components/like/Music';
 import Video from '@/components/like/Video';
 import SoundBar from '@/components/common/SoundBar';
