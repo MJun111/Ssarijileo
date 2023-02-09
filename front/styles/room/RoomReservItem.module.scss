@@ -2,6 +2,7 @@
 @import '../mixin';
 
 .container {
+  position: relative;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -78,6 +79,43 @@
       width: 100%;
     }
   }
+
+  .btnList {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 240px;
+
+    .firstReserv {
+      width: 80px;
+      height: 23px;
+      border: 1px solid var(--color-btn);
+      border-radius: 6px;
+      background: var(--color-background);
+      color: var(--color-btn);
+      font-weight: bold;
+      font-size: 12px;
+      margin: 0 20px;
+      cursor: pointer;
+    }
+    .nomalReserv {
+      width: 80px;
+      height: 23px;
+      border: 1px solid var(--color-btn);
+      border-radius: 6px;
+      background: var(--color-btn);
+      color: var(--color-background);
+      font-weight: bold;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .firstReserv:hover,
+    .nomalReserv:hover {
+      background: var(--color-hover);
+      border: 1px solid var(--color-hover);
+      color: var(--color-background);
+    }
+  }
 }
 .container:hover {
   background: linear-gradient(
@@ -89,6 +127,9 @@
 }
 .container:hover .isLong {
   animation: textLoop 10s linear infinite;
+}
+.container:hover .btnList {
+  display: block;
 }
 @keyframes textLoop {
   0% {
