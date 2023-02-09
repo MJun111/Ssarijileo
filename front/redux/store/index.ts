@@ -32,8 +32,6 @@ const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ serializableCheck: false }),
 });
-console.log(store.getState());
-console.log('!!!!');
 
 export default store;
 
