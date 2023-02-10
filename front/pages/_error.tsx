@@ -1,9 +1,9 @@
 import styles from '@/styles/error/Error.module.scss';
 
-function ErrorComp() {
+function Error() {
   return (
     <div className={styles.container}>
-      <div className={styles.title}>404</div>
+      <div className={styles.title}>ERROR</div>
       <div className={styles.sub}>Oops! Look likes something going wrong</div>
       <div className={styles.context}>
         Page Cannot be found! we’ll have it figured out in no time. <br />
@@ -16,4 +16,4 @@ function ErrorComp() {
   );
 }
 
-export default ErrorComp;
+export default Error;

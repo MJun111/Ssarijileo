@@ -48,15 +48,18 @@ function RoomSearch(props: {
 
   const changeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-
     const sortedData =
       sortType !== 'Default'
         ? rooms.filter(room => room.type === sortType)
         : rooms;
+    if (e.target.value === '') {
+      setFilteredRoom(sortedData);
+      return;
+    }
     const filteredData = sortedData.filter(
       room =>
-        hangul.search(room.title, searchText) !== -1 ||
-        room.title.toLowerCase().includes(searchText.toLowerCase()),
+        hangul.search(room.title, e.target.value) !== -1 ||
+        room.title.toLowerCase().includes(e.target.value.toLowerCase()),
     );
     setFilteredRoom(filteredData);
   };

@@ -1,12 +1,30 @@
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Image from 'next/image';
-import { videoInfo } from './ContestList';
+import { VideoInfo } from './ContestList';
 import styles from '@/styles/contest/ContestListItem.module.scss';
+import { RootState } from '@/redux/store';
 
 type VideoProps = {
-  info: videoInfo;
+  info: VideoInfo;
 };
 
 function ContestListItem({ info }: VideoProps) {
+  const [themeMode, setThemeMode] = useState('light');
+  const [likeMode, setLikeMode] = useState(false);
+
+  const storeTheme = useSelector((state: RootState) => state.theme);
+
+  useEffect(() => {
+    const theme = storeTheme.theme || 'light';
+    setThemeMode(theme);
+  }, [storeTheme]);
+
+  const heartIcon = likeMode
+    ? `img/chart/${themeMode}/${themeMode}_like_image.svg`
+    : `img/chart/${themeMode}/${themeMode}_chart_unlike_image.svg`;
+  // 요청 받아서
+
   // key 필요하면 받아놓기
   const { url, name, title, singer, like } = info;
   const myName = 'zㅣ존예지';
@@ -21,7 +39,7 @@ function ContestListItem({ info }: VideoProps) {
           controlsList="nodownload"
           controls
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
         <div className={styles.info}>
           <div className={styles.top}>
@@ -55,11 +73,15 @@ function ContestListItem({ info }: VideoProps) {
             </div>
             {name !== myName && (
               <Image
-                src="img/chart/light/light_chart_like_image.svg"
+                src={heartIcon}
                 width={24}
                 height={24}
                 alt="like"
                 className={styles.likeIcon}
+                // 좋아요 버튼 클릭 시
+                onClick={() => {
+                  setLikeMode(!likeMode);
+                }}
               />
             )}
             {name === myName && (

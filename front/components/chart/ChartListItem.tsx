@@ -1,9 +1,29 @@
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import Image from 'next/image';
 import classNames from 'classnames';
 import styles from '@/styles/chart/ChartListItem.module.scss';
+import { RootState } from '@/redux/store';
 
 function ChartListItem(props: {
   item: { rank: number; title: string; singer: string; album: string };
 }) {
+  // 다크모드 상태관리
+  const [themeMode, setThemeMode] = useState('light');
+  const [likeMode, setLikeMode] = useState(false);
+
+  const storeTheme = useSelector((state: RootState) => state.theme);
+
+  useEffect(() => {
+    const theme = storeTheme.theme || 'light';
+    setThemeMode(theme);
+  }, [storeTheme]);
+
+  const heartIcon = likeMode
+    ? `img/chart/${themeMode}/${themeMode}_like_image.svg`
+    : `img/chart/${themeMode}/${themeMode}_chart_unlike_image.svg`;
+  // 요청 받아서
+
   const { item } = props;
   const titleClassName = classNames({
     [styles.title]: true,
@@ -30,6 +50,17 @@ function ChartListItem(props: {
       <div className={styles.albumCover}>
         <div className={albumClassName}>{item.album}</div>
       </div>
+      <Image
+        src={heartIcon}
+        width={20}
+        height={20}
+        alt="like"
+        className={styles.like}
+        // 좋아요 버튼 클릭 시
+        onClick={() => {
+          setLikeMode(!likeMode);
+        }}
+      />
     </div>
   );
 }

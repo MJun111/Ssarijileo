@@ -28,7 +28,7 @@
     .loadContext {
       font-size: 20px;
       text-align: center;
-      color: $placeholder;
+      color: var(--color-placeHolder);
     }
   }
 }

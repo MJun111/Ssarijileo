@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import styles from '@/styles/chart/ChartList.module.scss';
 import ChartListItem from './ChartListItem';
 import Pagination from '@/components/common/Pagination';
 
 function ChartList() {
-  // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
-  const [themeMode, setThemeMode] = useState('light');
-
-  const storeTheme = useSelector<any>(state => state.theme);
-  useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
-  }, [themeMode, storeTheme]);
-  const heartIcon = `img/chart/${themeMode}/${themeMode}_chart_like_image.svg`;
-
   //  페이지
   const [page, setPage] = useState(1);
   //  노래 목록이 보일 개수
@@ -212,17 +201,6 @@ function ChartList() {
           return (
             <div className={styles.item} key={item.rank}>
               <ChartListItem item={item} />
-              <Image
-                src={heartIcon}
-                width={20}
-                height={20}
-                alt="like"
-                className={styles.like}
-                // 좋아요 버튼 클릭 시
-                // onClick={() => {
-                //   changeLike(item.pk);
-                // }}
-              />
             </div>
           );
         })}
