@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
 
