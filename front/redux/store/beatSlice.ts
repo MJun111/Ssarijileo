@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  beat: 1,
+  beat: 0.5,
 };
 
 const beatSlice = createSlice({

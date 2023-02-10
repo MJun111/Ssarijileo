@@ -53,9 +53,16 @@ function LoginModal({ setModalOpen }: any) {
           <button
             type="button"
             className={styles.closeBtn}
-            onClick={closeModal}
+            onClick={loginFormWithKakao}
           >
-            닫기
+            <Image
+              src="img/login/login_kakao_icon_image.svg"
+              width={20}
+              height={20}
+              alt="kakao"
+              className={styles.icon}
+            />
+            카카오 계정으로 로그인
           </button>
         </div>
       </div>
