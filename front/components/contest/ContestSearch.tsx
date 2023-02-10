@@ -13,8 +13,11 @@ function ContestSearch(props: {
   optionItem: OptionItem[];
   videos: VideoInfo[];
   setFilteredVideo: React.Dispatch<React.SetStateAction<VideoInfo[]>>;
+  selectType: string;
+  setSelectType: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const { optionItem, videos, setFilteredVideo } = props;
+  const { optionItem, videos, setFilteredVideo, selectType, setSelectType } =
+    props;
   // 다크모드 상태 관리
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -25,12 +28,11 @@ function ContestSearch(props: {
 
   const toggle = `img/common/${themeMode}/${themeMode}_toggle_open_image.svg`;
 
-  const [sortType, setSortType] = useState('Default');
   const [searchText, setSearchText] = useState('');
 
   const changeMode = (e: React.MouseEvent<HTMLElement>) => {
     const eventTarget = e.target as HTMLElement;
-    setSortType(eventTarget.innerText);
+    setSelectType(eventTarget.innerText);
     const filteredData =
       searchText !== ''
         ? videos.filter(
@@ -41,7 +43,7 @@ function ContestSearch(props: {
         : videos;
     if (eventTarget.innerText === 'Like') {
       filteredData.sort((a, b) => {
-        return a.like - b.like;
+        return b.like - a.like;
       });
     }
     setFilteredVideo(filteredData);
@@ -50,20 +52,16 @@ function ContestSearch(props: {
   const changeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
     const filteredData =
-      searchText !== ''
+      e.target.value !== ''
         ? videos.filter(
             video =>
-              hangul.search(video.title, searchText) !== -1 ||
-              video.title.toLowerCase().includes(searchText.toLowerCase()),
+              hangul.search(video.title, e.target.value) !== -1 ||
+              video.title.toLowerCase().includes(e.target.value.toLowerCase()),
           )
         : videos;
-    if (e.target.value === '') {
-      setFilteredVideo(filteredData);
-      return;
-    }
-    if (sortType === 'like') {
+    if (selectType === 'Like') {
       filteredData.sort((a, b) => {
-        return a.like - b.like;
+        return b.like - a.like;
       });
     }
     setFilteredVideo(filteredData);
@@ -86,7 +84,7 @@ function ContestSearch(props: {
         <div className={styles.sort}>
           <div className={styles.context}>Sort By : </div>
           <div className={styles.select}>
-            <div className={styles.type}>{sortType}</div>
+            <div className={styles.type}>{selectType}</div>
             <Image src={toggle} width={15} height={15} alt="toggle" />
           </div>
           <div className={styles.option}>{optionList}</div>
