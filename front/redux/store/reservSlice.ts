@@ -1,7 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+interface Reserv {
+  nickname: string;
+  songId: number;
+  isPriority: string;
+  title: string;
+  singer: string;
+}
+
 const initialState = {
-  reserv: [] as any,
+  reserv: [] as Reserv[],
 };
 
 const reservSlice = createSlice({
@@ -9,18 +17,21 @@ const reservSlice = createSlice({
   initialState,
   reducers: {
     addFirstReserv(state, action) {
-      state.reserv.unShift(action.payload);
+      state.reserv.unshift(action.payload);
+    },
+    addSecondReserv(state, action) {
+      state.reserv.splice(1, 0, action.payload);
     },
     addNomalReserv(state, action) {
       state.reserv.push(action.payload);
     },
     deleteReserv(state, action) {
-      state.reserv.splict(action.payload, 1);
+      state.reserv.splice(action.payload, 1);
     },
   },
 });
 
-export const { addFirstReserv, addNomalReserv, deleteReserv } =
+export const { addFirstReserv, addSecondReserv, addNomalReserv, deleteReserv } =
   reservSlice.actions;
 
 export default reservSlice;

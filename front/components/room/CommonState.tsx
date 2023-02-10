@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 import Image from 'next/image';
 import styles from '@/styles/room/CommonState.module.scss';
+import { setSsari } from '@/redux/store/ssariSlice';
 
-function CommonState(props: { title: any; setState: any; state: number }) {
-  const { title, setState, state } = props;
+function CommonState({ title }: any) {
   const [time, setTime] = useState(0);
+
+  // 저장되어있는 상태값 불러오기
+  const [state, setState] = useState(0);
+  const storeSsari = useSelector((state: RootState) => state.ssari);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setState(storeSsari.ssari);
+  }, [storeSsari]);
 
   const nextSong = [
     {
@@ -17,7 +28,7 @@ function CommonState(props: { title: any; setState: any; state: number }) {
       setTime(prev => {
         if (prev === 600) {
           if (state === 2) {
-            setState(3);
+            dispatch(setSsari(3));
           } else {
             window.close();
           }
@@ -43,7 +54,7 @@ function CommonState(props: { title: any; setState: any; state: number }) {
                   alt="video"
                   className={styles.icon}
                   onClick={() => {
-                    setState(3);
+                    dispatch(setSsari(3));
                   }}
                 />
               </div>
@@ -60,7 +71,7 @@ function CommonState(props: { title: any; setState: any; state: number }) {
                   alt="play"
                   className={styles.icon}
                   onClick={() => {
-                    setState(3);
+                    dispatch(setSsari(3));
                   }}
                 />
               </div>

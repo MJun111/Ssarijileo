@@ -121,19 +121,17 @@
         }
       }
 
-      .out {
+      .listOut {
         width: 460px;
         @include truncate;
 
         .listItem {
           width: 460px;
-          display: grid;
           display: flex;
           flex-direction: row;
           animation: textLoop 30s linear infinite;
 
           .item {
-            width: 130px;
             margin: 0 15px;
             font-size: 12px;
             color: $dark;

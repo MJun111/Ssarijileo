@@ -18,9 +18,21 @@ import styles from '@/styles/Room.module.scss';
 
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
+interface Reserv {
+  nickname: string;
+  songId: number;
+  isPriority: string;
+  title: string;
+  singer: string;
+}
+
 function Index() {
   // username
-  const myUserName = 'samplename';
+  const [myUserName, setMyUserName] = useState('');
+  const storeUser = useSelector((state: RootState) => state.user);
+  useEffect(() => {
+    setMyUserName(storeUser.nickname);
+  }, [storeUser]);
 
   // session Info
   const mySessionId = '123';
@@ -136,19 +148,24 @@ function Index() {
 
   // 다음 singer로 화면 전환
   // 임시 예약 리스트
-  const reservationList = [
-    {
-      user: 'samplename',
-      title: '가을 아침',
-      singer: '아이유',
-      src: 'sounds/가을아침MR.mp3',
-      time: 226,
-      lyricsList: [],
-    },
-  ];
+  const [reservationList, setReservationList] = useState<Reserv[]>([]);
+  const storeReservList = useSelector((state: RootState) => state.reserv);
+  useEffect(() => {
+    setReservationList(storeReservList.reserv);
+  }, [storeReservList]);
+  // const reservationList = [
+  //   {
+  //     user: 'samplename',
+  //     title: '가을 아침',
+  //     singer: '아이유',
+  //     src: 'sounds/가을아침MR.mp3',
+  //     time: 226,
+  //     lyricsList: [],
+  //   },
+  // ];
 
   const nextSinger = () => {
-    if (reservationList[0].user === myUserName) {
+    if (reservationList[0].nickname === myUserName) {
       session
         .signal({
           data: '', // Any string (optional)
