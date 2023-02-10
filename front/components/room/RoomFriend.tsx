@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import * as hangul from 'hangul-js';
 
+import { useSpring, animated } from 'react-spring';
+import { useDrag } from '@use-gesture/react';
+
 import styles from '@/styles/room/RoomFriend.module.scss';
 
 function RoomFriend({ setModalOpen }: any) {
@@ -68,6 +71,15 @@ function RoomFriend({ setModalOpen }: any) {
       </div>
     );
   });
+
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
+
+  const bind = useDrag(
+    ({ down, offset: [ox, oy] }) =>
+      api.start({ x: ox, y: oy, immediate: down }),
+    { bounds: { bottom: 0, top: -180, right: 1063, left: -22 } },
+  );
+
   return (
     <div className={styles.layout}>
       <input
@@ -77,7 +89,14 @@ function RoomFriend({ setModalOpen }: any) {
           setModalOpen(false);
         }}
       />
-      <div className={styles.container}>
+      <animated.div
+        {...bind()}
+        style={{
+          x,
+          y,
+        }}
+        className={styles.container}
+      >
         <div className={styles.top}>
           <div>친구 목록</div>
           <Image
@@ -109,7 +128,7 @@ function RoomFriend({ setModalOpen }: any) {
           </div>
           <div className={styles.friendList}>{listItems}</div>
         </div>
-      </div>
+      </animated.div>
     </div>
   );
 }
