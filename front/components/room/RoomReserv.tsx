@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import * as hangul from 'hangul-js';
-import { useDrag } from 'react-use-gesture';
+import { useDrag } from '@use-gesture/react';
 import { useSpring, animated } from 'react-spring';
 
 import RoomReservItem from '@/components/room/RoomReservItem';
@@ -148,32 +148,28 @@ function RoomReserv(props: {
 
   const postData = musicList.slice(offset, offset + limit);
 
-  const resevBox = useSpring({ x: 0, y: 0 });
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
 
-  const moveReservBox = useDrag(params => {
-    const { movement } = params;
-    if (movement[0] <= 0 || movement[1] <= 0) {
-      return;
-    }
-    console.log(movement);
-    resevBox.x.set(movement[0] - 50);
-    resevBox.y.set(movement[1] - 50);
-  });
+  const bind = useDrag(
+    ({ down, offset: [ox, oy] }) =>
+      api.start({ x: ox, y: oy, immediate: down }),
+    { bounds: { left: -127, bottom: 0, top: -80, right: 597 } },
+  );
 
   return (
     <div className={styles.layout}>
       <input
         type="button"
         className={styles.back}
-        // onClick={() => {
-        //   setModalOpen(false);
-        // }}
+        onClick={() => {
+          setModalOpen(false);
+        }}
       />
       <animated.div
-        {...moveReservBox()}
+        {...bind()}
         style={{
-          x: resevBox.x,
-          y: resevBox.y,
+          x,
+          y,
         }}
         className={styles.container}
       >
