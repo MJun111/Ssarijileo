@@ -23,7 +23,7 @@ function Index() {
   const myUserName = 'samplename';
 
   // session Info
-  const mySessionId = '33';
+  const mySessionId = '123';
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
@@ -33,7 +33,6 @@ function Index() {
   const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [screenPublisher, setScreenPublisher] = useState<any>();
-  const [screener, setScreener] = useState<any>([]);
   const [singer, setSinger] = useState<any[]>([]);
 
   // 초기 상태값
@@ -270,11 +269,10 @@ function Index() {
           setSubscribers([...newsubscribers]);
 
           // 화면공유
-        } else if (event.stream.typeOfVideo === 'CUSTOM') {
-          const subscreen = myScreen.subscribe(event.stream, undefined);
-          // console.log('커스텀 이벤트', event);
-          setShare(true);
-          setScreener(subscreen);
+          // } else if (event.stream.typeOfVideo === 'CUSTOM') {
+          //   const subscreen = myScreen.subscribe(event.stream, undefined);
+          //   // console.log('커스텀 이벤트', event);
+          //   setShare(true);
         }
       });
 
@@ -415,9 +413,10 @@ function Index() {
           </button>
           <div className={styles.singScreen}>
             <MainScreen
-              streamManager={screener[0]}
               singMode={mode}
               subscribers={subscribers}
+              screenOV={screenOV}
+              screenSession={screenSession}
             />
             {/* {testOnOff ? null : (
               <MainScreen
