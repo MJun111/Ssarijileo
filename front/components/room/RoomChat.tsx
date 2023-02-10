@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
+
+import { useSpring, animated } from 'react-spring';
+import { useDrag } from '@use-gesture/react';
+
 import styles from '@/styles/room/RoomChat.module.scss';
 
 function RoomChat({ setModalOpen, sendChat, chatList }: any) {
@@ -36,6 +40,7 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
       [styles.myChat]: myName === item.name,
       [styles.otherChat]: myName !== item.name,
     });
+
     return (
       <div className={chatClass}>
         <div className={styles.profileInfo}>
@@ -55,6 +60,14 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
     );
   });
 
+  const [{ x, y }, api] = useSpring(() => ({ x: 0, y: 0 }));
+
+  const bind = useDrag(
+    ({ down, offset: [ox, oy] }) =>
+      api.start({ x: ox, y: oy, immediate: down }),
+    { bounds: { bottom: 0, top: -120, right: 20, left: -1115 } },
+  );
+
   return (
     <div className={styles.layout}>
       <input
@@ -64,7 +77,14 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
           setModalOpen(false);
         }}
       />
-      <div className={styles.container}>
+      <animated.div
+        {...bind()}
+        style={{
+          x,
+          y,
+        }}
+        className={styles.container}
+      >
         <div className={styles.top}>
           <Image
             src="img/common/common_close_image.svg"
@@ -87,7 +107,7 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
         <button type="button" className={styles.btn} onClick={upChat}>
           전송
         </button>
-      </div>
+      </animated.div>
     </div>
   );
 }
