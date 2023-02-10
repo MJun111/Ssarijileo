@@ -257,17 +257,6 @@ function Music() {
           return (
             <div className={styles.item} key={item.rank}>
               <ChartListItem item={item} />
-              <Image
-                src={heartIcon}
-                width={20}
-                height={20}
-                alt="like"
-                className={styles.like}
-                // 좋아요 버튼 클릭 시
-                // onClick={() => {
-                //   changeLike(item.pk);
-                // }}
-              />
             </div>
           );
         })}

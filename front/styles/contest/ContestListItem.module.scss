@@ -12,6 +12,83 @@
   font-size: 12px;
 }
 
+@mixin modalBtn {
+  width: 70px;
+  height: 25px;
+  border-radius: 6px;
+  font-family: 'Jalnan', sans-serif;
+  font-size: 12px;
+  margin: 0 5px;
+}
+
+.layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  .back {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+  }
+  .modal {
+    position: absolute;
+    top: calc(50vh - 60px);
+    left: calc(50vw - 210px);
+    width: 400px;
+    height: 100px;
+    background: var(--color-background);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    padding: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    color: var(--color-text);
+    white-space: pre-line;
+    line-height: 20px;
+
+    .btnList {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 20px;
+
+      .okBtn {
+        @include modalBtn();
+        border: 1px solid var(--color-text);
+        background: var(--color-background);
+        color: var(--color-text);
+      }
+      .okBtn:hover {
+        border: 1px solid var(--color-text);
+        background: var(--color-text);
+        color: var(--color-background);
+      }
+      .closeBtn {
+        @include modalBtn();
+        border: 1px solid #ea9800;
+        background: var(--color-background);
+        color: #ea9800;
+      }
+      .closeBtn:hover {
+        border: 1px solid #ea9800;
+        background: #ea9800;
+        color: $white;
+      }
+    }
+  }
+}
+
 .container {
   margin: 20px 0;
   .content {

@@ -9,6 +9,8 @@ import echoSlice from './echoSlice';
 import beatSlice from './beatSlice';
 import volumeSlice from './volumeSlice';
 import storage from 'redux-persist/lib/storage';
+import reservSlice from './reservSlice';
+import userSlice from './userSlice';
 
 const rootReducer = combineReducers({
   theme: themeSlice.reducer,
@@ -17,12 +19,23 @@ const rootReducer = combineReducers({
   echo: echoSlice.reducer,
   beat: beatSlice.reducer,
   volume: volumeSlice.reducer,
+  reserv: reservSlice.reducer,
+  user: userSlice.reducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['theme', 'login', 'like', 'echo', 'beat', 'volume'],
+  whitelist: [
+    'theme',
+    'login',
+    'like',
+    'echo',
+    'beat',
+    'volume',
+    'reserv',
+    'user',
+  ],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

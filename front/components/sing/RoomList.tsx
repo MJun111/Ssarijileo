@@ -92,6 +92,7 @@ function RoomList() {
           optionItem={sortType}
           rooms={rooms}
           setFilteredRoom={setFilteredRoom}
+          setPage={setPage}
         />
       </div>
       <div className={styles.addBtn}>
@@ -114,7 +115,7 @@ function RoomList() {
       <Pagination
         limit={limit}
         page={page}
-        totalPosts={currentRoom.length}
+        totalPosts={filteredRoom.length}
         setPage={setPage}
       />
     </div>
