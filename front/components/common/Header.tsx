@@ -19,10 +19,12 @@ function Header() {
   const [nowLogin, setNowLogin] = useState(false);
   const [checked, setChecked] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [profile, setProfile] = useState('');
   const dispatch = useDispatch();
 
   const storeLogin = useSelector((state: RootState) => state.login);
   const storeTheme = useSelector((state: RootState) => state.theme);
+  const storeUser = useSelector((state: RootState) => state.user);
 
   const changeMode = useCallback(() => {
     setChecked(!checked);
@@ -45,6 +47,11 @@ function Header() {
   useEffect(() => {
     setNowLogin(storeLogin.login);
   }, [storeLogin]);
+
+  useEffect(() => {
+    console.log(storeUser.img);
+    setProfile(storeUser.img);
+  }, [storeUser]);
 
   const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -194,14 +201,13 @@ function Header() {
               }}
             />
             <Link href="profile/" key="profile">
-              <div className={styles.profile}>
-                <Image
-                  src={icons.profile}
-                  alt="profile"
-                  width={25}
-                  height={25}
-                />
-              </div>
+              <Image
+                src={profile}
+                alt="profile"
+                width={50}
+                height={50}
+                className={styles.profile}
+              />
             </Link>
           </div>
         )}

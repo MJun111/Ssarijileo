@@ -13,7 +13,6 @@ function Music() {
   useEffect(() => {
     setThemeMode(localStorage.getItem('theme') || 'light');
   }, [themeMode, storeTheme]);
-  const heartIcon = `img/chart/${themeMode}/${themeMode}_chart_like_image.svg`;
 
   //  페이지
   const [page, setPage] = useState(1);
@@ -257,17 +256,6 @@ function Music() {
           return (
             <div className={styles.item} key={item.rank}>
               <ChartListItem item={item} />
-              <Image
-                src={heartIcon}
-                width={20}
-                height={20}
-                alt="like"
-                className={styles.like}
-                // 좋아요 버튼 클릭 시
-                // onClick={() => {
-                //   changeLike(item.pk);
-                // }}
-              />
             </div>
           );
         })}

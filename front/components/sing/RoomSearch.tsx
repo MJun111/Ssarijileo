@@ -13,8 +13,9 @@ function RoomSearch(props: {
   optionItem: OptionItem[];
   rooms: RoomInfo[];
   setFilteredRoom: React.Dispatch<React.SetStateAction<RoomInfo[]>>;
+  setPage: any;
 }) {
-  const { optionItem, rooms, setFilteredRoom } = props;
+  const { optionItem, rooms, setFilteredRoom, setPage } = props;
   // 다크모드 상태 관리
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -44,6 +45,7 @@ function RoomSearch(props: {
           )
         : sortedData;
     setFilteredRoom(filteredData);
+    setPage(1);
   };
 
   const changeSearchText = (e: React.ChangeEvent<HTMLInputElement>) => {

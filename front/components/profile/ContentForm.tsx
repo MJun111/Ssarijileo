@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setNickname } from '@/redux/store/userSlice';
 
 import MicControlBar from '@/components/common/MicControlBar';
 import EchoControlBar from '@/components/common/EchoControlBar';
 
 import styles from '@/styles/profile/ContentForm.module.scss';
 
-function ContentForm(props: { theme: string; DUMMY_DATA: any }) {
-  const { theme, DUMMY_DATA } = props;
-  const [nickname, setNickname] = useState(DUMMY_DATA.nickname);
+function ContentForm(props: { theme: string }) {
+  const { theme } = props;
+  const [nicknameValue, setNicknameValue] = useState('');
+  const dispatch = useDispatch();
+
+  const storeUser = useSelector((state: RootState) => state.user);
 
   const images = {
     name: `img/profile/${theme}/${theme}_name_image.svg`,
@@ -16,13 +23,18 @@ function ContentForm(props: { theme: string; DUMMY_DATA: any }) {
     email: `img/profile/${theme}/${theme}_email_image.svg`,
   };
 
+  useEffect(() => {
+    setNicknameValue(storeUser.nickname);
+  }, [storeUser]);
+
   const saveProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    dispatch(setNickname(nicknameValue));
     console.log('저장');
   };
 
   const nickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
+    setNicknameValue(e.target.value);
   };
 
   return (
@@ -42,7 +54,7 @@ function ContentForm(props: { theme: string; DUMMY_DATA: any }) {
           id="nickname"
           type="text"
           className={styles.nickname}
-          value={nickname}
+          value={nicknameValue}
           onChange={nickNameChange}
         />
         <button type="button" className={styles.checkBtn}>
