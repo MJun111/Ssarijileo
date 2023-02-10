@@ -10,7 +10,6 @@ import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
 
 import styles from '@/styles/common/Header.module.scss';
-import { headers } from 'next/headers';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
