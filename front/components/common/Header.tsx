@@ -10,6 +10,7 @@ import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
 
 import styles from '@/styles/common/Header.module.scss';
+import { headers } from 'next/headers';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
@@ -121,6 +122,18 @@ function Header() {
   const showModal = () => {
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    let eventSource: EventSource;
+    const fetchEventSource = async () => {
+      eventSource = new EventSource('/api/notifications');
+      eventSource.onmessage = e => {
+        const data = JSON.parse(e.data);
+        console.log(data);
+      };
+    };
+    fetchEventSource();
+  }, []);
 
   return (
     <header className={styles.header}>

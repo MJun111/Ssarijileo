@@ -122,7 +122,7 @@ function ChartTop() {
     },
   ];
 
-  const bestData = best.map(item => {
+  const bestData = best.map((item, idx) => {
     return (
       <div className={styles.item} key={item.id}>
         <NextImage
@@ -131,6 +131,9 @@ function ChartTop() {
           height={180}
           alt="album"
           className={styles.albumCover}
+          onClick={() => {
+            window.scrollTo({ top: 1220 + idx * 815, behavior: 'smooth' });
+          }}
         />
         <div>
           {item.title}-{item.singer}

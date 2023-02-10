@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+
 import styles from '@/styles/common/Pagination.module.scss';
 
 type PaginationProps = {
@@ -15,9 +17,10 @@ function Pagination({ totalPosts, limit, page, setPage }: PaginationProps) {
   const [themeMode, setThemeMode] = useState('light');
   const [currPage, setCurrPage] = useState(page);
 
-  const storeTheme = useSelector<any>(state => state.theme);
+  const storeTheme = useSelector((state: RootState) => state.theme);
+
   useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
+    setThemeMode(storeTheme.theme);
   }, [themeMode, storeTheme]);
   const firstIcon = `img/common/${themeMode}/${themeMode}_first_image.svg`;
   const prevIcon = `img/common/${themeMode}/${themeMode}_prev_image.svg`;

@@ -12,7 +12,7 @@ function Title(props: { main: string; sub: string }) {
     if (window.location.pathname !== '/sing') {
       window.location.replace('sing/');
     } else {
-      window.scrollTo({ top: 1200 });
+      window.scrollTo({ top: 1200, behavior: 'smooth' });
     }
   };
 
