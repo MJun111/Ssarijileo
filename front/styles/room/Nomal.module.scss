@@ -26,6 +26,12 @@
     white-space: pre-wrap;
     filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
 
+    .video {
+      width: 910px;
+      height: 174px;
+      border-radius: 10px;
+    }
+
     .discoA {
       position: absolute;
       top: 0px;
