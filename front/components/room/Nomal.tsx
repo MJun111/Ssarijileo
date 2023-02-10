@@ -7,15 +7,24 @@ import { NormalSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
 
-function Nomal(props: { setState: any; reserv: NormalSong; screenShare: any }) {
-  const { setState, reserv, screenShare } = props;
+function Nomal(props: {
+  setState: any;
+  reserv: NormalSong;
+  screenShare: any;
+  state: number;
+  screen: any;
+}) {
+  const { setState, reserv, screenShare, state, screen } = props;
   const [time, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const sourceRef = useRef<AudioBufferSourceNode>();
   const lyrics = reserv.lyricsList;
   const startTime = useRef<number>(Date.now());
 
-  const canvasWidth = 950;
+  const canvasWidth = 910;
   const canvasHeight = 174;
   const canvasRef = useCanvas(canvasWidth, canvasHeight);
   const flag = useRef(true);
@@ -23,7 +32,11 @@ function Nomal(props: { setState: any; reserv: NormalSong; screenShare: any }) {
     if (lyrics.length === 0) return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.roundRect(0, 0, canvasWidth, canvasHeight, 10);
+    ctx.fill();
+    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     const deltaTime = (Date.now() - startTime.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (reserv.time < deltaTime) {
@@ -48,7 +61,9 @@ function Nomal(props: { setState: any; reserv: NormalSong; screenShare: any }) {
       lyricB = ' ';
     }
     if (lyrics.length === 1 && lyrics[0].time < deltaTime) {
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     } else if (lyrics[0].verse === '') {
       lyricA = '간주중';
       lyricB = '...';
@@ -75,35 +90,52 @@ function Nomal(props: { setState: any; reserv: NormalSong; screenShare: any }) {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    fetch('sounds/아무노래MR.mp3')
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => {
-        const audioContext = new AudioContext();
-        audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
-          const source = audioContext.createBufferSource();
-          source.buffer = audioBuffer;
-          const mp3AudioDestination =
-            audioContext.createMediaStreamDestination();
-          source.connect(mp3AudioDestination);
-          source.connect(audioContext.destination);
-          source.start();
-          sourceRef.current = source;
-          startTime.current = Date.now();
-          setIsPlay(true);
-          screenShare(audioContext, mp3AudioDestination);
+    if (state === 3) {
+      fetch('sounds/아무노래MR.mp3')
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+          const audioContext = new AudioContext();
+          audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            const mp3AudioDestination =
+              audioContext.createMediaStreamDestination();
+            source.connect(mp3AudioDestination);
+            source.connect(audioContext.destination);
+            source.start();
+            sourceRef.current = source;
+            startTime.current = Date.now();
+            setIsPlay(true);
+            screenShare(audioContext, mp3AudioDestination);
+          });
         });
-      });
+    }
   }, []);
+
+  useEffect(() => {
+    console.log('!!!!!!!', state);
+    if (screen !== undefined && !!videoRef) {
+      screen.addVideoElement(videoRef.current);
+    }
+  }, [screen]);
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <canvas
-          id="screen-screen"
-          width={canvasWidth}
-          height={canvasHeight}
-          ref={canvasRef}
-        />
+        {state === 3 && (
+          <canvas
+            id="screen-screen"
+            width={canvasWidth}
+            height={canvasHeight}
+            ref={canvasRef}
+            className={styles.canvas}
+          />
+        )}
+        {state === 4 && (
+          <video className={styles.video} autoPlay ref={videoRef}>
+            <track kind="captions" />
+          </video>
+        )}
         <video
           className={styles.discoA}
           autoPlay

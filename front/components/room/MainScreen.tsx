@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
 
@@ -25,7 +25,6 @@ export function MainScreen(props: {
   screenSession: any;
 }) {
   const { singMode, subscribers, screenOV, screenSession } = props;
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [screen, setScreen] = useState<any>(undefined);
 
   // 노래방 상태관리
@@ -182,7 +181,7 @@ export function MainScreen(props: {
       .getUserMedia({
         audioSource: undefined,
         videoSource: undefined,
-        resolution: '950x350',
+        resolution: '910x174',
         frameRate: 30,
       })
       .then(async () => {
@@ -220,12 +219,6 @@ export function MainScreen(props: {
     });
   }, []);
 
-  useEffect(() => {
-    if (screen !== undefined && !!videoRef) {
-      screen.addVideoElement(videoRef.current);
-    }
-  }, [screen]);
-
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
@@ -246,17 +239,23 @@ export function MainScreen(props: {
           setState={setState}
           reserv={reserv[0]}
           screenShare={screenShare}
+          state={state}
+          screen={screen}
         />
       )}
-      {state === 3 && myName !== mainName && (
+      {/* {state === 3 && myName !== mainName && (
         <video className={styles.video} autoPlay ref={videoRef}>
           <track kind="captions" />
         </video>
-      )}
+      )} */}
       {state === 4 && (
-        <video className={styles.video} autoPlay ref={videoRef}>
-          <track kind="captions" />
-        </video>
+        <Nomal
+          setState={setState}
+          reserv={reserv[0]}
+          screenShare={screenShare}
+          state={state}
+          screen={screen}
+        />
       )}
       {/* <video className={styles.video} autoPlay ref={videoRef}>
         <track kind="captions" />
