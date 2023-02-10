@@ -7,8 +7,8 @@ import { NormalSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
 
-function Nomal(props: { setState: any; reserv: NormalSong }) {
-  const { setState, reserv } = props;
+function Nomal(props: { setState: any; reserv: NormalSong; screenShare: any }) {
+  const { setState, reserv, screenShare } = props;
   const [time, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const sourceRef = useRef<AudioBufferSourceNode>();
@@ -75,18 +75,22 @@ function Nomal(props: { setState: any; reserv: NormalSong }) {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    fetch('sounds/가을아침MR.mp3')
+    fetch('sounds/아무노래MR.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => {
         const audioContext = new AudioContext();
         audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
           const source = audioContext.createBufferSource();
           source.buffer = audioBuffer;
+          const mp3AudioDestination =
+            audioContext.createMediaStreamDestination();
+          source.connect(mp3AudioDestination);
           source.connect(audioContext.destination);
           source.start();
           sourceRef.current = source;
           startTime.current = Date.now();
           setIsPlay(true);
+          screenShare(audioContext, mp3AudioDestination);
         });
       });
   }, []);
