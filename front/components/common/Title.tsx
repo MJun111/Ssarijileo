@@ -8,6 +8,14 @@ function Title(props: { main: string; sub: string }) {
 
   const storeLogin: any = useSelector<any>(state => state.login);
 
+  const goRoom = () => {
+    if (window.location.pathname !== '/sing') {
+      window.location.replace('sing/');
+    } else {
+      window.scrollTo({ top: 1200, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className={styles.title}>
       <div className={styles.top}>
@@ -22,7 +30,7 @@ function Title(props: { main: string; sub: string }) {
           type="button"
           onClick={() => {
             if (storeLogin.login) {
-              window.location.replace('sing/');
+              goRoom();
             } else {
               window.confirm('로그인 후 이용하세요🎤🎵');
             }

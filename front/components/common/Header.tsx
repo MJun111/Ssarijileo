@@ -129,6 +129,18 @@ function Header() {
     setModalOpen(true);
   };
 
+  useEffect(() => {
+    let eventSource: EventSource;
+    const fetchEventSource = async () => {
+      eventSource = new EventSource('/api/notifications');
+      eventSource.onmessage = e => {
+        const data = JSON.parse(e.data);
+        console.log(data);
+      };
+    };
+    fetchEventSource();
+  }, []);
+
   return (
     <header className={styles.header}>
       {modalOpen && <LoginModal setModalOpen={setModalOpen} />}

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+
 import styles from '@/styles/common/Pagination.module.scss';
 
 type PaginationProps = {
@@ -17,6 +18,7 @@ function Pagination({ totalPosts, limit, page, setPage }: PaginationProps) {
   const [currPage, setCurrPage] = useState(page);
 
   const storeTheme = useSelector((state: RootState) => state.theme);
+
   useEffect(() => {
     setThemeMode(storeTheme.theme);
   }, [themeMode, storeTheme]);
