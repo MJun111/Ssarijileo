@@ -13,7 +13,6 @@ function Music() {
   useEffect(() => {
     setThemeMode(localStorage.getItem('theme') || 'light');
   }, [themeMode, storeTheme]);
-  const heartIcon = `img/chart/${themeMode}/${themeMode}_chart_like_image.svg`;
 
   //  페이지
   const [page, setPage] = useState(1);

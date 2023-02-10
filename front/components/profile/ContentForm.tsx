@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setNickname } from '@/redux/store/userSlice';
+
 import MicControlBar from '@/components/common/MicControlBar';
 import EchoControlBar from '@/components/common/EchoControlBar';
 
-import { setNickname } from '@/redux/store/userSlice';
-
 import styles from '@/styles/profile/ContentForm.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 
 function ContentForm(props: { theme: string }) {
   const { theme } = props;

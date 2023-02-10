@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
-import { setImg } from '@/redux/store/userSlice';
 import { RootState } from '@/redux/store';
 
 import LoginModal from '@/components/login/LoginModal';

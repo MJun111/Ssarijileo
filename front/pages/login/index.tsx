@@ -1,16 +1,14 @@
 import React from 'react';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setLogin } from '@/redux/store/loginSlice';
-import { setCookie } from '@/util/cookie';
-import { getCookie } from '@/util/cookie';
+import { setCookie, getCookie } from '@/util/cookie';
 
-import { setImg } from '@/redux/store/userSlice';
-import { setNickname } from '@/redux/store/userSlice';
+import { setImg, setNickname } from '@/redux/store/userSlice';
 import { setEcho } from '@/redux/store/echoSlice';
 import { setVolume } from '@/redux/store/volumeSlice';
 
 import Spinner from '@/components/common/Spinner';
-import axios from 'axios';
 
 function kakao() {
   const dispatch = useDispatch();
