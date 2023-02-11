@@ -305,9 +305,11 @@ function Index() {
       });
 
       // 노래 정보 수신
+      // const dispatch = useDispatch();
       mySession.on('signal:reservationList', (event: any) => {
         const getReserveData = JSON.parse(event.data);
-        console.log(getReserveData);
+        // dispatch(setReservationList(getReserveData));
+        console.log('예약리스트', getReserveData);
       });
 
       // 내 캠 connect
