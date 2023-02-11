@@ -11,6 +11,7 @@ import volumeSlice from './volumeSlice';
 import storage from 'redux-persist/lib/storage';
 import reservSlice from './reservSlice';
 import userSlice from './userSlice';
+import ssariSlice from './ssariSlice';
 
 const rootReducer = combineReducers({
   theme: themeSlice.reducer,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   volume: volumeSlice.reducer,
   reserv: reservSlice.reducer,
   user: userSlice.reducer,
+  ssari: ssariSlice.reducer,
 });
 
 const persistConfig = {
@@ -35,6 +37,7 @@ const persistConfig = {
     'volume',
     'reserv',
     'user',
+    'ssari',
   ],
 };
 
