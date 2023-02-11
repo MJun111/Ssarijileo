@@ -420,7 +420,7 @@ function Index() {
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
           {singer.map(person => {
-            return <MyScreen streamManager={person} />;
+            return <MyScreen key={person.id} streamManager={person} />;
           })}
           <button type="button" onClick={nextSinger}>
             ||
@@ -447,7 +447,7 @@ function Index() {
         </div>
         <div className={styles.otherScreen}>
           {publisher.map(pub => {
-            return <MyScreen streamManager={pub} />;
+            return <MyScreen streamManager={pub} key={pub.id} />;
           })}
           {subscribers.map(sub => {
             return <MyScreen streamManager={sub} key={sub.stream.streamId} />;

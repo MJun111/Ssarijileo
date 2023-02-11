@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
 import { RootState } from '@/redux/store';
+import { getCookie } from '@/util/cookie';
 
 import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
@@ -49,7 +51,6 @@ function Header() {
   }, [storeLogin]);
 
   useEffect(() => {
-    console.log(storeUser.img);
     setProfile(storeUser.img);
   }, [storeUser]);
 
@@ -129,16 +130,37 @@ function Header() {
     setModalOpen(true);
   };
 
+  const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
-    let eventSource: EventSource;
-    const fetchEventSource = async () => {
-      eventSource = new EventSource('/api/notifications');
-      eventSource.onmessage = e => {
-        const data = JSON.parse(e.data);
-        console.log(data);
+    if (storeLogin.login) {
+      let eventSource: EventSource;
+      const fetchEventSource = async () => {
+        try {
+          const token = getCookie('Authorization');
+          console.log(token);
+          eventSource = new EventSource('api/v1/profile/sse/', {
+            headers: {
+              Authorization: token,
+              'Content-Type': 'text/event-stream',
+            },
+            withCredentials: true,
+          });
+          console.log(eventSource);
+          eventSource.onmessage = e => {
+            const data = JSON.parse(e.data);
+            console.log(data);
+          };
+          eventSource.onerror = e => {
+            console.log('error');
+            console.log(e);
+            eventSource.close();
+          };
+        } catch (e) {
+          console.log('!!!');
+        }
       };
-    };
-    fetchEventSource();
+      fetchEventSource();
+    }
   }, []);
 
   return (
