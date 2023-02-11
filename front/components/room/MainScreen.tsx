@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import CommonState from '@/components/room/CommonState';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 // import axios from 'axios';
 // import { getCookie } from '@/util/cookie';
 
+import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
 import styles from '@/styles/room/Screen.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
@@ -49,12 +49,12 @@ export function MainScreen(props: {
   // 3 : 진행 상태 (mode 별로 컴포넌트 분리)
 
   // 저장되어있는 상태값 불러오기
-  const [state, setState] = useState(0);
+  const [nowState, setNowState] = useState(0);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setState(storeSsari.ssari);
+    setNowState(storeSsari.ssari);
   }, [storeSsari]);
 
   // props로 받아야 할 데이터 ---> 참가자 수
@@ -253,7 +253,7 @@ export function MainScreen(props: {
   useEffect(() => {
     screenSession.on('streamCreated', (event: any) => {
       if (event.stream.typeOfVideo === 'CUSTOM') {
-        setState(4);
+        setNowState(4);
         const subscreen = screenSession.subscribe(event.stream, undefined);
         // console.log('커스텀 이벤트', event);
         setScreen(subscreen);
@@ -264,13 +264,13 @@ export function MainScreen(props: {
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
-      {state === 0 && <CommonState title={title[0]} />}
-      {state === 1 && <CommonState title={title[1]} />}
+      {nowState === 0 && <CommonState title={title[0]} />}
+      {nowState === 1 && <CommonState title={title[1]} />}
       {/* 대기 상태 */}
-      {state === 2 && <CommonState title={title[0]} />}
+      {nowState === 2 && <CommonState title={title[0]} />}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {state === 3 && singMode === 'nomal' && myName === mainName && (
+      {nowState === 3 && singMode === 'nomal' && myName === mainName && (
         <Nomal reserv={reserv} screenShare={screenShare} screen={screen} />
       )}
       {/* {state === 3 && myName !== mainName && (
@@ -278,7 +278,7 @@ export function MainScreen(props: {
           <track kind="captions" />
         </video>
       )} */}
-      {state === 4 && (
+      {nowState === 4 && (
         <Nomal reserv={reserv} screenShare={screenShare} screen={screen} />
       )}
       {/* <video className={styles.video} autoPlay ref={videoRef}>

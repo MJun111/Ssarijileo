@@ -72,9 +72,9 @@ function ReservList() {
           <div className={styles.nowPlay}>
             <div className={styles.out}>
               <span className={styles.title}>
-                {reservationList.length != 0 ? reservationList[0].title : ''}
+                {reservationList.length !== 0 ? reservationList[0].title : ''}
               </span>
-              -{reservationList.length != 0 ? reservationList[0].singer : ''}
+              -{reservationList.length !== 0 ? reservationList[0].singer : ''}
             </div>
           </div>
           <div className={styles.listOut}>

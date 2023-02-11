@@ -1,14 +1,14 @@
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import classNames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addFirstReserv,
   addNomalReserv,
   addSecondReserv,
 } from '@/redux/store/reservSlice';
-import classNames from 'classnames';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
-import { useEffect, useState } from 'react';
 import { RootState } from '@/redux/store';
 
 function RoomReservItem(props: {

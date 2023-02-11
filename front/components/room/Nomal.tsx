@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-
-import Image from 'next/image';
 
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
@@ -18,13 +17,13 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
   const [isPlay, setIsPlay] = useState(false);
 
   // 저장되어있는 상태값 불러오기
-  const [state, setState] = useState(0);
+  const [nowState, setNowState] = useState(0);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setState(storeSsari.ssari);
-    console.log('!!!!!!!!!!!!!!!!!!', state);
+    setNowState(storeSsari.ssari);
+    console.log('!!!!!!!!!!!!!!!!!!', nowState);
   }, [storeSsari]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -100,7 +99,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    if (state === 3) {
+    if (nowState === 3) {
       fetch('sounds/아무노래MR.mp3')
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
@@ -131,7 +130,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {state === 3 && (
+        {nowState === 3 && (
           <canvas
             id="screen-screen"
             width={canvasWidth}
@@ -140,7 +139,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
             className={styles.canvas}
           />
         )}
-        {state === 4 && (
+        {nowState === 4 && (
           <video className={styles.video} autoPlay ref={videoRef}>
             <track kind="captions" />
           </video>

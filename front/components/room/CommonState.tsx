@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import Image from 'next/image';
 import styles from '@/styles/room/CommonState.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 
@@ -9,12 +9,12 @@ function CommonState({ title }: any) {
   const [time, setTime] = useState(0);
 
   // 저장되어있는 상태값 불러오기
-  const [state, setState] = useState(0);
+  const [nowState, setNowState] = useState(0);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setState(storeSsari.ssari);
+    setNowState(storeSsari.ssari);
   }, [storeSsari]);
 
   const nextSong = [
@@ -27,7 +27,7 @@ function CommonState({ title }: any) {
     const interval = setInterval(() => {
       setTime(prev => {
         if (prev === 600) {
-          if (state === 2) {
+          if (nowState === 2) {
             dispatch(setSsari(3));
           } else {
             window.close();
@@ -42,8 +42,8 @@ function CommonState({ title }: any) {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {state !== 2 && title}
-        {state === 2 && (
+        {nowState !== 2 && title}
+        {nowState === 2 && (
           <div className={styles.btn}>
             <div className={styles.item}>
               <div className={styles.back}>
@@ -83,7 +83,7 @@ function CommonState({ title }: any) {
         )}
       </div>
       <div className={styles.timeLine}>
-        {state === 2 && (
+        {nowState === 2 && (
           <span className={styles.nextInfo}>
             {nextSong[0].title}-{nextSong[0].singer}
           </span>
