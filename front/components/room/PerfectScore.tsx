@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { PitchDetector } from 'pitchy';
+import { useDispatch } from 'react-redux';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 
 import song from '@/fixtures/사건의_지평선.json';
 import * as data from '@/constants/PerfectScoreData';
 import styles from '@/styles/room/PerfectScore.module.scss';
-import { useDispatch } from 'react-redux';
 import { setSsari } from '@/redux/store/ssariSlice';
 
 function PerfectScore() {
