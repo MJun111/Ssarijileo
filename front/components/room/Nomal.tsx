@@ -23,7 +23,6 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
 
   useEffect(() => {
     setNowState(storeSsari.ssari);
-    console.log('!!!!!!!!!!!!!!!!!!', nowState);
   }, [storeSsari]);
 
   const videoRef = useRef<HTMLVideoElement>(null);

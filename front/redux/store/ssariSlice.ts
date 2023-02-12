@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  ssari: 0,
+  ssari: 0 as number,
 };
 
 const ssariSlice = createSlice({

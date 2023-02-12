@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import styles from '@/styles/room/ReservList.module.scss';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
+import { setSsari } from '@/redux/store/ssariSlice';
 
 interface Reserv {
   nickname: string;
@@ -39,6 +40,7 @@ function ReservList({ session }: any) {
 
   const [reservationList, setReservationList] = useState<Reserv[]>([]);
   const storeReservList = useSelector((state: RootState) => state.reserv);
+  const storeSsari = useSelector((state: RootState) => state.ssari);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -50,6 +52,11 @@ function ReservList({ session }: any) {
     const getReserveData = JSON.parse(event.data);
     console.log('예약리스트', getReserveData);
     dispatch(setReserv(getReserveData));
+    if (getReserveData.length !== 0) {
+      if (storeSsari.ssari === 1 || storeSsari.ssari === 0) {
+        dispatch(setSsari(2));
+      }
+    }
   });
 
   //   현재 곡 제외 예약 목록만 뽑아내기

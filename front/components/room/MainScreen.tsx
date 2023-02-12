@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 // import axios from 'axios';
@@ -8,6 +8,9 @@ import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
 import styles from '@/styles/room/Screen.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
+import PerfectScore from './PerfectScore';
+import OrderSong from './OrderSong';
+import Guess from './Guess';
 
 interface Reserv {
   nickname: string;
@@ -261,6 +264,14 @@ export function MainScreen(props: {
     });
   }, []);
 
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (screen !== undefined && !!videoRef) {
+      screen.addVideoElement(videoRef.current);
+    }
+  }, [screen]);
+
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
@@ -270,20 +281,20 @@ export function MainScreen(props: {
       {nowState === 2 && <CommonState title={title[0]} />}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {nowState === 3 && singMode === 'nomal' && myName === mainName && (
+      {nowState === 3 && singMode === 'N' && (
         <Nomal reserv={reserv} screenShare={screenShare} screen={screen} />
       )}
-      {/* {state === 3 && myName !== mainName && (
+      {nowState === 4 && singMode === 'N' && (
+        <Nomal reserv={reserv} screenShare={screenShare} screen={screen} />
+      )}
+      {nowState === 3 && singMode === 'P' && <PerfectScore />}
+      {nowState === 4 && singMode === 'P' && (
         <video className={styles.video} autoPlay ref={videoRef}>
           <track kind="captions" />
         </video>
-      )} */}
-      {nowState === 4 && (
-        <Nomal reserv={reserv} screenShare={screenShare} screen={screen} />
       )}
-      {/* <video className={styles.video} autoPlay ref={videoRef}>
-        <track kind="captions" />
-      </video> */}
+      {nowState === 3 && singMode === 'O' && <OrderSong />}
+      {nowState === 4 && singMode === 'O' && <Guess />}
     </div>
   );
 }

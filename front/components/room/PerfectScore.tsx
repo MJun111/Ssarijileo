@@ -6,8 +6,13 @@ import { useAnimation } from '@/hooks/useAnimation';
 import song from '@/fixtures/사건의_지평선.json';
 import * as data from '@/constants/PerfectScoreData';
 import styles from '@/styles/room/PerfectScore.module.scss';
+import { useDispatch } from 'react-redux';
+import { setSsari } from '@/redux/store/ssariSlice';
 
 function PerfectScore() {
+  const dispatch = useDispatch();
+
+  // const videoRef = useRef<HTMLVideoElement>(null);
   const dataArrayRef = useRef<Float32Array>(new Float32Array(data.BUFFER_SIZE));
   const pitchDetectorRef = useRef<PitchDetector<Float32Array>>(
     PitchDetector.forFloat32Array(data.BUFFER_SIZE),
@@ -45,6 +50,7 @@ function PerfectScore() {
   const stop = () => {
     musicRef.current?.stop(0);
     setIsStarted(false);
+    dispatch(setSsari(2));
   };
 
   const isSilentBuffer = (buffer: Float32Array) => {
@@ -303,6 +309,12 @@ function PerfectScore() {
         setIsReady(musicRef.current !== undefined);
       });
   }, [analyserRef, isStarted]);
+
+  // useEffect(() => {
+  //   if (screen !== undefined && !!videoRef) {
+  //     screen.addVideoElement(videoRef.current);
+  //   }
+  // }, [screen]);
 
   return (
     <>
