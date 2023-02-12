@@ -203,10 +203,10 @@ export function MainScreen(props: {
       {nowState === 2 && <CommonState title={title[0]} />}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {nowState === 3 && singMode === 'N' && (
+      {nowState === 3 && singMode === 'N' && nextSong && (
         <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
       )}
-      {nowState === 4 && singMode === 'N' && (
+      {nowState === 4 && singMode === 'N' && nextSong && (
         <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
       )}
       {nowState === 3 && singMode === 'P' && <PerfectScore />}
