@@ -4,7 +4,7 @@ import ReservList from './ReservList';
 
 import styles from '@/styles/room/RoomHeader.module.scss';
 
-function RoomHeader({ leaveRoom }: any) {
+function RoomHeader({ leaveRoom, session }: any) {
   return (
     <div className={styles.container}>
       <div className={styles.reservList}>
@@ -15,7 +15,7 @@ function RoomHeader({ leaveRoom }: any) {
           alt="reserv"
           className={styles.reservIcon}
         />
-        <ReservList />
+        <ReservList session={session} />
       </div>
       <Image
         src="img/ssari/ssari_close_image.svg"

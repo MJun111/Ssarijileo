@@ -21,8 +21,9 @@ interface SongData {
 
 function RoomReserv(props: {
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  session: any;
 }) {
-  const { setModalOpen } = props;
+  const { setModalOpen, session } = props;
 
   //  페이지
   const [page, setPage] = useState(1);
@@ -207,7 +208,7 @@ function RoomReserv(props: {
           {postData.map(item => {
             return (
               <div className={styles.item} key={item.songId}>
-                <RoomReservItem item={item} />
+                <RoomReservItem item={item} session={session} />
               </div>
             );
           })}

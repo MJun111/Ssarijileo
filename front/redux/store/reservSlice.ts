@@ -16,22 +16,12 @@ const reservSlice = createSlice({
   name: 'reserv',
   initialState,
   reducers: {
-    addFirstReserv(state, action) {
-      state.reserv.unshift(action.payload);
-    },
-    addSecondReserv(state, action) {
-      state.reserv.splice(1, 0, action.payload);
-    },
-    addNomalReserv(state, action) {
-      state.reserv.push(action.payload);
-    },
-    deleteReserv(state, action) {
-      state.reserv.splice(action.payload, 1);
+    setReserv(state, action) {
+      state.reserv = action.payload;
     },
   },
 });
 
-export const { addFirstReserv, addSecondReserv, addNomalReserv, deleteReserv } =
-  reservSlice.actions;
+export const { setReserv } = reservSlice.actions;
 
 export default reservSlice;

@@ -83,7 +83,9 @@ function RoomFooter({ session, publisher }: any) {
           micControl={micControl}
         />
       )}
-      {reservModalOpen && <RoomReserv setModalOpen={setReservModalOpen} />}
+      {reservModalOpen && (
+        <RoomReserv setModalOpen={setReservModalOpen} session={session} />
+      )}
       <div className={styles.section}>
         <div className={styles.btnList}>
           {/* 노래 중에는 버튼 바꾸기 !!! */}

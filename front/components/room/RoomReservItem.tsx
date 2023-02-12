@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  addFirstReserv,
-  addNomalReserv,
-  addSecondReserv,
-} from '@/redux/store/reservSlice';
+import { useSelector } from 'react-redux';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
 import { RootState } from '@/redux/store';
+
+interface Reserv {
+  nickname: string;
+  songId: number;
+  isPriority: string;
+  title: string;
+  singer: string;
+}
 
 function RoomReservItem(props: {
   item: {
@@ -19,8 +22,9 @@ function RoomReservItem(props: {
     album: string;
     image: string;
   };
+  session: any;
 }) {
-  const { item } = props;
+  const { item, session } = props;
   const titleClassName = classNames({
     [styles.title]: true,
     [styles.isLong]: item.title.length > 27,
@@ -36,8 +40,10 @@ function RoomReservItem(props: {
 
   const [userNickname, setUserNickname] = useState('');
   const [ssariState, setSsariState] = useState(0);
+  const [reservationList, setReservationList] = useState<Reserv[]>([]);
   const storeUser = useSelector((state: RootState) => state.user);
   const storeSsari = useSelector((state: RootState) => state.ssari);
+  const storeReserv = useSelector((state: RootState) => state.reserv);
 
   useEffect(() => {
     setUserNickname(storeUser.nickname);
@@ -47,41 +53,78 @@ function RoomReservItem(props: {
     setSsariState(storeSsari.ssari);
   }, [storeSsari]);
 
+  useEffect(() => {
+    setReservationList(storeReserv.reserv);
+  }, [storeReserv]);
+
   // 우선예약 (예약목록 맨 앞에 추가)
-  const dispatch = useDispatch();
   const firstReserv = () => {
-    dispatch(
-      addFirstReserv({
-        nickname: userNickname,
-        songId: item.songId,
-        isPriority: 'N',
-        title: item.title,
-        singer: item.singer,
-      }),
-    );
+    const newReserv = [...reservationList];
+    newReserv.unshift({
+      nickname: userNickname,
+      songId: item.songId,
+      isPriority: 'Y',
+      title: item.title,
+      singer: item.singer,
+    });
+    session
+      .signal({
+        data: JSON.stringify(newReserv), // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'reservationList', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`노래 예약 정보 송신 성공`, newReserv);
+      })
+      .catch((error: any) => {
+        console.error('노래 예약 정보 송신 실패', error);
+      });
   };
   const secondReserv = () => {
-    dispatch(
-      addSecondReserv({
-        nickname: userNickname,
-        songId: item.songId,
-        isPriority: 'N',
-        title: item.title,
-        singer: item.singer,
-      }),
-    );
+    const newReserv = [...reservationList];
+    newReserv.splice(1, 0, {
+      nickname: userNickname,
+      songId: item.songId,
+      isPriority: 'Y',
+      title: item.title,
+      singer: item.singer,
+    });
+    session
+      .signal({
+        data: JSON.stringify(newReserv), // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'reservationList', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`노래 예약 정보 송신 성공`, newReserv);
+      })
+      .catch((error: any) => {
+        console.error('노래 예약 정보 송신 실패', error);
+      });
   };
+
   // 일반예약 (예약목록 맨 뒤에 추가)
   const nomalReserv = () => {
-    dispatch(
-      addNomalReserv({
-        nickname: userNickname,
-        songId: item.songId,
-        isPriority: 'Y',
-        title: item.title,
-        singer: item.singer,
-      }),
-    );
+    const newReserv = [...reservationList];
+    newReserv.push({
+      nickname: userNickname,
+      songId: item.songId,
+      isPriority: 'Y',
+      title: item.title,
+      singer: item.singer,
+    });
+    session
+      .signal({
+        data: JSON.stringify(newReserv), // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'reservationList', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`노래 예약 정보 송신 성공`, newReserv);
+      })
+      .catch((error: any) => {
+        console.error('노래 예약 정보 송신 실패', error);
+      });
   };
   return (
     <div className={styles.container}>
