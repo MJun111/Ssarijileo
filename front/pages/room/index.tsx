@@ -1,6 +1,6 @@
 // Path: '/room'
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
@@ -15,6 +15,7 @@ import Loading from '@/components/room/Loading';
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
+import { setReserv } from '@/redux/store/reservSlice';
 
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
@@ -246,6 +247,8 @@ function Index() {
     }
   };
 
+  const dispatch = useDispatch();
+
   // 사용자가 떠날때
   const leaveSession = () => {
     const mySession = session;
@@ -260,7 +263,7 @@ function Index() {
     setPublisher([]);
     setSubscribers([]);
     setSinger([]);
-
+    dispatch(setReserv([]));
     window.close();
   };
 
@@ -302,14 +305,6 @@ function Index() {
       // 다음 singer
       mySession.on('signal:nextSinger', (event: any) => {
         changeSinger(event.from);
-      });
-
-      // 노래 정보 수신
-      // const dispatch = useDispatch();
-      mySession.on('signal:reservationList', (event: any) => {
-        const getReserveData = JSON.parse(event.data);
-        // dispatch(setReservationList(getReserveData));
-        console.log('예약리스트', getReserveData);
       });
 
       // 내 캠 connect
@@ -418,7 +413,11 @@ function Index() {
   return (
     <div className={styles.container}>
       {/* <RoomController /> */}
-      <RoomHeader leaveRoom={leaveSession} screenShare={screenShare} />
+      <RoomHeader
+        leaveRoom={leaveSession}
+        screenShare={screenShare}
+        session={session}
+      />
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
           {singer.map(person => {

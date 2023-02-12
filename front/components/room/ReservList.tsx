@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import styles from '@/styles/room/ReservList.module.scss';
 import { RootState } from '@/redux/store';
-import { deleteReserv } from '@/redux/store/reservSlice';
+import { setReserv } from '@/redux/store/reservSlice';
 
 interface Reserv {
   nickname: string;
@@ -15,7 +15,7 @@ interface Reserv {
   singer: string;
 }
 
-function ReservList() {
+function ReservList({ session }: any) {
   const [themeMode, setThemeMode] = useState('light');
   // 다크모드 관리
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -39,18 +39,27 @@ function ReservList() {
 
   const [reservationList, setReservationList] = useState<Reserv[]>([]);
   const storeReservList = useSelector((state: RootState) => state.reserv);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     setReservationList(storeReservList.reserv);
   }, [storeReservList]);
-  const dispatch = useDispatch();
+
+  // 노래 정보 수신
+  session.on('signal:reservationList', (event: any) => {
+    const getReserveData = JSON.parse(event.data);
+    console.log('예약리스트', getReserveData);
+    dispatch(setReserv(getReserveData));
+  });
 
   //   현재 곡 제외 예약 목록만 뽑아내기
-  const reserv = reservationList.slice(1);
+  const reserv = reservationList.length > 1 ? reservationList.slice(1) : [];
+
   return (
     <div className={styles.container}>
       <div className={modalClass}>
         {reserv.map((item, idx) => (
-          <div className={styles.modalItem} key={item.songId}>
+          <div className={styles.modalItem} key={idx}>
             <div className={styles.number}>{idx + 2}</div>
             <div className={styles.title}>{item.title}</div>
             <div className={styles.singer}>{item.singer}</div>
@@ -58,7 +67,20 @@ function ReservList() {
             <button
               type="button"
               onClick={() => {
-                dispatch(deleteReserv(idx));
+                const newReserv = [...reservationList];
+                newReserv.splice(idx, 1);
+                session
+                  .signal({
+                    data: JSON.stringify(newReserv), // Any string (optional)
+                    to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+                    type: 'reservationList', // The type of message (optional)
+                  })
+                  .then(() => {
+                    console.log(`노래 예약 정보 송신 성공`, newReserv);
+                  })
+                  .catch((error: any) => {
+                    console.error('노래 예약 정보 송신 실패', error);
+                  });
               }}
               className={styles.btn}
             >
