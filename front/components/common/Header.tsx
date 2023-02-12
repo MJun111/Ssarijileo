@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
+import axios from 'axios';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
@@ -130,30 +132,68 @@ function Header() {
     setModalOpen(true);
   };
 
+  const data = {
+    fromUserNickname: '쁘띠태학',
+    toUserNickname: '금쪽수민',
+    friendId: 1,
+  };
+
+  const testAlarm = () => {
+    console.log(
+      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
+    );
+    axios
+      .post('api/v1/friend/invite/', data)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err.config.data);
+      });
+  };
+
+  const testSSE = () => {
+    console.log(
+      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
+    );
+    axios
+      .post('api/v1/friend/request/', data)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  // const userNickname = storeUser.nickname;
+  const userNickname = '쁘띠태학';
+  console.log(userNickname);
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
-    if (storeLogin.login) {
+    if (true) {
       let eventSource: EventSource;
       const fetchEventSource = async () => {
         try {
-          const token = getCookie('Authorization');
-          console.log(token);
-          eventSource = new EventSource('api/v1/profile/sse/', {
-            headers: {
-              Authorization: token,
-              'Content-Type': 'text/event-stream',
-            },
-            withCredentials: true,
+          // const token = getCookie('Authorization');
+          eventSource = new EventSource(`api/v1/sse/${userNickname}`, {
+            // headers: { Authorization: token },
+            heartbeatTimeout: 1000000,
           });
-          console.log(eventSource);
           eventSource.onmessage = e => {
-            const data = JSON.parse(e.data);
-            console.log(data);
-          };
-          eventSource.onerror = e => {
-            console.log('error');
+            console.log('메시지 도착');
+            // const data = JSON.parse(e.data);
             console.log(e);
-            eventSource.close();
+          };
+          eventSource.onopen = e => {
+            console.log('open');
+            console.log(e);
+          };
+          eventSource.onerror = (e: any) => {
+            console.log('error');
+            if (!e.error?.message.includes('No activity')) {
+              eventSource.close();
+            }
           };
         } catch (e) {
           console.log('!!!');
@@ -220,7 +260,7 @@ function Header() {
               width={20}
               height={20}
               className={styles.alarm}
-              // onClick={showAlarm}
+              onClick={testSSE}
             />
             <Image
               src={icons.logout}
