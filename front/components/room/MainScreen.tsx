@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -8,6 +8,9 @@ import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
 import styles from '@/styles/room/Screen.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
+import PerfectScore from './PerfectScore';
+import OrderSong from './OrderSong';
+import Guess from './Guess';
 
 interface Reserv {
   nickname: string;
@@ -183,6 +186,13 @@ export function MainScreen(props: {
     '참가자가 없습니다\n10분 뒤 노래방이 닫힙니다.',
     '예약목록이 없습니다\n10분 뒤 노래방이 닫힙니다.',
   ];
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (screen !== undefined && !!videoRef) {
+      screen.addVideoElement(videoRef.current);
+    }
+  }, [screen]);
 
   return (
     <div className={styles.modeScreen}>
@@ -193,17 +203,23 @@ export function MainScreen(props: {
       {nowState === 2 && <CommonState title={title[0]} />}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {nowState === 3 && singMode === 'nomal' && nextSong && (
+      {nowState === 3 && singMode === 'N' && (
         <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
       )}
-      {nowState === 4 && nextSong && (
+      {nowState === 4 && singMode === 'N' && (
         <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
       )}
-      {/* <video className={styles.video} autoPlay ref={videoRef}>
-        <track kind="captions" />
-      </video> */}
+      {nowState === 3 && singMode === 'P' && <PerfectScore />}
+      {nowState === 4 && singMode === 'P' && (
+        <video className={styles.video} autoPlay ref={videoRef}>
+          <track kind="captions" />
+        </video>
+      )}
+      {nowState === 3 && singMode === 'O' && <OrderSong />}
+      {nowState === 4 && singMode === 'O' && <Guess />}
     </div>
   );
 }
 
 export default MainScreen;
+
