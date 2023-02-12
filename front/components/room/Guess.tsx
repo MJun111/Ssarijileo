@@ -59,7 +59,7 @@ function Guess() {
       startTime: 58,
     },
   ];
-  const lyricList = DUMMY_DATA.map((item, idx) => {
+  const lyricList = DUMMY_DATA.map(item => {
     // setInterval로 다음 가사 시간 전까지 class지정
     return (
       <div className={styles.item} key={item.lyricsId}>

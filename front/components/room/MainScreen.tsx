@@ -62,11 +62,11 @@ export function MainScreen(props: {
 
   // props로 받아야 할 데이터 ---> 참가자 수
   // 내 닉네임 정보 받아오기
-  const [myName, setMyname] = useState('');
-  const storeUser = useSelector((state: RootState) => state.user);
-  useEffect(() => {
-    setMyname(storeUser.nickname);
-  }, [storeUser]);
+  // const [myName, setMyname] = useState('');
+  // const storeUser = useSelector((state: RootState) => state.user);
+  // useEffect(() => {
+  //   setMyname(storeUser.nickname);
+  // }, [storeUser]);
 
   // 예약목록 0인덱스에 저장된 닉네임 가져오기
   const [reservList, setReservList] = useState<Reserv[]>([]);
@@ -77,7 +77,7 @@ export function MainScreen(props: {
     setReservList(storeReserv.reserv);
   }, [storeReserv]);
 
-  const mainName = reservList.length ? reservList[0].nickname : '';
+  // const mainName = reservList.length ? reservList[0].nickname : '';
 
   // 0번 인덱스 곡 상세 정보 axios로 요청
   // if (reservList.length) {
