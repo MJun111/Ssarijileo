@@ -51,10 +51,6 @@ function Index() {
   const [loading, setLoading] = useState(true);
   const [init, setInit] = useState(false);
 
-  // 화면공유 상태값
-  const [share, setShare] = useState(false);
-  // const [testOnOff, setTest] = useState(false);
-
   // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
   useEffect(() => {
