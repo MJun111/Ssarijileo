@@ -326,10 +326,7 @@ function Index() {
   return (
     <div className={styles.container}>
       {/* <RoomController /> */}
-      <RoomHeader
-        leaveRoom={leaveSession}
-        session={session}
-      />
+      <RoomHeader leaveRoom={leaveSession} session={session} />
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
           {singer.map(person => {
