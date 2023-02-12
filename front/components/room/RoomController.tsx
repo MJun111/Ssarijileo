@@ -6,7 +6,7 @@ import PitchController from './PitchController';
 import BeatController from './BeatController';
 import VolumeController from './VolumeController';
 
-function RoomController({ setModalOpen }: any) {
+function RoomController({ setModalOpen, camControl, micControl }: any) {
   const [picthModalOpen, setPicthModalOpen] = useState(false);
   const [beatModalOpen, setBeatModalOpen] = useState(false);
   const [volumeModalOpen, setVolumeModalOpen] = useState(false);
@@ -67,6 +67,7 @@ function RoomController({ setModalOpen }: any) {
             height={72}
             alt="camera"
             className={styles.icon}
+            onClick={camControl}
           />
           <div className={styles.context}>카메라 ON/OFF</div>
         </div>
@@ -77,6 +78,7 @@ function RoomController({ setModalOpen }: any) {
             height={72}
             alt="mic"
             className={styles.icon}
+            onClick={micControl}
           />
           <div className={styles.context}>마이크 ON/OFF</div>
         </div>

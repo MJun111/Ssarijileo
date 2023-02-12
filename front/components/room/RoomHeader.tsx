@@ -4,7 +4,7 @@ import ReservList from './ReservList';
 
 import styles from '@/styles/room/RoomHeader.module.scss';
 
-function RoomHeader({ leaveRoom, screenShare }: any) {
+function RoomHeader({ leaveRoom }: any) {
   return (
     <div className={styles.container}>
       <div className={styles.reservList}>
@@ -14,7 +14,6 @@ function RoomHeader({ leaveRoom, screenShare }: any) {
           height={46}
           alt="reserv"
           className={styles.reservIcon}
-          onClick={screenShare}
         />
         <ReservList />
       </div>
