@@ -35,7 +35,7 @@ function Index() {
   }, [storeUser]);
 
   // session Info
-  const mySessionId = '123';
+  const mySessionId = '1234';
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
@@ -50,10 +50,6 @@ function Index() {
   // 초기 상태값
   const [loading, setLoading] = useState(true);
   const [init, setInit] = useState(false);
-
-  // 화면공유 상태값
-  const [share, setShare] = useState(false);
-  // const [testOnOff, setTest] = useState(false);
 
   // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -106,45 +102,6 @@ function Index() {
 
     setInit(true);
   };
-
-  // const testOn = () => {
-  //   setTest(!testOnOff);
-  // };
-
-  // 오디오 스트림 filterss
-  // const [delay, setDelay] = useState(50000000);
-  // const [intensity, setIntensity] = useState(0.6);
-  // const [feedback, setFeedback] = useState(0.4);
-  // const [amplify, setAmplify] = useState(1.5);
-  // `audioamplify amplification=${amplify} clipping-method=wrap-positive`
-
-  // const delay = 50000000;
-  // const intensity = 0.6;
-  // const feedback = 0.4;
-
-  // const audioFilter = () => [
-  //   publisher.stream
-  //     .applyFilter('GStreamerFilter', {
-  //       command: `audioecho delay=${delay} intensity=${intensity} feedback=${feedback}`,
-  //     })
-  //     .then(() => {
-  //       console.log('Filter activate');
-  //     })
-  //     .catch((error: any) => {
-  //       console.error(error);
-  //     }),
-  // ];
-
-  // const audioFilterOff = () => {
-  //   publisher.stream
-  //     .removeFilter()
-  //     .then(() => {
-  //       console.log('Filter removed');
-  //     })
-  //     .catch((error: any) => {
-  //       console.error(error);
-  //     });
-  // };
 
   // 다음 singer로 화면 전환
   // 임시 예약 리스트
@@ -359,50 +316,6 @@ function Index() {
     }
   }, [init]);
 
-  // 화면 공유 (stream.typeOfVideo === 'CUSTOM')
-  const screenShare = () => {
-    if (!share) {
-      setShare(!share);
-      screenOV
-        .getUserMedia({
-          audioSource: undefined,
-          videoSource: undefined,
-          resolution: '950x350',
-          frameRate: 30,
-        })
-        .then(async () => {
-          // audioSource
-          const testAudio = new Audio('/sounds/mr.mp3');
-          const audioContext = new AudioContext();
-          const mp3AudioSource =
-            audioContext.createMediaElementSource(testAudio);
-          const mp3AudioDestination =
-            audioContext.createMediaStreamDestination();
-          mp3AudioSource.connect(mp3AudioDestination);
-          mp3AudioSource.connect(audioContext.destination);
-          await testAudio.play();
-          const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
-
-          // videoSource
-          const canvas = document.getElementById(
-            'screen-screen',
-          ) as HTMLCanvasElement | null;
-
-          const testVideoTrack = canvas?.captureStream(30).getVideoTracks()[0];
-          const newScreenPublisher = screenOV.initPublisher(undefined, {
-            audioSource: testAudioTrack,
-            videoSource: testVideoTrack,
-          });
-
-          setScreenPublisher(newScreenPublisher);
-          screenSession.publish(newScreenPublisher);
-        });
-    } else {
-      setShare(!share);
-      leaveScreen();
-    }
-  };
-
   // 임의로 mode 선언
   const mode = 'nomal';
 
@@ -418,7 +331,7 @@ function Index() {
   return (
     <div className={styles.container}>
       {/* <RoomController /> */}
-      <RoomHeader leaveRoom={leaveSession} screenShare={screenShare} />
+      <RoomHeader leaveRoom={leaveSession} />
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
           {singer.map(person => {
@@ -456,7 +369,7 @@ function Index() {
           })}
         </div>
       </div>
-      <RoomFooter session={session} />
+      <RoomFooter session={session} publisher={publisher} />
     </div>
   );
 }
