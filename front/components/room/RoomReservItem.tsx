@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
 import { RootState } from '@/redux/store';
@@ -44,8 +44,6 @@ function RoomReservItem(props: {
   const storeUser = useSelector((state: RootState) => state.user);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const storeReserv = useSelector((state: RootState) => state.reserv);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setUserNickname(storeUser.nickname);

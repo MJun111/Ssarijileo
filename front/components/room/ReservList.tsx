@@ -59,7 +59,7 @@ function ReservList({ session }: any) {
     <div className={styles.container}>
       <div className={modalClass}>
         {reserv.map((item, idx) => (
-          <div className={styles.modalItem} key={idx}>
+          <div className={styles.modalItem} key={item.songId}>
             <div className={styles.number}>{idx + 2}</div>
             <div className={styles.title}>{item.title}</div>
             <div className={styles.singer}>{item.singer}</div>
