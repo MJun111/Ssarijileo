@@ -8,7 +8,7 @@ import RoomReserv from './RoomReserv';
 
 import styles from '@/styles/room/RoomFooter.module.scss';
 
-function RoomFooter({ session }: any) {
+function RoomFooter({ session, publisher }: any) {
   const [controllerModalOpen, setControllerModalOpen] = useState(false);
   const [friendModalOpen, setFriendModalOpen] = useState(false);
   const [reservModalOpen, setReservModalOpen] = useState(false);
@@ -19,6 +19,18 @@ function RoomFooter({ session }: any) {
       name: '싸리질러',
     },
   ]);
+  const [cam, setCam] = useState(true);
+  const [mic, setMic] = useState(true);
+
+  // cam, mic on off
+  const camControl = () => {
+    publisher[0].publishVideo(!cam);
+    setCam(!cam);
+  };
+  const micControl = () => {
+    publisher[0].publishAudio(!mic);
+    setMic(!mic);
+  };
 
   // 채팅 듣기 on
   const chatOn = () => {
@@ -65,7 +77,11 @@ function RoomFooter({ session }: any) {
       )}
       {friendModalOpen && <RoomFriend setModalOpen={setFriendModalOpen} />}
       {controllerModalOpen && (
-        <RoomController setModalOpen={setControllerModalOpen} />
+        <RoomController
+          setModalOpen={setControllerModalOpen}
+          camControl={camControl}
+          micControl={micControl}
+        />
       )}
       {reservModalOpen && (
         <RoomReserv setModalOpen={setReservModalOpen} session={session} />
