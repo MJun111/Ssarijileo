@@ -5,17 +5,37 @@ import { RootState } from '@/redux/store';
 import styles from '@/styles/room/CommonState.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 
+interface Reserv {
+  nickname: string;
+  songId: number;
+  isPriority: string;
+  title: string;
+  singer: string;
+}
+
 function CommonState({ title }: any) {
   const [time, setTime] = useState(0);
 
   // 저장되어있는 상태값 불러오기
   const [nowState, setNowState] = useState(0);
+  const [reservList, setReservList] = useState<Reserv[]>([]);
+  const [userInfo, setUserInfo] = useState('');
   const storeSsari = useSelector((state: RootState) => state.ssari);
+  const storeUser = useSelector((state: RootState) => state.user);
+  const stoerResesrv = useSelector((state: RootState) => state.reserv);
   const dispatch = useDispatch();
 
   useEffect(() => {
     setNowState(storeSsari.ssari);
   }, [storeSsari]);
+
+  useEffect(() => {
+    setReservList(stoerResesrv.reserv);
+  }, [stoerResesrv]);
+
+  useEffect(() => {
+    setUserInfo(storeUser.nickname);
+  });
 
   const nextSong = [
     {
@@ -46,24 +66,43 @@ function CommonState({ title }: any) {
         {nowState === 2 && (
           <div className={styles.btn}>
             <div className={styles.item}>
-              <div className={styles.back}>
+              <button
+                type="button"
+                className={styles.back}
+                disabled={reservList[0].nickname !== userInfo}
+                onClick={() => {
+                  if (reservList[0].nickname === userInfo) {
+                    dispatch(setSsari(3));
+                  } else {
+                    dispatch(setSsari(4));
+                  }
+                }}
+              >
                 <Image
                   src="img/room/room_video_image.svg"
                   width={58}
                   height={38}
                   alt="video"
                   className={styles.icon}
-                  onClick={() => {
-                    dispatch(setSsari(3));
-                  }}
                 />
-              </div>
+              </button>
               <div className={styles.context}>
                 녹화모드로 <br /> 시작하기
               </div>
             </div>
             <div className={styles.item}>
-              <div className={styles.back}>
+              <button
+                type="button"
+                className={styles.back}
+                disabled={reservList[0].nickname !== userInfo}
+                onClick={() => {
+                  if (reservList[0].nickname === userInfo) {
+                    dispatch(setSsari(3));
+                  } else {
+                    dispatch(setSsari(4));
+                  }
+                }}
+              >
                 <Image
                   src="img/room/room_play_image.svg"
                   width={50}
@@ -71,10 +110,14 @@ function CommonState({ title }: any) {
                   alt="play"
                   className={styles.icon}
                   onClick={() => {
-                    dispatch(setSsari(3));
+                    if (reservList[0].nickname === userInfo) {
+                      dispatch(setSsari(3));
+                    } else {
+                      dispatch(setSsari(4));
+                    }
                   }}
                 />
-              </div>
+              </button>
               <div className={styles.context}>
                 일반모드로 <br /> 시작하기
               </div>
