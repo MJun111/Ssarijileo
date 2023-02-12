@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 import CommonState from '@/components/room/CommonState';
