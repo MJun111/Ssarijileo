@@ -9,6 +9,7 @@ import RoomReservItem from '@/components/room/RoomReservItem';
 import Pagination from '@/components/common/Pagination';
 
 import styles from '@/styles/room/RoomReserv.module.scss';
+import { getCookie } from '@/util/cookie';
 
 interface SongData {
   songId: number;
@@ -33,84 +34,19 @@ function RoomReserv(props: {
   const [allMusicList, setAllMusicList] = useState<SongData[]>([]);
   const [musicList, setMusicList] = useState<SongData[]>([]);
 
-  const dummyData = [
-    {
-      songId: 1,
-      title: 'Ditto',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 2,
-      title: '사건의 지평선',
-      singer: '윤하',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 3,
-      title: 'Hype boy',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 4,
-      title: 'OMG',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 5,
-      title: 'After LIKE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 6,
-      title: 'ANTIFRAGILE',
-      singer: 'LE SSERAFIM (르세라핌)',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 7,
-      title: 'Attention',
-      singer: 'NewJeans',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 8,
-      title: 'LOVE DIVE',
-      singer: 'IVE(아이브)',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 9,
-      title: 'Nxde',
-      singer: '여자(아이들)',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-    {
-      songId: 10,
-      title: 'NOT SORRY (Feat. pH-1) (Prod. by Slom)333333333333333',
-      singer: '이영지',
-      album: 'NewJeans ‘OMG’',
-      image: '',
-    },
-  ];
-
   useEffect(() => {
-    axios.get('api/v1/song').then(res => {
+    // 모든 노래 정보
+    axios({
+      method: 'GET',
+      url: 'api/v1/song',
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
+        refreshToken: `${getCookie('refreshToken')}`,
+      },
+    }).then(res => {
       console.log(res.data);
-      setAllMusicList(dummyData);
-      setMusicList(dummyData);
+      setAllMusicList(res.data);
+      setMusicList(res.data);
     });
   }, []);
 
