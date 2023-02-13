@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import axios from 'axios';
 
 import styles from '@/styles/room/ReservList.module.scss';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 import { setSsari } from '@/redux/store/ssariSlice';
+import { getCookie } from '@/util/cookie';
 
 interface Reserv {
   nickname: string;
@@ -52,10 +54,8 @@ function ReservList({ session }: any) {
     const getReserveData = JSON.parse(event.data);
     console.log('예약리스트', getReserveData);
     dispatch(setReserv(getReserveData));
-    if (getReserveData.length !== 0) {
-      if (storeSsari.ssari === 1 || storeSsari.ssari === 0) {
-        dispatch(setSsari(2));
-      }
+    if (getReserveData.length !== 0 && storeSsari.ssari === 1) {
+      dispatch(setSsari(2));
     }
   });
 
@@ -74,6 +74,24 @@ function ReservList({ session }: any) {
             <button
               type="button"
               onClick={() => {
+                axios
+                  .delete('api/v1/reservation', {
+                    headers: {
+                      Authorization: `${getCookie('Authorization')}`,
+                      refreshToken: `${getCookie('refreshToken')}`,
+                    },
+                    data: {
+                      songId:
+                        reservationList.length !== 0
+                          ? reservationList[0].title
+                          : '',
+                      // 임시 세션 아이디
+                      sessionId: '12345',
+                    },
+                  })
+                  .then(res => {
+                    console.log(res.data);
+                  });
                 const newReserv = [...reservationList];
                 newReserv.splice(idx, 1);
                 session

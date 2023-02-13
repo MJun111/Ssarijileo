@@ -243,6 +243,7 @@ function Index() {
       // 참가자가 떠날때
       mySession.on('streamDestroyed', (event: any) => {
         // Remove the stream from 'subscribers' array
+        console.log('아아아아앙', event.stream);
         deleteSubscriber(event.stream.streamManager);
       });
 
@@ -299,7 +300,7 @@ function Index() {
   }, [init]);
 
   // 임의로 mode 선언
-  const mode = 'O';
+  const mode = 'N';
 
   // 로딩중 return
   if (loading)

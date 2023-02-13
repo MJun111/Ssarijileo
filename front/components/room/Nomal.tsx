@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { RootState } from '@/redux/store';
 
 import { useCanvas } from '@/hooks/useCanvas';
@@ -10,10 +11,16 @@ import { NextSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
+import { getCookie } from '@/util/cookie';
 
-function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
-  const { nextSong, screenShare, screen } = props;
-  const [time, setTime] = useState(0);
+function Nomal(props: {
+  nextSong: NextSong;
+  screenShare: any;
+  screen: any;
+  isNow: boolean;
+}) {
+  const { nextSong, screenShare, screen, isNow } = props;
+  const [nowtime, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
 
   // 저장되어있는 상태값 불러오기
@@ -24,6 +31,8 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
   useEffect(() => {
     setNowState(storeSsari.ssari);
   }, [storeSsari]);
+
+  // 저장되어있는 노래목록 불러오기
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -112,6 +121,19 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
             source.connect(mp3AudioDestination);
             source.connect(audioContext.destination);
             source.start();
+            // axios
+            //   .post('api/v1/reservation/sing', {
+            //     headers: {
+            //       Authorization: `${getCookie('Authorization')}`,
+            //       refreshToken: `${getCookie('refreshToken')}`,
+            //     },
+            //     data: {
+            //       songId: nextSong.songId,
+            //     },
+            //   })
+            //   .then(res => {
+            //     console.log('노래 시작 요청 응답 : ', res);
+            //   });
             sourceRef.current = source;
             startTime.current = Date.now();
             setIsPlay(true);
@@ -123,7 +145,7 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
   }, [nowState]);
 
   useEffect(() => {
-    if (screen !== undefined && !!videoRef) {
+    if (screen !== undefined && !!videoRef.current) {
       screen.addVideoElement(videoRef.current);
     }
   }, [screen]);
@@ -131,7 +153,7 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {nowState === 3 && (
+        {nowState === 3 && isNow && (
           <canvas
             id="screen-screen"
             width={canvasWidth}
@@ -140,7 +162,7 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
             className={styles.canvas}
           />
         )}
-        {nowState === 4 && (
+        {nowState === 3 && !isNow && (
           <video className={styles.video} autoPlay ref={videoRef}>
             <track kind="captions" />
           </video>
@@ -206,19 +228,19 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
           <input
             className={styles.input}
             type="range"
-            value={(time * 100) / nextSong.time}
+            value={(nowtime * 100) / nextSong.time}
             readOnly
           />
         </div>
         <div className={styles.value}>
           <div>
-            {Math.floor(time / 60) < 10
-              ? `0${Math.floor(time / 60)}`
-              : Math.floor(time / 60)}{' '}
+            {Math.floor(nowtime / 60) < 10
+              ? `0${Math.floor(nowtime / 60)}`
+              : Math.floor(nowtime / 60)}{' '}
             :{' '}
-            {Math.floor(time % 60) < 10
-              ? `0${Math.floor(time % 60)}`
-              : Math.floor(time % 60)}
+            {Math.floor(nowtime % 60) < 10
+              ? `0${Math.floor(nowtime % 60)}`
+              : Math.floor(nowtime % 60)}
           </div>
           <div>
             {Math.floor(nextSong.time / 60) < 10
@@ -233,7 +255,22 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
         <button
           type="button"
           onClick={() => {
+            axios
+              .delete('api/v1/reservation/sing', {
+                headers: {
+                  Authorization: `${getCookie('Authorization')}`,
+                  refreshToken: `${getCookie('refreshToken')}`,
+                },
+                data: {
+                  songId: nextSong.songId,
+                  time: nowtime,
+                },
+              })
+              .then(res => {
+                console.log('노래 취소 요청 응답 : ', res.data);
+              });
             sourceRef.current?.stop(0);
+            // screenSession.forceunpublish(screen);
             console.log(sourceRef.current);
             dispatch(setSsari(2));
           }}

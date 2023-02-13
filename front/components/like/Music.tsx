@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-
+import axios from 'axios';
+import styles from '@/styles/like/Music.module.scss';
 // import ChartListItem from '@/components/chart/ChartListItem';
 import Pagination from '@/components/common/Pagination';
-
-import styles from '@/styles/like/Music.module.scss';
+import { getCookie } from '@/util/cookie';
 
 function Music() {
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
@@ -20,6 +20,17 @@ function Music() {
   const [page, setPage] = useState(1);
   //  노래 목록이 보일 개수
   const limit = 10;
+
+  axios
+    .get('api/v1/song/my', {
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
+        refreshToken: `${getCookie('refreshToken')}`,
+      },
+    })
+    .then(res => {
+      console.log('애창곡 목록 요청 : ', res);
+    });
 
   const chartList = [
     {
