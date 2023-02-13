@@ -46,18 +46,17 @@ function RoomFooter({ session, publisher }: any) {
 
   // 채팅 보내기
   const sendChat = (sendMassage: string) => {
-    session
-      .signal({
-        data: sendMassage, // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'chat', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`"${sendMassage}"라고 채팅 보내기 성공`);
-      })
-      .catch((error: any) => {
-        console.error('채팅 보내기 에러', error);
-      });
+    session.signal({
+      data: sendMassage, // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'chat', // The type of message (optional)
+    });
+    // .then(() => {
+    //   console.log(`"${sendMassage}"라고 채팅 보내기 성공`);
+    // })
+    // .catch((error: any) => {
+    //   console.error('채팅 보내기 에러', error);
+    // });
   };
 
   // 렌더링시 실행

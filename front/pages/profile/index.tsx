@@ -42,13 +42,15 @@ function MyPage() {
       <div className={styles.box}>
         <div className={styles.sidebar}>
           <div className={styles.profileImg}>
-            <Image
-              src={profile}
-              alt="profile"
-              className={styles.profile}
-              width={100}
-              height={100}
-            />
+            {profile && (
+              <Image
+                src={profile}
+                alt="profile"
+                className={styles.profile}
+                width={100}
+                height={100}
+              />
+            )}
           </div>
           <div className={styles.name}>{nicknameValue}님</div>
           <button

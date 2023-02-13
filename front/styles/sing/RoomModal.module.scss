@@ -84,6 +84,11 @@
         color: var(--color-text);
         font-family: 'Jalnan', sans-serif;
       }
+      
+      .warning {
+        box-shadow: 0 0 0 1px #c7241a;
+      }
+
       .input::placeholder {
         font-size: 12px;
         color: var(--color-placeHolder);

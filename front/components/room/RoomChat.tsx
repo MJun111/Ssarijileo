@@ -27,8 +27,18 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
 
   // 보낼 채팅 메세지 전달
   const upChat = () => {
+    if (sendMessage.trim() === '') return;
     sendChat(sendMessage);
     setChat('');
+    console.log('upChat', sendMessage);
+  };
+
+  const keyUpChat = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      console.log(sendMessage);
+      upChat();
+    }
   };
 
   // 채팅리스트
@@ -42,7 +52,7 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
     });
 
     return (
-      <div className={chatClass}>
+      <div className={chatClass} key={item.id}>
         <div className={styles.profileInfo}>
           <div className={styles.profile}>
             <Image
@@ -101,8 +111,9 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
         <textarea
           id="send"
           className={styles.input}
-          onChange={changeChat}
           value={sendMessage}
+          onChange={changeChat}
+          onKeyDown={keyUpChat}
         />
         <button type="button" className={styles.btn} onClick={upChat}>
           전송
