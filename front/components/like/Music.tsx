@@ -18,7 +18,7 @@ function Music(props: { likeList: SongInfo[] }) {
 
   useEffect(() => {
     likeList.map((item, idx) => (item.ranking = idx));
-  });
+  }, []);
 
   //  페이지
   const [page, setPage] = useState(1);
