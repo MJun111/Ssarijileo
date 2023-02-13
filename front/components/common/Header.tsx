@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
 import { RootState } from '@/redux/store';
-import { getCookie } from '@/util/cookie';
 
 import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
@@ -140,19 +139,19 @@ function Header() {
     friendId: 1,
   };
 
-  const testAlarm = () => {
-    console.log(
-      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
-    );
-    axios
-      .post('api/v1/friend/invite/', data)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err.config.data);
-      });
-  };
+  // const testAlarm = () => {
+  //   console.log(
+  //     `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
+  //   );
+  //   axios
+  //     .post('api/v1/friend/invite/', data)
+  //     .then(res => {
+  //       console.log(res);
+  //     })
+  //     .catch(err => {
+  //       console.log(err.config.data);
+  //     });
+  // };
 
   const testSSE = () => {
     console.log(

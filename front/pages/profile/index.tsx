@@ -1,4 +1,4 @@
- // Path: 'profile/'
+// Path: 'profile/'
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
@@ -42,13 +42,13 @@ function MyPage() {
       <div className={styles.box}>
         <div className={styles.sidebar}>
           <div className={styles.profileImg}>
-            {profile && <Image
+            { profile && <Image
               src={profile}
               alt="profile"
               className={styles.profile}
               width={100}
               height={100}
-            />}
+            /> }
           </div>
           <div className={styles.name}>{nicknameValue}님</div>
           <button
