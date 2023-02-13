@@ -132,9 +132,11 @@ function Header() {
     setModalOpen(true);
   };
 
+  const userNickname = storeUser.nickname;
+
   const data = {
-    fromUserNickname: '쁘띠태학',
-    toUserNickname: '금쪽수민',
+    fromUserNickname: userNickname,
+    toUserNickname: '김소윤_5985',
     friendId: 1,
   };
 
@@ -166,12 +168,9 @@ function Header() {
       });
   };
 
-  // const userNickname = storeUser.nickname;
-  const userNickname = '쁘띠태학';
-  console.log(userNickname);
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
-    if (true) {
+    if (storeLogin.login) {
       let eventSource: EventSource;
       const fetchEventSource = async () => {
         try {
