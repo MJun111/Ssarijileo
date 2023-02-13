@@ -18,7 +18,6 @@ function Nomal(props: {
   screenShare: any;
   screen: any;
   isNow: boolean;
-  screenSession: any;
 }) {
   const { nextSong, screenShare, screen, isNow } = props;
   const [nowtime, setTime] = useState(0);

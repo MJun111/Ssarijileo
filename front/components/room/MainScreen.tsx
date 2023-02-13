@@ -185,7 +185,6 @@ export function MainScreen(props: {
           screenShare={screenShare}
           screen={screen}
           isNow={reservList[0].nickname === myName}
-          screenSession={screenSession}
         />
       )}
       {nowState === 3 &&
