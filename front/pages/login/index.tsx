@@ -50,16 +50,19 @@ function kakao() {
         Authorization: `${getCookie('Authorization')}`,
         refreshToken: `${getCookie('refreshToken')}`,
       },
-    }).then(res => {
-      // 받은 사용자 정보 저장
-      dispatch(setImg(res.data.image));
-      dispatch(setNickname(res.data.nickname));
-      dispatch(setEcho(res.data.eco));
-      dispatch(setVolume(res.data.volume));
+    })
+      .then(res => {
+        // 받은 사용자 정보 저장
+        dispatch(setImg(res.data.image));
+        dispatch(setNickname(res.data.nickname));
+        dispatch(setEcho(res.data.eco));
+        dispatch(setVolume(res.data.volume));
 
-      // 상태 저장 후 메인으로 이동
-      window.location.replace('/');
-    });
+        // 상태 저장 후 메인으로 이동
+      })
+      .then(() => {
+        window.location.replace('/');
+      });
   }
 
   return <Spinner />;

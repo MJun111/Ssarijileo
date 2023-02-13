@@ -243,6 +243,7 @@ function Index() {
       // 참가자가 떠날때
       mySession.on('streamDestroyed', (event: any) => {
         // Remove the stream from 'subscribers' array
+        console.log('아아아아앙', event.stream);
         deleteSubscriber(event.stream.streamManager);
       });
 

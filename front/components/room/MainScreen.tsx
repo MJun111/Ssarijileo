@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -35,7 +35,7 @@ export interface NormalSong {
 }
 
 export interface NextSong {
-  sondId: number;
+  songId: number;
   title: string;
   singer: string;
   album: string;
@@ -156,23 +156,11 @@ export function MainScreen(props: {
       });
   };
 
-  // useEffect(() => {
-  //   // 다른 사람이 노래 부르기 시작하면 state를 4로
-  //   screenSession.on('streamCreated', (event: any) => {
-  //     if (event.stream.typeOfVideo === 'CUSTOM') {
-  //       dispatch(setSsari(3));
-  //       const subscreen = screenSession.subscribe(event.stream, undefined);
-  //       // console.log('커스텀 이벤트', event);
-  //       setScreen(subscreen);
-  //     }
-  //   });
-  // }, []);
-  // 다른 사람이 노래 부르기 시작하면 state를 4로
+  // 다른 사람이 노래 부르기 시작하면 state를 3으로
   screenSession.on('streamCreated', (event: any) => {
     if (event.stream.typeOfVideo === 'CUSTOM') {
       dispatch(setSsari(3));
       const subscreen = screenSession.subscribe(event.stream, undefined);
-      // console.log('커스텀 이벤트', event);
       setScreen(subscreen);
     }
   });
@@ -181,13 +169,6 @@ export function MainScreen(props: {
     '참가자가 없습니다\n10분 뒤 노래방이 닫힙니다.',
     '예약목록이 없습니다\n10분 뒤 노래방이 닫힙니다.',
   ];
-  // const videoRef = useRef<HTMLVideoElement>(null);
-
-  // useEffect(() => {
-  //   if (screen !== undefined && !!videoRef) {
-  //     screen.addVideoElement(videoRef.current);
-  //   }
-  // }, [screen]);
 
   return (
     <div className={styles.modeScreen}>
@@ -204,19 +185,9 @@ export function MainScreen(props: {
           screenShare={screenShare}
           screen={screen}
           isNow={reservList[0].nickname === myName}
+          screenSession={screenSession}
         />
       )}
-      {/* {nowState === 3 &&
-        singMode === 'N' &&
-        reservList[0].nickname !== myName &&
-        nextSong && (
-          <Nomal
-            nextSong={nextSong}
-            screenShare={screenShare}
-            screen={screen}
-            isNow={reservList[0].nickname === myName}
-          />
-        )} */}
       {nowState === 3 &&
         singMode === 'P' &&
         reservList[0].nickname === myName && <PerfectScore />}

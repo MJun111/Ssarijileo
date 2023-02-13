@@ -10,14 +10,17 @@ import { NextSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
+import axios from 'axios';
+import { getCookie } from '@/util/cookie';
 
 function Nomal(props: {
   nextSong: NextSong;
   screenShare: any;
   screen: any;
   isNow: boolean;
+  screenSession: any;
 }) {
-  const { nextSong, screenShare, screen, isNow } = props;
+  const { nextSong, screenShare, screen, isNow, screenSession } = props;
   const [time, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -29,6 +32,8 @@ function Nomal(props: {
   useEffect(() => {
     setNowState(storeSsari.ssari);
   }, [storeSsari]);
+
+  // 저장되어있는 노래목록 불러오기
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -117,6 +122,19 @@ function Nomal(props: {
             source.connect(mp3AudioDestination);
             source.connect(audioContext.destination);
             source.start();
+            // axios
+            //   .post('api/v1/reservation/sing', {
+            //     headers: {
+            //       Authorization: `${getCookie('Authorization')}`,
+            //       refreshToken: `${getCookie('refreshToken')}`,
+            //     },
+            //     data: {
+            //       songId: nextSong.songId,
+            //     },
+            //   })
+            //   .then(res => {
+            //     console.log('노래 시작 요청 응답 : ', res);
+            //   });
             sourceRef.current = source;
             startTime.current = Date.now();
             setIsPlay(true);
@@ -128,11 +146,8 @@ function Nomal(props: {
   }, [nowState]);
 
   useEffect(() => {
-    console.log('!!!!!!!!!!!', isNow);
-    console.log('!!!!!!!!!!!', screen);
-    if (screen !== undefined && !!videoRef) {
+    if (screen !== undefined && !!videoRef.current) {
       screen.addVideoElement(videoRef.current);
-      console.log('!!!!!!!!!!!', videoRef);
     }
   }, [screen]);
 
@@ -241,7 +256,22 @@ function Nomal(props: {
         <button
           type="button"
           onClick={() => {
+            axios
+              .delete('api/v1/reservation/sing', {
+                headers: {
+                  Authorization: `${getCookie('Authorization')}`,
+                  refreshToken: `${getCookie('refreshToken')}`,
+                },
+                data: {
+                  songId: nextSong.songId,
+                  time: time,
+                },
+              })
+              .then(res => {
+                console.log('노래 취소 요청 응답 : ', res.data);
+              });
             sourceRef.current?.stop(0);
+            // screenSession.forceunpublish(screen);
             console.log(sourceRef.current);
             dispatch(setSsari(2));
           }}
