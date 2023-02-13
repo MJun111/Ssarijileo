@@ -70,7 +70,6 @@ export function MainScreen(props: {
   const [reservList, setReservList] = useState<Reserv[]>([]);
   const storeReserv = useSelector((state: RootState) => state.reserv);
   useEffect(() => {
-    console.log('메인스크린에서 예약 변경 수신', storeReserv);
     setReservList([...storeReserv.reserv]);
   }, [storeReserv]);
 
@@ -92,18 +91,45 @@ export function MainScreen(props: {
   // props로 받아야 할 데이터 ---> 참가자 수
   // 상태변경 (참가자 수에 따라)
   // 메인 참가자 여부도 확인 !!!!
-  useEffect(() => {
-    if (subscribers.length !== 0 && reservList.length === 0) {
-      dispatch(setSsari(1));
-    } else if (subscribers.length !== 0 && reservList.length !== 0) {
-      dispatch(setSsari(2));
-    } else if (subscribers.length === 0) {
-      dispatch(setSsari(0));
-    }
-  }, [subscribers]);
+  // useEffect(() => {
+  //   if (subscribers.length !== 0 && reservList.length === 0) {
+  //     dispatch(setSsari(1));
+  //   } else if (subscribers.length !== 0 && reservList.length !== 0) {
+  //     dispatch(setSsari(2));
+  //   } else if (subscribers.length === 0) {
+  //     dispatch(setSsari(0));
+  //   }
+  // }, [subscribers]);
 
   // 상태변경에 따른 행동 ()
+  // useEffect(() => {
+  //   if (nowState === 2) {
+  //     axios({
+  //       method: 'GET',
+  //       url: `api/v1/song/detail/${reservList[0].songId}`,
+  //       headers: {
+  //         Authorization: `${getCookie('Authorization')}`,
+  //         refreshToken: `${getCookie('refreshToken')}`,
+  //       },
+  //     }).then(res => {
+  //       const response = res.data;
+  //       const runtime = res.data.time.split(':');
+  //       response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
+  //       setNextSong(response);
+  //       console.log(response);
+  //     });
+  //   }
+  // }, [nowState]);
+
+  const nextStep = () => {};
+
   useEffect(() => {
+    if (nowState === 0) {
+      if (subscribers.length !== 0) dispatch(setSsari(1));
+    }
+    if (nowState === 1) {
+      if (reservList.length > 0) dispatch(setSsari(2));
+    }
     if (nowState === 2) {
       axios({
         method: 'GET',
@@ -118,9 +144,27 @@ export function MainScreen(props: {
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
         setNextSong(response);
         console.log(response);
+        if (reservList[0].nickname === myName) {
+          dispatch(setSsari(3));
+        } else dispatch(setSsari(4));
       });
     }
+    if (nowState === 7) {
+      publisher[0].publishAudio(true);
+      nextStep();
+    }
+    // if (nowState === 0)
+    // if (nowState === 0)
+    // if (nowState === 0)
+    // if (nowState === 0)
+    // if (nowState === 0)
   }, [nowState]);
+
+  useEffect(() => {
+    if (reservList.length === 1 && nowState === 1) {
+      dispatch(setSsari(2));
+    }
+  }, [reservList]);
 
   // 화면 공유
   const screenShare = (audioContext: any, mp3AudioDestination: any) => {
@@ -156,18 +200,25 @@ export function MainScreen(props: {
       });
   };
 
-  // 다른 사람이 노래 부르기 시작하면 state를 3으로
+  // 다른 사람이 노래 부르기 시작하면 state를 6으로
   screenSession.on('streamCreated', (event: any) => {
     if (event.stream.typeOfVideo === 'CUSTOM') {
-      dispatch(setSsari(3));
+      dispatch(setSsari(6));
       const subscreen = screenSession.subscribe(event.stream, undefined);
       setScreen(subscreen);
     }
   });
 
+  // 다른사람 노래부르는 화면 송출 끝날때
+  screenSession.on('streamDestroyed', () => {
+    setScreen(undefined);
+  });
+
   const title = [
     '참가자가 없습니다\n10분 뒤 노래방이 닫힙니다.',
     '예약목록이 없습니다\n10분 뒤 노래방이 닫힙니다.',
+    '노래를 불러오는 중입니다\n',
+    '다른 사람이 부를 차례입니다.\n',
   ];
 
   return (
@@ -175,21 +226,18 @@ export function MainScreen(props: {
       {/* 공통 */}
       {nowState === 0 && <CommonState title={title[0]} />}
       {nowState === 1 && <CommonState title={title[1]} />}
+      {nowState === 2 && <CommonState title={title[2]} />}
       {/* 대기 상태 */}
-      {nowState === 2 && <CommonState title={title[0]} />}
+      {nowState === 3 && <CommonState title={title[0]} />}
+      {nowState === 4 && <CommonState title={title[3]} />}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {nowState === 3 && singMode === 'N' && nextSong && (
-        <Nomal
-          nextSong={nextSong}
-          screenShare={screenShare}
-          screen={screen}
-          isNow={reservList[0].nickname === myName}
-        />
+      {[5, 6].includes(nowState) && singMode === 'N' && nextSong && (
+        <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
       )}
-      {nowState === 3 &&
+      {/* {nowState === 3 &&
         singMode === 'P' &&
-        reservList[0].nickname === myName && <PerfectScore />}
+        reservList[0].nickname === myName && <PerfectScore />} */}
       {/* {nowState === 3 &&
         singMode === 'P' &&
         reservList[0].nickname !== myName && (
@@ -197,12 +245,12 @@ export function MainScreen(props: {
             <track kind="captions" />
           </video>
         )} */}
-      {nowState === 3 &&
+      {/* {nowState === 3 &&
         singMode === 'O' &&
         reservList[0].nickname === myName && <OrderSong />}
       {nowState === 3 &&
         singMode === 'O' &&
-        reservList[0].nickname !== myName && <Guess />}
+        reservList[0].nickname !== myName && <Guess />} */}
     </div>
   );
 }

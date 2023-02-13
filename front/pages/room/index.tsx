@@ -36,7 +36,7 @@ function Index() {
   }, [storeUser]);
 
   // session Info
-  const mySessionId = '12345';
+  const mySessionId = '123451';
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
@@ -123,22 +123,6 @@ function Index() {
       })
       .catch((error: any) => {
         console.error('다음 싱어 시그널 에러', error);
-      });
-  };
-
-  // 예약정보 공유 JSON.stringify(reservationList)
-  const shareReservationList = () => {
-    session
-      .signal({
-        data: JSON.stringify(reservationList), // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'reservationList', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`노래 예약 정보 송신 성공`);
-      })
-      .catch((error: any) => {
-        console.error('노래 예약 정보 송신 실패', error);
       });
   };
 
@@ -322,9 +306,6 @@ function Index() {
           })}
           <button type="button" onClick={nextSinger}>
             ||
-          </button>
-          <button type="button" onClick={shareReservationList}>
-            list
           </button>
           <div className={styles.singScreen}>
             <MainScreen

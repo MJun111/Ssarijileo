@@ -43,6 +43,7 @@ function CommonState({ title }: any) {
       singer: reservList.length ? reservList[0].singer : '',
     },
   ];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(prev => {
@@ -59,11 +60,12 @@ function CommonState({ title }: any) {
 
     return () => clearInterval(interval);
   }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {nowState !== 2 && title}
-        {nowState === 2 && reservList[0].nickname === userInfo && (
+        {nowState < 3 && title}
+        {nowState === 3 && (
           <div className={styles.btn}>
             <div className={styles.item}>
               <button
@@ -71,7 +73,7 @@ function CommonState({ title }: any) {
                 className={styles.back}
                 disabled={reservList[0].nickname !== userInfo}
                 onClick={() => {
-                  dispatch(setSsari(3));
+                  dispatch(setSsari(5));
                 }}
               >
                 <Image
@@ -92,7 +94,7 @@ function CommonState({ title }: any) {
                 className={styles.back}
                 disabled={reservList[0].nickname !== userInfo}
                 onClick={() => {
-                  dispatch(setSsari(3));
+                  dispatch(setSsari(5));
                 }}
               >
                 <Image
@@ -101,13 +103,6 @@ function CommonState({ title }: any) {
                   height={58}
                   alt="play"
                   className={styles.icon}
-                  onClick={() => {
-                    if (reservList[0].nickname === userInfo) {
-                      dispatch(setSsari(3));
-                    } else {
-                      dispatch(setSsari(4));
-                    }
-                  }}
                 />
               </button>
               <div className={styles.context}>
@@ -116,7 +111,7 @@ function CommonState({ title }: any) {
             </div>
           </div>
         )}
-        {nowState === 2 && reservList[0].nickname !== userInfo && (
+        {nowState === 4 && (
           <div className={styles.message}>
             예약한 참가자가 대기 중입니다... <br />
             10분 뒤 자동으로 차례가 넘어갑니다...
@@ -124,7 +119,7 @@ function CommonState({ title }: any) {
         )}
       </div>
       <div className={styles.timeLine}>
-        {nowState === 2 && (
+        {nowState > 2 && (
           <span className={styles.nextInfo}>
             {nextSong[0].title}-{nextSong[0].singer}
           </span>
