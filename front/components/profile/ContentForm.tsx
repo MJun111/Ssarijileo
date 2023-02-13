@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import classNames from 'classnames';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -13,6 +14,7 @@ import styles from '@/styles/profile/ContentForm.module.scss';
 function ContentForm(props: { theme: string }) {
   const { theme } = props;
   const [nicknameValue, setNicknameValue] = useState('');
+  const [nicknameWarning, setNicknameWarning] = useState(false);
   const dispatch = useDispatch();
 
   const storeUser = useSelector((state: RootState) => state.user);
@@ -33,7 +35,17 @@ function ContentForm(props: { theme: string }) {
     console.log('저장');
   };
 
+  const nicknameClass = classNames({
+    [styles.warning]: nicknameWarning,
+    [styles.nickname]: true,
+  });
+
   const nickNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 10) {
+      setNicknameWarning(true);
+      return;
+    }
+    setNicknameWarning(false);
     setNicknameValue(e.target.value);
   };
 
@@ -53,7 +65,7 @@ function ContentForm(props: { theme: string }) {
         <input
           id="nickname"
           type="text"
-          className={styles.nickname}
+          className={nicknameClass}
           value={nicknameValue}
           onChange={nickNameChange}
         />

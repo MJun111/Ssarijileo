@@ -1,9 +1,9 @@
 import styles from '@/styles/error/Error.module.scss';
 
-export default function NotFound() {
+function Forbidden() {
   return (
     <div className={styles.container}>
-      <div className={styles.title}>404</div>
+      <div className={styles.title}>ERROR</div>
       <div className={styles.sub}>Oops! Look likes something going wrong</div>
       <div className={styles.context}>
         Page Cannot be found! we’ll have it figured out in no time. <br />
@@ -15,3 +15,5 @@ export default function NotFound() {
     </div>
   );
 }
+
+export default Forbidden;

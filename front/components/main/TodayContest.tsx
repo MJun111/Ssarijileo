@@ -1,51 +1,92 @@
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
+import { getCookie } from '@/util/cookie';
 import type { RankingItem } from '@/pages';
 
 import styles from '@/styles/main/TodayContest.module.scss';
 
 function TodayContest(props: { ranking: RankingItem[] }) {
   const { ranking } = props;
-  const storeLogin: any = useSelector<any>(state => state.login);
+  const storeLogin = useSelector((state: RootState) => state.login);
+  const storeUser = useSelector((state: RootState) => state.user);
+  const [rank, setRank] = useState<JSX.Element[]>([]);
+  const medal = [
+    'img/main/main_medal_gold_image.svg',
+    'img/main/main_medal_silver_image.svg',
+    'img/main/main_medal_bronze_image.svg',
+  ];
 
-  const rank = ranking.map(item => (
-    <tr
-      className={styles.item}
-      key={item.rank}
-      onClick={() => {
-        if (storeLogin.login) {
-          window.location.replace('contest/');
-        } else {
-          window.confirm('로그인 후 이용하세요🎤🎵');
-        }
-      }}
-    >
-      <td className={styles.medal}>
-        <Image
-          src={item.medal}
-          width={50}
-          height={50}
-          alt="medal"
-          className={styles.medalIcon}
-        />
-      </td>
-      <td className={styles.profile}>
-        <div className={styles.content}>
-          <Image src={item.profile} width={30} height={30} alt="profile" />
-        </div>
-      </td>
-      <td className={styles.name}>{item.name}</td>
-      <td className={styles.title}>{item.title}</td>
-      <td className={styles.singer}>{item.singer}</td>
-      <td className={styles.like}>{item.like}</td>
-    </tr>
-  ));
-  const simpleRank = ranking.map(item => {
+  const profiles: {
+    nickname: string;
+    image: string;
+  }[] = [];
+
+  const findProfile = (nickname: string) => {
+    const profile = profiles.find(item => item.nickname === nickname);
+    return profile ? profile.image : 'img/main/main_profile_image.svg';
+  };
+
+  useEffect(() => {
+    axios
+      .get(`api/v1/friend/${storeUser.nickname}`, {
+        headers: {
+          Authorization: getCookie('Authorization'),
+        },
+      })
+      .then(res => {
+        profiles.push(...res.data);
+      })
+      .then(() => {
+        const rankData = ranking.map((item, idx) => (
+          <tr
+            className={styles.item}
+            key={item.singingContestId}
+            onClick={() => {
+              if (storeLogin.login) {
+                window.location.replace('contest/');
+              } else {
+                window.confirm('로그인 후 이용하세요🎤🎵');
+              }
+            }}
+          >
+            <td className={styles.medal}>
+              <Image
+                src={medal[idx]}
+                width={50}
+                height={50}
+                alt="medal"
+                className={styles.medalIcon}
+              />
+            </td>
+            <td className={styles.profile}>
+              <div className={styles.content}>
+                <Image
+                  src={findProfile(item.nickname)}
+                  width={30}
+                  height={30}
+                  alt="profile"
+                />
+              </div>
+            </td>
+            <td className={styles.name}>{item.nickname}</td>
+            <td className={styles.title}>{item.title}</td>
+            <td className={styles.singer}>{item.singer}</td>
+            <td className={styles.like}>{item.likeCount}</td>
+          </tr>
+        ));
+        setRank(rankData);
+      });
+  }, [ranking]);
+
+  const simpleRank = ranking.map((item, idx) => {
     return (
       <tr
         className={styles.simpleItem}
-        key={item.rank}
+        key={item.singingContestId}
         onClick={() => {
           if (storeLogin.login) {
             window.location.replace('contest/');
@@ -56,14 +97,14 @@ function TodayContest(props: { ranking: RankingItem[] }) {
       >
         <td className={styles.simpleMedal}>
           <Image
-            src={item.medal}
+            src={medal[idx]}
             width={50}
             height={50}
             alt="medal"
             className={styles.simpleMedalIcon}
           />
         </td>
-        <th className={styles.simpleName}>{item.name}</th>
+        <th className={styles.simpleName}>{item.nickname}</th>
       </tr>
     );
   });

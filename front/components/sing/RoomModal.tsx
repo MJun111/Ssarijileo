@@ -21,10 +21,21 @@ function RoomModal({ setModalOpen }: any) {
   };
 
   // 방제
+  const [titleWarning, setTitleWarning] = useState(false);
   const [title, setTitle] = useState('');
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 20) {
+      setTitleWarning(true);
+      return;
+    }
+    setTitleWarning(false);
     setTitle(event.target.value);
   };
+
+  const titleClass = classNames({
+    [styles.warning]: titleWarning,
+    [styles.input]: true,
+  });
 
   // 비공개방 체크값 관리
   const [unlock, setLock] = useState(true);
@@ -96,7 +107,7 @@ function RoomModal({ setModalOpen }: any) {
           <input
             type="text"
             placeholder="방 제목을 입력하세요..."
-            className={styles.input}
+            className={titleClass}
             value={title}
             onChange={changeTitle}
           />

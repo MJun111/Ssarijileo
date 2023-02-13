@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
+import axios from 'axios';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
@@ -49,7 +52,6 @@ function Header() {
   }, [storeLogin]);
 
   useEffect(() => {
-    console.log(storeUser.img);
     setProfile(storeUser.img);
   }, [storeUser]);
 
@@ -129,16 +131,69 @@ function Header() {
     setModalOpen(true);
   };
 
+  const userNickname = storeUser.nickname;
+
+  const data = {
+    fromUserNickname: userNickname,
+    toUserNickname: userNickname,
+    friendId: 1,
+  };
+
+  // const testAlarm = () => {
+  //   console.log(
+  //     `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
+  //   );
+  //   axios
+  //     .post('api/v1/friend/invite/', data)
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.config.data);
+  //     });
+  // };
+
+  const testSSE = () => {
+    console.log(
+      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
+    );
+    axios.post('api/v1/friend/request/', data);
+    // .then(res => {
+    //   console.log(res);
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
+  };
+
+  const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
-    let eventSource: EventSource;
-    const fetchEventSource = async () => {
-      eventSource = new EventSource('/api/notifications');
+    if (storeLogin.login) {
+      // const token = getCookie('Authorization');
+      const eventSource = new EventSource(`api/v1/sse/${userNickname}`, {
+        // headers: { Authorization: token },
+        heartbeatTimeout: 1000000,
+      });
+
       eventSource.onmessage = e => {
-        const data = JSON.parse(e.data);
-        console.log(data);
+        try {
+          const msg = JSON.parse(e.data);
+          if (msg.type === 'request') {
+            console.log('친구요청이 왔습니다.');
+          } else if (msg.type === 'invite') {
+            console.log('초대장이 왔습니다.');
+          }
+        } catch (err) {
+          console.log(err);
+        }
       };
-    };
-    fetchEventSource();
+      eventSource.onerror = (e: any) => {
+        if (!e.error?.message.includes('No activity')) {
+          console.log('close');
+          eventSource.close();
+        }
+      };
+    }
   }, []);
 
   return (
@@ -198,7 +253,7 @@ function Header() {
               width={20}
               height={20}
               className={styles.alarm}
-              // onClick={showAlarm}
+              onClick={testSSE}
             />
             <Image
               src={icons.logout}

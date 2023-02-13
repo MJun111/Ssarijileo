@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
-import styles from '@/styles/like/Music.module.scss';
-import ChartListItem from '@/components/chart/ChartListItem';
+
+// import ChartListItem from '@/components/chart/ChartListItem';
 import Pagination from '@/components/common/Pagination';
 import { getCookie } from '@/util/cookie';
+
+import styles from '@/styles/like/Music.module.scss';
 
 function Music() {
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
@@ -268,7 +269,7 @@ function Music() {
         {postData.map(item => {
           return (
             <div className={styles.item} key={item.rank}>
-              <ChartListItem item={item} />
+              {/* <ChartListItem item={item} /> */}
             </div>
           );
         })}

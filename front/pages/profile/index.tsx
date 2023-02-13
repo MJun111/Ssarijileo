@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 import ContentForm from '@/components/profile/ContentForm';
 import FriendForm from '@/components/profile/FriendForm';
 
 import styles from '@/styles/profile/Profile.module.scss';
-import { RootState } from '@/redux/store';
 
 function MyPage() {
   // const DUMMY_DATA = {
@@ -42,13 +42,15 @@ function MyPage() {
       <div className={styles.box}>
         <div className={styles.sidebar}>
           <div className={styles.profileImg}>
-            <Image
-              src={profile}
-              alt="profile"
-              className={styles.profile}
-              width={100}
-              height={100}
-            />
+            {profile && (
+              <Image
+                src={profile}
+                alt="profile"
+                className={styles.profile}
+                width={100}
+                height={100}
+              />
+            )}
           </div>
           <div className={styles.name}>{nicknameValue}님</div>
           <button
