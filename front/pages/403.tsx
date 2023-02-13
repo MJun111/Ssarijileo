@@ -1,17 +1,26 @@
+import { useDispatch } from 'react-redux';
+import { setLogin } from '@/redux/store/loginSlice';
+
 import styles from '@/styles/error/Error.module.scss';
 
 function Forbidden() {
+  const dispatch = useDispatch();
+  dispatch(setLogin(false));
+  const date = new Date().toLocaleString();
   return (
     <div className={styles.container}>
-      <div className={styles.title}>ERROR</div>
-      <div className={styles.sub}>Oops! Look likes something going wrong</div>
-      <div className={styles.context}>
-        Page Cannot be found! we’ll have it figured out in no time. <br />
-        Menwhile, cheek out these fresh ideas:
+      <div className={styles.title}>403 Forbidden</div>
+      <div className={styles.sub}>
+        You don't have permission to access / on this server.
       </div>
-      <button className={styles.homeBtn} type="button">
-        Go to home
-      </button>
+      <div className={styles.context}>
+        Meanwhile, check out these fresh ideas:
+        <br />
+        Please try login again
+        <br />
+        <br />
+        {date}
+      </div>
     </div>
   );
 }

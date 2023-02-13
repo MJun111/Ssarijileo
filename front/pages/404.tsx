@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className={styles.sub}>Oops! Look likes something going wrong</div>
       <div className={styles.context}>
         Page Cannot be found! we’ll have it figured out in no time. <br />
-        Menwhile, cheek out these fresh ideas:
+        Meanwhile, check out these fresh ideas:
       </div>
       <button className={styles.homeBtn} type="button">
         Go to home

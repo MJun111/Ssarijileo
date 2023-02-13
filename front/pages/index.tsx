@@ -77,6 +77,15 @@ export const getServerSideProps: GetServerSideProps = async context => {
     };
   } catch (err) {
     const res = JSON.parse(JSON.stringify(err));
+    if (res?.status === 403) {
+      return {
+        redirect: {
+          destination: '/403',
+          permanent: false,
+        },
+      };
+    }
+
     return {
       props: {
         chartItemA: null,
@@ -95,8 +104,6 @@ function Home(props: {
   res: any;
 }) {
   const { chartItemA, chartItemB, ranking, res } = props;
-  console.log(ranking);
-  console.log('status', res);
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
 

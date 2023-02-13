@@ -28,8 +28,8 @@ const nextConfig = {
         // destination: 'http://localhost:8060/api/v1/friend/request/:path*',
       },
       {
-        source: '/:path*',
-        destination: 'http://i8b302.p.ssafy.io:8000/:path*',
+        source: '/api/v1/:path*',
+        destination: 'http://i8b302.p.ssafy.io:8000/api/v1/:path*',
       },
     ];
   },

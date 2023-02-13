@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import axios from 'axios';
 
+import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
 import { RootState } from '@/redux/store';
+import 'react-toastify/dist/ReactToastify.css';
 
 import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
@@ -139,31 +141,18 @@ function Header() {
     friendId: 1,
   };
 
-  // const testAlarm = () => {
-  //   console.log(
-  //     `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
-  //   );
-  //   axios
-  //     .post('api/v1/friend/invite/', data)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.config.data);
-  //     });
-  // };
+  const testAlarm = () => {
+    console.log(
+      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
+    );
+    axios.post('api/v1/friend/invite/', data);
+  };
 
   const testSSE = () => {
     console.log(
       `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
     );
     axios.post('api/v1/friend/request/', data);
-    // .then(res => {
-    //   console.log(res);
-    // })
-    // .catch(err => {
-    //   console.log(err);
-    // });
   };
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
@@ -178,10 +167,22 @@ function Header() {
       eventSource.onmessage = e => {
         try {
           const msg = JSON.parse(e.data);
-          if (msg.type === 'request') {
+          console.log(msg);
+          if (msg.args.type === 'request') {
             console.log('친구요청이 왔습니다.');
-          } else if (msg.type === 'invite') {
-            console.log('초대장이 왔습니다.');
+          } else if (msg.args.type === 'invite') {
+            const notify = () =>
+              toast(`${msg.fromUserNickname}으로 부터의 초대`, {
+                position: 'top-right',
+                autoClose: 15000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: themeMode === 'light' ? 'light' : 'dark',
+              });
+            notify();
           }
         } catch (err) {
           console.log(err);
@@ -253,8 +254,9 @@ function Header() {
               width={20}
               height={20}
               className={styles.alarm}
-              onClick={testSSE}
+              onClick={testAlarm}
             />
+            <ToastContainer />
             <Image
               src={icons.logout}
               alt="logout"
