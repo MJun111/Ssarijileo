@@ -91,6 +91,7 @@ export function MainScreen(props: {
 
   // props로 받아야 할 데이터 ---> 참가자 수
   // 상태변경 (참가자 수에 따라)
+  // 메인 참가자 여부도 확인 !!!!
   useEffect(() => {
     if (subscribers.length !== 0 && reservList.length === 0) {
       dispatch(setSsari(1));
@@ -101,38 +102,23 @@ export function MainScreen(props: {
     }
   }, [subscribers]);
 
-  // 상태변경 (노래 예약 목록에 따라)
-  useEffect(() => {
-    if (nowState === 0 && reservList.length > 0) {
-      dispatch(setSsari(2));
-    } else if (nowState === 1 && reservList.length > 0) {
-      dispatch(setSsari(2));
-    }
-  }, [reservList]);
-
   // 상태변경에 따른 행동 ()
   useEffect(() => {
-    if (nowState === 1) {
-      if (reservList.length > 0) {
-        dispatch(setSsari(2));
-      }
-    } else if (nowState === 2) {
-      if (reservList[0].nickname === myName) {
-        axios({
-          method: 'GET',
-          url: `api/v1/song/detail/${reservList[0].songId}`,
-          headers: {
-            Authorization: `${getCookie('Authorization')}`,
-            refreshToken: `${getCookie('refreshToken')}`,
-          },
-        }).then(res => {
-          const response = res.data;
-          const runtime = res.data.time.split(':');
-          response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
-          setNextSong(response);
-          console.log(response);
-        });
-      }
+    if (nowState === 2) {
+      axios({
+        method: 'GET',
+        url: `api/v1/song/detail/${reservList[0].songId}`,
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      }).then(res => {
+        const response = res.data;
+        const runtime = res.data.time.split(':');
+        response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
+        setNextSong(response);
+        console.log(response);
+      });
     }
   }, [nowState]);
 
@@ -170,29 +156,38 @@ export function MainScreen(props: {
       });
   };
 
-  useEffect(() => {
-    // 다른 사람이 노래 부르기 시작하면 state를 4로
-    screenSession.on('streamCreated', (event: any) => {
-      if (event.stream.typeOfVideo === 'CUSTOM') {
-        dispatch(setSsari(4));
-        const subscreen = screenSession.subscribe(event.stream, undefined);
-        // console.log('커스텀 이벤트', event);
-        setScreen(subscreen);
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   // 다른 사람이 노래 부르기 시작하면 state를 4로
+  //   screenSession.on('streamCreated', (event: any) => {
+  //     if (event.stream.typeOfVideo === 'CUSTOM') {
+  //       dispatch(setSsari(3));
+  //       const subscreen = screenSession.subscribe(event.stream, undefined);
+  //       // console.log('커스텀 이벤트', event);
+  //       setScreen(subscreen);
+  //     }
+  //   });
+  // }, []);
+  // 다른 사람이 노래 부르기 시작하면 state를 4로
+  screenSession.on('streamCreated', (event: any) => {
+    if (event.stream.typeOfVideo === 'CUSTOM') {
+      dispatch(setSsari(3));
+      const subscreen = screenSession.subscribe(event.stream, undefined);
+      // console.log('커스텀 이벤트', event);
+      setScreen(subscreen);
+    }
+  });
 
   const title = [
     '참가자가 없습니다\n10분 뒤 노래방이 닫힙니다.',
     '예약목록이 없습니다\n10분 뒤 노래방이 닫힙니다.',
   ];
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    if (screen !== undefined && !!videoRef) {
-      screen.addVideoElement(videoRef.current);
-    }
-  }, [screen]);
+  // useEffect(() => {
+  //   if (screen !== undefined && !!videoRef) {
+  //     screen.addVideoElement(videoRef.current);
+  //   }
+  // }, [screen]);
 
   return (
     <div className={styles.modeScreen}>
@@ -204,19 +199,40 @@ export function MainScreen(props: {
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
       {nowState === 3 && singMode === 'N' && nextSong && (
-        <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
+        <Nomal
+          nextSong={nextSong}
+          screenShare={screenShare}
+          screen={screen}
+          isNow={reservList[0].nickname === myName}
+        />
       )}
-      {nowState === 4 && singMode === 'N' && nextSong && (
-        <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
-      )}
-      {nowState === 3 && singMode === 'P' && <PerfectScore />}
-      {nowState === 4 && singMode === 'P' && (
-        <video className={styles.video} autoPlay ref={videoRef}>
-          <track kind="captions" />
-        </video>
-      )}
-      {nowState === 3 && singMode === 'O' && <OrderSong />}
-      {nowState === 4 && singMode === 'O' && <Guess />}
+      {/* {nowState === 3 &&
+        singMode === 'N' &&
+        reservList[0].nickname !== myName &&
+        nextSong && (
+          <Nomal
+            nextSong={nextSong}
+            screenShare={screenShare}
+            screen={screen}
+            isNow={reservList[0].nickname === myName}
+          />
+        )} */}
+      {nowState === 3 &&
+        singMode === 'P' &&
+        reservList[0].nickname === myName && <PerfectScore />}
+      {/* {nowState === 3 &&
+        singMode === 'P' &&
+        reservList[0].nickname !== myName && (
+          <video className={styles.video} autoPlay ref={videoRef}>
+            <track kind="captions" />
+          </video>
+        )} */}
+      {nowState === 3 &&
+        singMode === 'O' &&
+        reservList[0].nickname === myName && <OrderSong />}
+      {nowState === 3 &&
+        singMode === 'O' &&
+        reservList[0].nickname !== myName && <Guess />}
     </div>
   );
 }

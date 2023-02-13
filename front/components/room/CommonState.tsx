@@ -39,8 +39,8 @@ function CommonState({ title }: any) {
 
   const nextSong = [
     {
-      title: '가을 아침',
-      singer: '아이유',
+      title: reservList.length ? reservList[0].title : '',
+      singer: reservList.length ? reservList[0].singer : '',
     },
   ];
   useEffect(() => {
@@ -63,7 +63,7 @@ function CommonState({ title }: any) {
     <div className={styles.container}>
       <div className={styles.content}>
         {nowState !== 2 && title}
-        {nowState === 2 && (
+        {nowState === 2 && reservList[0].nickname === userInfo && (
           <div className={styles.btn}>
             <div className={styles.item}>
               <button
@@ -71,11 +71,7 @@ function CommonState({ title }: any) {
                 className={styles.back}
                 disabled={reservList[0].nickname !== userInfo}
                 onClick={() => {
-                  if (reservList[0].nickname === userInfo) {
-                    dispatch(setSsari(3));
-                  } else {
-                    dispatch(setSsari(4));
-                  }
+                  dispatch(setSsari(3));
                 }}
               >
                 <Image
@@ -96,11 +92,7 @@ function CommonState({ title }: any) {
                 className={styles.back}
                 disabled={reservList[0].nickname !== userInfo}
                 onClick={() => {
-                  if (reservList[0].nickname === userInfo) {
-                    dispatch(setSsari(3));
-                  } else {
-                    dispatch(setSsari(4));
-                  }
+                  dispatch(setSsari(3));
                 }}
               >
                 <Image
@@ -122,6 +114,12 @@ function CommonState({ title }: any) {
                 일반모드로 <br /> 시작하기
               </div>
             </div>
+          </div>
+        )}
+        {nowState === 2 && reservList[0].nickname !== userInfo && (
+          <div className={styles.message}>
+            예약한 참가자가 대기 중입니다... <br />
+            10분 뒤 자동으로 차례가 넘어갑니다...
           </div>
         )}
       </div>

@@ -11,8 +11,13 @@ import { NextSong } from '@/components/room/MainScreen';
 import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 
-function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
-  const { nextSong, screenShare, screen } = props;
+function Nomal(props: {
+  nextSong: NextSong;
+  screenShare: any;
+  screen: any;
+  isNow: boolean;
+}) {
+  const { nextSong, screenShare, screen, isNow } = props;
   const [time, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -123,15 +128,18 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
   }, [nowState]);
 
   useEffect(() => {
+    console.log('!!!!!!!!!!!', isNow);
+    console.log('!!!!!!!!!!!', screen);
     if (screen !== undefined && !!videoRef) {
       screen.addVideoElement(videoRef.current);
+      console.log('!!!!!!!!!!!', videoRef);
     }
   }, [screen]);
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {nowState === 3 && (
+        {nowState === 3 && isNow && (
           <canvas
             id="screen-screen"
             width={canvasWidth}
@@ -140,7 +148,7 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
             className={styles.canvas}
           />
         )}
-        {nowState === 4 && (
+        {nowState === 3 && !isNow && (
           <video className={styles.video} autoPlay ref={videoRef}>
             <track kind="captions" />
           </video>

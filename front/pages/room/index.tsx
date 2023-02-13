@@ -299,7 +299,7 @@ function Index() {
   }, [init]);
 
   // 임의로 mode 선언
-  const mode = 'O';
+  const mode = 'N';
 
   // 로딩중 return
   if (loading)

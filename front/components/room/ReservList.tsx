@@ -52,10 +52,8 @@ function ReservList({ session }: any) {
     const getReserveData = JSON.parse(event.data);
     console.log('예약리스트', getReserveData);
     dispatch(setReserv(getReserveData));
-    if (getReserveData.length !== 0) {
-      if (storeSsari.ssari === 1 || storeSsari.ssari === 0) {
-        dispatch(setSsari(2));
-      }
+    if (getReserveData.length !== 0 && storeSsari.ssari === 1) {
+      dispatch(setSsari(2));
     }
   });
 
