@@ -7,6 +7,9 @@ import Pagination from '@/components/common/Pagination';
 import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/like/Music.module.scss';
+// import ChartListItem from '@/components/chart/ChartListItem';
+import Pagination from '@/components/common/Pagination';
+import { getCookie } from '@/util/cookie';
 
 function Music() {
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
