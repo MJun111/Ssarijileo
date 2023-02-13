@@ -222,4 +222,3 @@ export function MainScreen(props: {
 }
 
 export default MainScreen;
-
