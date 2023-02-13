@@ -13,6 +13,7 @@ import TodayContest from '@/components/main/TodayContest';
 import Team from '@/components/main/Team';
 
 import styles from '@/styles/Home.module.scss';
+import { RootState } from '@/redux/store';
 
 export interface ChartItem {
   album: string;
@@ -30,7 +31,7 @@ export interface RankingItem {
   singer: string;
   file: string;
   registerDate: string;
-  likeCount: number;
+  lickCount: number;
   like: boolean;
 }
 
@@ -60,27 +61,28 @@ export const getServerSideProps: GetServerSideProps = async context => {
     );
     const sortedRanking = rankingRes.data.sort(
       (a: RankingItem, b: RankingItem) => {
-        return b.likeCount - a.likeCount;
+        return b.lickCount - a.lickCount;
       },
     );
     const ranking: RankingItem[] = sortedRanking.slice(0, 3);
+    // const ranking: any = JSON.parse(JSON.stringify(rankingRes.data));
 
     return {
       props: {
         chartItemA,
         chartItemB,
         ranking,
-        status: 200,
+        res: { status: 200 },
       },
     };
   } catch (err) {
-    const status = JSON.parse(JSON.stringify(err)).status;
+    const res = JSON.parse(JSON.stringify(err));
     return {
       props: {
         chartItemA: null,
         chartItemB: null,
         ranking: null,
-        status,
+        res,
       },
     };
   }
@@ -90,12 +92,13 @@ function Home(props: {
   chartItemA: ChartItem[];
   chartItemB: ChartItem[];
   ranking: RankingItem[];
-  status: number;
+  res: any;
 }) {
-  const { chartItemA, chartItemB, ranking, status } = props;
-  console.log('status', status);
+  const { chartItemA, chartItemB, ranking, res } = props;
+  console.log(ranking);
+  console.log('status', res);
   const [themeMode, setThemeMode] = useState('light');
-  const storeTheme: any = useSelector<any>(state => state.theme);
+  const storeTheme = useSelector((state: RootState) => state.theme);
 
   useEffect(() => {
     setThemeMode(storeTheme.theme);

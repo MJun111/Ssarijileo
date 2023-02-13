@@ -178,11 +178,14 @@ function Header() {
       eventSource.onmessage = e => {
         try {
           const data = JSON.parse(e.data);
-          console.log(data);
-          if (data.type === 'friend') {
+          if (data.type === 'request') {
             console.log('친구요청이 왔습니다.');
+          } else if (data.type === 'invite') {
+            console.log('초대장이 왔습니다.');
           }
-        } catch (err) {}
+        } catch (err) {
+          console.log(err);
+        }
       };
       eventSource.onerror = (e: any) => {
         if (!e.error?.message.includes('No activity')) {
