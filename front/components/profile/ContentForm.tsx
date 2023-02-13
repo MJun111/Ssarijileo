@@ -3,6 +3,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { RootState } from '@/redux/store';
 import { setNickname } from '@/redux/store/userSlice';
 
@@ -10,7 +11,6 @@ import MicControlBar from '@/components/common/MicControlBar';
 import EchoControlBar from '@/components/common/EchoControlBar';
 
 import styles from '@/styles/profile/ContentForm.module.scss';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 function ContentForm(props: { theme: string }) {

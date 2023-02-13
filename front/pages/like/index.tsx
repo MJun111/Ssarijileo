@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import classnames from 'classnames';
 
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { setLike } from '@/redux/store/likeSlice';
 import { RootState } from '@/redux/store';
 
@@ -11,7 +12,6 @@ import Music from '@/components/like/Music';
 import Video from '@/components/like/Video';
 import SoundBar from '@/components/common/SoundBar';
 import { useCookie } from '@/hooks/useCookie';
-import axios from 'axios';
 
 export interface SongInfo {
   songId: number;

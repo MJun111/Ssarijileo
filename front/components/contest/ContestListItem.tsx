@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
+import axios from 'axios';
 import styles from '@/styles/contest/ContestListItem.module.scss';
 import { RootState } from '@/redux/store';
 import { VideoInfo } from '@/pages/contest';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 type VideoProps = {
@@ -18,6 +18,7 @@ function ContestListItem({ info }: VideoProps) {
   const [likeMode, setLikeMode] = useState(like);
   const [modalMode, setModalMode] = useState(false);
   const [nowLike, setNowLike] = useState(likeCount);
+  const [singId] = useState(singingContestId);
   // file = 'video/test.mp4';
 
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -66,7 +67,7 @@ function ContestListItem({ info }: VideoProps) {
                     .post(
                       'api/v1/singing-contest/like',
                       {
-                        singingContestId: singingContestId,
+                        singingContestId: singId,
                         isLike: likeMode ? 'N' : 'Y',
                       },
                       {

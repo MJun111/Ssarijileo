@@ -5,8 +5,6 @@ import { useSelector } from 'react-redux';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
 import { RootState } from '@/redux/store';
-import axios from 'axios';
-import { getCookie } from '@/util/cookie';
 
 interface Reserv {
   nickname: string;

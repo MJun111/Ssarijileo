@@ -1,12 +1,12 @@
 // import styles from '@/styles/contest/Contest.module.scss';
 import { GetServerSideProps } from 'next';
+import axios from 'axios';
 
 import ContestList from '@/components/contest/ContestList';
 
 import ContestTop from '@/components/contest/ContestTop';
 import SoundBar from '@/components/common/SoundBar';
 import { useCookie } from '@/hooks/useCookie';
-import axios from 'axios';
 
 export interface VideoInfo {
   singingContestId: number;
