@@ -36,7 +36,7 @@ function Index() {
   }, [storeUser]);
 
   // session Info
-  const mySessionId = '1234';
+  const mySessionId = '12345';
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
@@ -104,39 +104,26 @@ function Index() {
     setInit(true);
   };
 
-  // 다음 singer로 화면 전환
-  // 임시 예약 리스트
+  // 예약 리스트
   const [reservationList, setReservationList] = useState<Reserv[]>([]);
   const storeReservList = useSelector((state: RootState) => state.reserv);
   useEffect(() => {
     setReservationList(storeReservList.reserv);
   }, [storeReservList]);
-  // const reservationList = [
-  //   {
-  //     user: 'samplename',
-  //     title: '가을 아침',
-  //     singer: '아이유',
-  //     src: 'sounds/가을아침MR.mp3',
-  //     time: 226,
-  //     lyricsList: [],
-  //   },
-  // ];
 
   const nextSinger = () => {
-    if (reservationList[0].nickname === myUserName) {
-      session
-        .signal({
-          data: '', // Any string (optional)
-          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-          type: 'nextSinger', // The type of message (optional)
-        })
-        .then(() => {
-          console.log(`"${myUserName}"가 싱어, 시그널 성공`);
-        })
-        .catch((error: any) => {
-          console.error('다음 싱어 시그널 에러', error);
-        });
-    }
+    session
+      .signal({
+        data: '', // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'nextSinger', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`"${myUserName}"가 싱어, 시그널 성공`);
+      })
+      .catch((error: any) => {
+        console.error('다음 싱어 시그널 에러', error);
+      });
   };
 
   // 예약정보 공유 JSON.stringify(reservationList)
@@ -344,6 +331,7 @@ function Index() {
               subscribers={subscribers}
               screenOV={screenOV}
               screenSession={screenSession}
+              publisher={publisher}
             />
             {/* {testOnOff ? null : (
               <MainScreen

@@ -6,13 +6,13 @@ import { RootState } from '@/redux/store';
 
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
-import { NormalSong } from '@/components/room/MainScreen';
+import { NextSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 
-function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
-  const { reserv, screenShare, screen } = props;
+function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
+  const { nextSong, screenShare, screen } = props;
   const [time, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -28,7 +28,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const sourceRef = useRef<AudioBufferSourceNode>();
-  const lyrics = reserv.lyricsList;
+  const lyrics = nextSong.lyricsList;
   const startTime = useRef<number>(Date.now());
 
   const canvasWidth = 910;
@@ -46,7 +46,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
     // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
     const deltaTime = (Date.now() - startTime.current) / 1000;
     setTime(Math.floor(deltaTime));
-    if (reserv.time < deltaTime) {
+    if (nextSong.time < deltaTime) {
       dispatch(setSsari(2));
       // 예약목록 0번 인덱스 삭제...
       sourceRef.current?.stop(0);
@@ -99,6 +99,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
 
   useEffect(() => {
     if (nowState === 3) {
+      console.log('노말');
       fetch('sounds/아무노래MR.mp3')
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
@@ -114,11 +115,12 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
             sourceRef.current = source;
             startTime.current = Date.now();
             setIsPlay(true);
+            console.log('재생하고있는데');
             screenShare(audioContext, mp3AudioDestination);
           });
         });
     }
-  }, []);
+  }, [nowState]);
 
   useEffect(() => {
     if (screen !== undefined && !!videoRef) {
@@ -204,7 +206,7 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
           <input
             className={styles.input}
             type="range"
-            value={(time * 100) / reserv.time}
+            value={(time * 100) / nextSong.time}
             readOnly
           />
         </div>
@@ -219,13 +221,13 @@ function Nomal(props: { reserv: NormalSong; screenShare: any; screen: any }) {
               : Math.floor(time % 60)}
           </div>
           <div>
-            {Math.floor(reserv.time / 60) < 10
-              ? `0${Math.floor(reserv.time / 60)}`
-              : Math.floor(reserv.time / 60)}{' '}
+            {Math.floor(nextSong.time / 60) < 10
+              ? `0${Math.floor(nextSong.time / 60)}`
+              : Math.floor(nextSong.time / 60)}{' '}
             :{' '}
-            {Math.floor(reserv.time % 60) < 10
-              ? `0${Math.floor(reserv.time % 60)}`
-              : Math.floor(reserv.time % 60)}
+            {Math.floor(nextSong.time % 60) < 10
+              ? `0${Math.floor(nextSong.time % 60)}`
+              : Math.floor(nextSong.time % 60)}
           </div>
         </div>
         <button
