@@ -5,7 +5,8 @@ import * as hangul from 'hangul-js';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
-import type { OptionItem, VideoInfo } from '@/components/contest/ContestList';
+import type { OptionItem } from '@/components/contest/ContestList';
+import { VideoInfo } from '@/pages/contest';
 
 import styles from '@/styles/common/Search.module.scss';
 

@@ -10,7 +10,6 @@ import ContestSearch from '@/components/contest/ContestSearch';
 
 import styles from '@/styles/contest/ContestList.module.scss';
 import { VideoInfo } from '@/pages/contest';
-import axios from 'axios';
 
 export interface OptionItem {
   mode: string;
