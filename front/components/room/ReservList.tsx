@@ -76,10 +76,6 @@ function ReservList({ session }: any) {
               onClick={() => {
                 axios
                   .delete('api/v1/reservation', {
-                    headers: {
-                      Authorization: `${getCookie('Authorization')}`,
-                      refreshToken: `${getCookie('refreshToken')}`,
-                    },
                     data: {
                       songId:
                         reservationList.length !== 0
@@ -87,6 +83,10 @@ function ReservList({ session }: any) {
                           : '',
                       // 임시 세션 아이디
                       sessionId: '12345',
+                    },
+                    headers: {
+                      Authorization: `${getCookie('Authorization')}`,
+                      refreshToken: `${getCookie('refreshToken')}`,
                     },
                   })
                   .then(res => {

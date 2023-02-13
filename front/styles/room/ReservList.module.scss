@@ -126,10 +126,10 @@
         @include truncate;
 
         .listItem {
+          animation: textLoop 30s linear infinite;
           width: 460px;
           display: flex;
           flex-direction: row;
-          animation: textLoop 30s linear infinite;
 
           .item {
             margin: 0 15px;

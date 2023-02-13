@@ -121,19 +121,19 @@ function Nomal(props: {
             source.connect(mp3AudioDestination);
             source.connect(audioContext.destination);
             source.start();
-            // axios
-            //   .post('api/v1/reservation/sing', {
-            //     headers: {
-            //       Authorization: `${getCookie('Authorization')}`,
-            //       refreshToken: `${getCookie('refreshToken')}`,
-            //     },
-            //     data: {
-            //       songId: nextSong.songId,
-            //     },
-            //   })
-            //   .then(res => {
-            //     console.log('노래 시작 요청 응답 : ', res);
-            //   });
+            axios
+              .post('api/v1/reservation/sing', {
+                headers: {
+                  Authorization: `${getCookie('Authorization')}`,
+                  refreshToken: `${getCookie('refreshToken')}`,
+                },
+                data: {
+                  songId: nextSong.songId,
+                },
+              })
+              .then(res => {
+                console.log('노래 시작 요청 응답 : ', res);
+              });
             sourceRef.current = source;
             startTime.current = Date.now();
             setIsPlay(true);
@@ -257,13 +257,13 @@ function Nomal(props: {
           onClick={() => {
             axios
               .delete('api/v1/reservation/sing', {
-                headers: {
-                  Authorization: `${getCookie('Authorization')}`,
-                  refreshToken: `${getCookie('refreshToken')}`,
-                },
                 data: {
                   songId: nextSong.songId,
                   time: nowtime,
+                },
+                headers: {
+                  Authorization: `${getCookie('Authorization')}`,
+                  refreshToken: `${getCookie('refreshToken')}`,
                 },
               })
               .then(res => {

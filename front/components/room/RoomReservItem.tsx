@@ -35,7 +35,7 @@ function RoomReservItem(props: {
   });
   const albumClassName = classNames({
     [styles.album]: true,
-    [styles.isLong]: item.album.length > 15,
+    [styles.isLong]: item.album.length > 8,
   });
 
   const [userNickname, setUserNickname] = useState('');
