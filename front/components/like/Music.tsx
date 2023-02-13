@@ -255,7 +255,7 @@ function Music() {
         {postData.map(item => {
           return (
             <div className={styles.item} key={item.rank}>
-              <ChartListItem item={item} />
+              {/* <ChartListItem item={item} /> */}
             </div>
           );
         })}
