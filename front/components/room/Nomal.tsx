@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { RootState } from '@/redux/store';
 
 import { useCanvas } from '@/hooks/useCanvas';
@@ -10,7 +11,6 @@ import { NextSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 function Nomal(props: {
@@ -20,8 +20,8 @@ function Nomal(props: {
   isNow: boolean;
   screenSession: any;
 }) {
-  const { nextSong, screenShare, screen, isNow, screenSession } = props;
-  const [time, setTime] = useState(0);
+  const { nextSong, screenShare, screen, isNow } = props;
+  const [nowtime, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
 
   // 저장되어있는 상태값 불러오기
@@ -229,19 +229,19 @@ function Nomal(props: {
           <input
             className={styles.input}
             type="range"
-            value={(time * 100) / nextSong.time}
+            value={(nowtime * 100) / nextSong.time}
             readOnly
           />
         </div>
         <div className={styles.value}>
           <div>
-            {Math.floor(time / 60) < 10
-              ? `0${Math.floor(time / 60)}`
-              : Math.floor(time / 60)}{' '}
+            {Math.floor(nowtime / 60) < 10
+              ? `0${Math.floor(nowtime / 60)}`
+              : Math.floor(nowtime / 60)}{' '}
             :{' '}
-            {Math.floor(time % 60) < 10
-              ? `0${Math.floor(time % 60)}`
-              : Math.floor(time % 60)}
+            {Math.floor(nowtime % 60) < 10
+              ? `0${Math.floor(nowtime % 60)}`
+              : Math.floor(nowtime % 60)}
           </div>
           <div>
             {Math.floor(nextSong.time / 60) < 10
@@ -264,7 +264,7 @@ function Nomal(props: {
                 },
                 data: {
                   songId: nextSong.songId,
-                  time: time,
+                  time: nowtime,
                 },
               })
               .then(res => {

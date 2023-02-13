@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
+import axios from 'axios';
 
 import styles from '@/styles/room/ReservList.module.scss';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 import { setSsari } from '@/redux/store/ssariSlice';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 interface Reserv {
