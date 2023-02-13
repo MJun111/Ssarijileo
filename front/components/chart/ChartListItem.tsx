@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import classNames from 'classnames';
+import axios from 'axios';
 import { RootState } from '@/redux/store';
 
 import type { ChartItem } from '@/pages';
 
 import styles from '@/styles/chart/ChartListItem.module.scss';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 function ChartListItem(props: { item: ChartItem }) {

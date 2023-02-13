@@ -121,16 +121,20 @@ function Nomal(props: {
             source.connect(mp3AudioDestination);
             source.connect(audioContext.destination);
             source.start();
+            console.log('현재 곡 정보', nextSong);
             axios
-              .post('api/v1/reservation/sing', {
-                headers: {
-                  Authorization: `${getCookie('Authorization')}`,
-                  refreshToken: `${getCookie('refreshToken')}`,
-                },
-                data: {
+              .post(
+                'api/v1/reservation/sing',
+                {
                   songId: nextSong.songId,
                 },
-              })
+                {
+                  headers: {
+                    Authorization: `${getCookie('Authorization')}`,
+                    refreshToken: `${getCookie('refreshToken')}`,
+                  },
+                },
+              )
               .then(res => {
                 console.log('노래 시작 요청 응답 : ', res);
               });
@@ -255,6 +259,7 @@ function Nomal(props: {
         <button
           type="button"
           onClick={() => {
+            console.log('노래 취소 곡 정보 : ', nextSong);
             axios
               .delete('api/v1/reservation/sing', {
                 data: {
