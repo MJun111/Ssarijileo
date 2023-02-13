@@ -1,9 +1,11 @@
 // Path: '/'
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { GetServerSideProps } from 'next';
 
-// import axios from 'axios';
+import axios from 'axios';
 
+import { useCookie } from '@/hooks/useCookie';
 import MainTop from '@/components/main/MainTop';
 import SoundBar from '@/components/common/SoundBar';
 import TodayChart from '@/components/main/TodayChart';
@@ -11,126 +13,92 @@ import TodayContest from '@/components/main/TodayContest';
 import Team from '@/components/main/Team';
 
 import styles from '@/styles/Home.module.scss';
+import { RootState } from '@/redux/store';
 
 export interface ChartItem {
-  rank: number;
-  title: string;
+  album: string;
+  image: string;
+  ranking: number;
   singer: string;
+  songId: number;
+  title: string;
 }
 
 export interface RankingItem {
-  rank: number;
-  medal: string;
-  profile: string;
-  name: string;
+  singingContestId: number;
+  nickname: string;
   title: string;
   singer: string;
-  like: string;
+  file: string;
+  registerDate: string;
+  likeCount: number;
+  like: boolean;
 }
 
-export async function getServerSideProps() {
-  // const chartRes = await axios.get('api/v1/chart');
-  // const { chartItemA, chartItemB } = chartRes.data;
-  // const rankingRes = await axios.get('api/v1/ranking');
-  // const { ranking } = rankingRes.data;
+export const getServerSideProps: GetServerSideProps = async context => {
+  const cookieString = context.req.headers.cookie || '';
+  const cookies = useCookie(cookieString);
+  const token = cookies.Authorization;
+  try {
+    const chartRes = await axios.get(
+      'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
+      {
+        headers: {
+          Authorization: token,
+        },
+      },
+    );
+    const chartItemA: ChartItem[] = chartRes.data.slice(0, 5);
+    const chartItemB: ChartItem[] = chartRes.data.slice(5, 10);
 
-  return {
-    props: {
-      chartItemA: [
-        {
-          rank: 1,
-          title: 'Ditto',
-          singer: 'NewJeans',
+    const rankingRes = await axios.get(
+      'http://i8b302.p.ssafy.io:8000/api/v1/singing-contest/',
+      {
+        headers: {
+          Authorization: token,
         },
-        {
-          rank: 2,
-          title: '사건의 지평선',
-          singer: '윤하',
-        },
-        {
-          rank: 3,
-          title: 'Hype boy',
-          singer: 'NewJeans',
-        },
-        {
-          rank: 4,
-          title: 'OMG',
-          singer: 'NewJeans',
-        },
-        {
-          rank: 5,
-          title: 'After LIKE',
-          singer: 'IVE(아이브)',
-        },
-      ],
-      chartItemB: [
-        {
-          rank: 6,
-          title: 'ANTIFRAGILE',
-          singer: 'LE SSERAFIM (르세라핌)',
-        },
-        {
-          rank: 7,
-          title: 'Attention',
-          singer: 'NewJeans',
-        },
-        {
-          rank: 8,
-          title: 'LOVE DIVE',
-          singer: 'IVE(아이브)',
-        },
-        {
-          rank: 9,
-          title: 'Nxde',
-          singer: '여자(아이들)',
-        },
-        {
-          rank: 10,
-          title: 'NOT SORRY (Feat. pH-1) (Prod. by Slom)',
-          singer: '이영지',
-        },
-      ],
-      ranking: [
-        {
-          rank: 1,
-          medal: 'img/main/main_medal_gold_image.svg',
-          profile: 'icon/header/light/light_profile_icon.svg',
-          name: '나는이수민',
-          title: 'Hype boy',
-          singer: 'NewJeans',
-          like: '4k',
-        },
-        {
-          rank: 2,
-          medal: 'img/main/main_medal_sliver_image.svg',
-          profile: 'icon/header/light/light_profile_icon.svg',
-          name: '김맹준',
-          title: 'Hype boy',
-          singer: 'NewJeans',
-          like: '4k',
-        },
-        {
-          rank: 3,
-          medal: 'img/main/main_medal_bronze_image.svg',
-          profile: 'icon/header/light/light_profile_icon.svg',
-          name: 'zㅣ존예지',
-          title: 'Hype boy',
-          singer: 'NewJeans',
-          like: '4k',
-        },
-      ],
-    },
-  };
-}
+      },
+    );
+    const sortedRanking = rankingRes.data.sort(
+      (a: RankingItem, b: RankingItem) => {
+        return b.likeCount - a.likeCount;
+      },
+    );
+    const ranking: RankingItem[] = sortedRanking.slice(0, 3);
+    // const ranking: any = JSON.parse(JSON.stringify(rankingRes.data));
+
+    return {
+      props: {
+        chartItemA,
+        chartItemB,
+        ranking,
+        res: { status: 200 },
+      },
+    };
+  } catch (err) {
+    const res = JSON.parse(JSON.stringify(err));
+    return {
+      props: {
+        chartItemA: null,
+        chartItemB: null,
+        ranking: null,
+        res,
+      },
+    };
+  }
+};
 
 function Home(props: {
   chartItemA: ChartItem[];
   chartItemB: ChartItem[];
   ranking: RankingItem[];
+  res: any;
 }) {
-  const { chartItemA, chartItemB, ranking } = props;
+  const { chartItemA, chartItemB, ranking, res } = props;
+  console.log(ranking);
+  console.log('status', res);
   const [themeMode, setThemeMode] = useState('light');
-  const storeTheme: any = useSelector<any>(state => state.theme);
+  const storeTheme = useSelector((state: RootState) => state.theme);
 
   useEffect(() => {
     setThemeMode(storeTheme.theme);
@@ -147,10 +115,12 @@ function Home(props: {
       <MainTop />
       <div className={styles.container}>
         <SoundBar />
-        <TodayChart chartItemA={chartItemA} chartItemB={chartItemB} />
-        <SoundBar />
-        <TodayContest ranking={ranking} />
-        <SoundBar />
+        {chartItemA && chartItemB && (
+          <TodayChart chartItemA={chartItemA} chartItemB={chartItemB} />
+        )}
+        {chartItemA && chartItemB && <SoundBar />}
+        {ranking && <TodayContest ranking={ranking} />}
+        {ranking && <SoundBar />}
         <Team img={img} />
       </div>
     </main>

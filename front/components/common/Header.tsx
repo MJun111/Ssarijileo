@@ -135,7 +135,7 @@ function Header() {
 
   const data = {
     fromUserNickname: userNickname,
-    toUserNickname: '김소윤_5985',
+    toUserNickname: userNickname,
     friendId: 1,
   };
 
@@ -145,10 +145,10 @@ function Header() {
   //   );
   //   axios
   //     .post('api/v1/friend/invite/', data)
-  //     .then(res => {
+  //     .then((res) => {
   //       console.log(res);
   //     })
-  //     .catch(err => {
+  //     .catch((err) => {
   //       console.log(err.config.data);
   //     });
   // };
@@ -157,47 +157,42 @@ function Header() {
     console.log(
       `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
     );
-    axios
-      .post('api/v1/friend/request/', data)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    axios.post('api/v1/friend/request/', data);
+    // .then(res => {
+    //   console.log(res);
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
   };
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
     if (storeLogin.login) {
-      let eventSource: EventSource;
-      const fetchEventSource = async () => {
+      // const token = getCookie('Authorization');
+      const eventSource = new EventSource(`api/v1/sse/${userNickname}`, {
+        // headers: { Authorization: token },
+        heartbeatTimeout: 1000000,
+      });
+
+      eventSource.onmessage = e => {
         try {
-          // const token = getCookie('Authorization');
-          eventSource = new EventSource(`api/v1/sse/${userNickname}`, {
-            // headers: { Authorization: token },
-            heartbeatTimeout: 1000000,
-          });
-          eventSource.onmessage = e => {
-            console.log('메시지 도착');
-            // const data = JSON.parse(e.data);
-            console.log(e);
-          };
-          eventSource.onopen = e => {
-            console.log('open');
-            console.log(e);
-          };
-          eventSource.onerror = (e: any) => {
-            console.log('error');
-            if (!e.error?.message.includes('No activity')) {
-              eventSource.close();
-            }
-          };
-        } catch (e) {
-          console.log('!!!');
+          const msg = JSON.parse(e.data);
+          if (msg.type === 'request') {
+            console.log('친구요청이 왔습니다.');
+          } else if (msg.type === 'invite') {
+            console.log('초대장이 왔습니다.');
+          }
+        } catch (err) {
+          console.log(err);
         }
       };
-      fetchEventSource();
+      eventSource.onerror = (e: any) => {
+        if (!e.error?.message.includes('No activity')) {
+          console.log('close');
+          eventSource.close();
+        }
+      };
     }
   }, []);
 

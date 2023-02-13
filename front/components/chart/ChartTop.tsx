@@ -10,8 +10,14 @@ import Title from '@/components/common/Title';
 import TopImg from '@/components/common/TopImg';
 
 import styles from '@/styles/chart/ChartTop.module.scss';
+import { ChartItem } from '@/pages';
 
-function ChartTop() {
+function ChartTop(props: {
+  day: ChartItem[];
+  week: ChartItem[];
+  month: ChartItem[];
+}) {
+  const { day, week, month } = props;
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
 
@@ -99,34 +105,29 @@ function ChartTop() {
   const heartD = `img/chart/${themeMode}/${themeMode}_chart_heart4_image.svg`;
 
   useAnimation(animate, 0);
-  // 월간, 주간, 일간 1등 노래 정보 받기
 
-  const best = [
-    {
-      id: 1,
-      img: 'https://i1.sndcdn.com/artworks-Ah2Fl2dwIlA2xWeb-kWN55A-t240x240.jpg',
-      title: 'OMG',
-      singer: 'NewJeans',
-    },
-    {
-      id: 2,
-      img: 'https://image.bugsm.co.kr/album/images/500/40789/4078936.jpg',
-      title: 'After LIKE',
-      singer: 'IVE',
-    },
-    {
-      id: 3,
-      img: 'http://image.genie.co.kr/Y/IMAGE/IMG_ALBUM/083/072/254/83072254_1665976983718_1_600x600.JPG',
-      title: 'Nxde',
-      singer: '(여자)아이들',
-    },
-  ];
-
+  const best = [month[0], week[0], day[0]];
+  const category = ['월간', '주간', '일간'];
   const bestData = best.map((item, idx) => {
+    if (!item)
+      return (
+        <div className={styles.item} key={`${category[idx]}-987654321`}>
+          <NextImage
+            src="img/common/common_headphone_image.svg"
+            width={180}
+            height={180}
+            alt="album"
+            className={styles.albumCover}
+            onClick={() => {
+              window.scrollTo({ top: 1220 + idx * 815, behavior: 'smooth' });
+            }}
+          />
+        </div>
+      );
     return (
-      <div className={styles.item} key={item.id}>
+      <div className={styles.item} key={`${category[idx]}-${item.songId}`}>
         <NextImage
-          src={item.img}
+          src={item.image}
           width={180}
           height={180}
           alt="album"

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import classNames from 'classnames';
-import styles from '@/styles/chart/ChartListItem.module.scss';
 import { RootState } from '@/redux/store';
 
-function ChartListItem(props: {
-  item: { rank: number; title: string; singer: string; album: string };
-}) {
+import type { ChartItem } from '@/pages';
+
+import styles from '@/styles/chart/ChartListItem.module.scss';
+
+function ChartListItem(props: { item: ChartItem }) {
   const { item } = props;
 
   // 다크모드 상태관리
@@ -85,8 +86,14 @@ function ChartListItem(props: {
         </div>
       )}
       <div className={styles.container}>
-        <div className={styles.img}>커버</div>
-        <div className={styles.rank}>{item.rank}</div>
+        <Image
+          src={item.image}
+          width={70}
+          height={70}
+          alt="cover"
+          className={styles.img}
+        />
+        <div className={styles.rank}>{item.ranking}</div>
         <div className={styles.titleCover}>
           <div className={titleClassName}>{item.title}</div>
         </div>
