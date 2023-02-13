@@ -157,21 +157,18 @@ function Header() {
     console.log(
       `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
     );
-    axios
-      .post('api/v1/friend/request/', data)
-      // .then(res => {
-      //   console.log(res);
-      // })
-      // .catch(err => {
-      //   console.log(err);
-      // });
+    axios.post('api/v1/friend/request/', data);
+    // .then(res => {
+    //   console.log(res);
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
   };
 
-  console.log(userNickname);
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {
-    if (typeof (EventSource) !== "undefined") {
-
+    if (storeLogin.login) {
       // const token = getCookie('Authorization');
       const eventSource = new EventSource(`api/v1/sse/${userNickname}`, {
         // headers: { Authorization: token },
@@ -179,16 +176,15 @@ function Header() {
       });
 
       eventSource.onmessage = e => {
-        console.log('message');
-        console.log(e);
-      };
-      eventSource.onopen = e => {
-        console.log('open');
-        console.log(e);
+        try {
+          const data = JSON.parse(e.data);
+          console.log(data);
+          if (data.type === 'friend') {
+            console.log('친구요청이 왔습니다.');
+          }
+        } catch (err) {}
       };
       eventSource.onerror = (e: any) => {
-        console.log('error');
-        console.log(e);
         if (!e.error?.message.includes('No activity')) {
           console.log('close');
           eventSource.close();

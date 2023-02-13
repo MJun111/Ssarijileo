@@ -1,14 +1,14 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import {RootState} from "@/redux/store";
+import { RootState } from '@/redux/store';
 
-import axios from "axios";
+import axios from 'axios';
 
 import type { RankingItem } from '@/pages';
 
 import styles from '@/styles/main/TodayContest.module.scss';
-import {getCookie} from "@/util/cookie";
+import { getCookie } from '@/util/cookie';
 
 function TodayContest(props: { ranking: RankingItem[] }) {
   const { ranking } = props;
@@ -27,20 +27,19 @@ function TodayContest(props: { ranking: RankingItem[] }) {
   }[] = [];
 
   const findProfile = (nickname: string) => {
-    const profile = profiles.find((item) => item.nickname === nickname);
-    console.log(profile)
+    const profile = profiles.find(item => item.nickname === nickname);
     return profile ? profile.image : 'img/main/main_profile_image.svg';
   };
 
   useEffect(() => {
-    axios.get('api/v1/friend/' + storeUser.nickname, {
-      headers: {
-        Authorization: getCookie('Authorization'),
-      }
-    })
-      .then((res) => {
+    axios
+      .get('api/v1/friend/' + storeUser.nickname, {
+        headers: {
+          Authorization: getCookie('Authorization'),
+        },
+      })
+      .then(res => {
         profiles.push(...res.data);
-        console.log(profiles);
       })
       .then(() => {
         const rank = ranking.map((item, idx) => (
@@ -66,17 +65,22 @@ function TodayContest(props: { ranking: RankingItem[] }) {
             </td>
             <td className={styles.profile}>
               <div className={styles.content}>
-                <Image src={findProfile(item.nickname)} width={30} height={30} alt="profile" />
+                <Image
+                  src={findProfile(item.nickname)}
+                  width={30}
+                  height={30}
+                  alt="profile"
+                />
               </div>
             </td>
             <td className={styles.name}>{item.nickname}</td>
             <td className={styles.title}>{item.title}</td>
             <td className={styles.singer}>{item.singer}</td>
-            <td className={styles.like}>{item.like}</td>
+            <td className={styles.like}>{item.likeCount}</td>
           </tr>
         ));
         setRank(rank);
-      })
+      });
   }, [ranking]);
 
   const simpleRank = ranking.map((item, idx) => {
@@ -105,7 +109,6 @@ function TodayContest(props: { ranking: RankingItem[] }) {
       </tr>
     );
   });
-
 
   return (
     <div className={styles.container}>
