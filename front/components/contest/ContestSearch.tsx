@@ -44,7 +44,7 @@ function ContestSearch(props: {
         : videos;
     if (eventTarget.innerText === 'Like') {
       filteredData.sort((a, b) => {
-        return b.like - a.like;
+        return b.likeCount - a.likeCount;
       });
     }
     setFilteredVideo(filteredData);
@@ -62,7 +62,7 @@ function ContestSearch(props: {
         : videos;
     if (selectType === 'Like') {
       filteredData.sort((a, b) => {
-        return b.like - a.like;
+        return b.likeCount - a.likeCount;
       });
     }
     setFilteredVideo(filteredData);
