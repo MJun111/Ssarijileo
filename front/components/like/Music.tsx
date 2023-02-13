@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 
-// import ChartListItem from '@/components/chart/ChartListItem';
-import Pagination from '@/components/common/Pagination';
-import { getCookie } from '@/util/cookie';
-
 import styles from '@/styles/like/Music.module.scss';
 // import ChartListItem from '@/components/chart/ChartListItem';
 import Pagination from '@/components/common/Pagination';
