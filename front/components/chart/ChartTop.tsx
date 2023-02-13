@@ -107,10 +107,11 @@ function ChartTop(props: {
   useAnimation(animate, 0);
 
   const best = [month[0], week[0], day[0]];
+  const category = ['월간', '주간', '일간'];
   const bestData = best.map((item, idx) => {
     if (!item)
       return (
-        <div className={styles.item} key={987654321 + idx}>
+        <div className={styles.item} key={`${category[idx]}-987654321`}>
           <NextImage
             src="img/common/common_headphone_image.svg"
             width={180}
@@ -124,7 +125,7 @@ function ChartTop(props: {
         </div>
       );
     return (
-      <div className={styles.item} key={`${idx}-${item.songId}`}>
+      <div className={styles.item} key={`${category[idx]}-${item.songId}`}>
         <NextImage
           src={item.image}
           width={180}

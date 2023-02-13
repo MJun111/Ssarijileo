@@ -5,17 +5,13 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 
 import type { ChartItem } from '@/pages';
-import { useCookie } from '@/hooks/useCookie';
 import ChartTop from '@/components/chart/ChartTop';
 import SoundBar from '@/components/common/SoundBar';
 import ChartList from '@/components/chart/ChartList';
 
 import styles from '@/styles/chart/Chart.module.scss';
 
-export const getServerSideProps: GetServerSideProps = async context => {
-  const cookieString = context.req.headers.cookie || '';
-  const cookies = useCookie(cookieString);
-  const token = cookies.Authorization;
+export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const dailyRes = await axios.get(
       'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
