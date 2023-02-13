@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useSelector } from 'react-redux';
 
 import type { ChartItem } from '@/pages';
-import type {RootState} from "@/redux/store";
+import type { RootState } from '@/redux/store';
 import TodayChartItem from '@/components/main/TodayChartItem';
 
 import styles from '@/styles/main/TodayChart.module.scss';
@@ -12,7 +12,7 @@ function TodayChart(props: {
   chartItemB: ChartItem[];
 }) {
   const { chartItemA, chartItemB } = props;
-  const storeLogin= useSelector((state: RootState) => state.login);
+  const storeLogin = useSelector((state: RootState) => state.login);
 
   const chartListA = chartItemA.map(item => {
     return <TodayChartItem key={item.songId} item={item} />;

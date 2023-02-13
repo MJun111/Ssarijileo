@@ -5,9 +5,7 @@ import type { ChartItem } from '@/pages';
 
 import styles from '@/styles/main/TodayChart.module.scss';
 
-function TodayChartItem(props: {
-  item: ChartItem;
-}) {
+function TodayChartItem(props: { item: ChartItem }) {
   const { item } = props;
   const titleClassName = classNames({
     [styles.songTitle]: true,
@@ -15,7 +13,13 @@ function TodayChartItem(props: {
   });
   return (
     <div className={styles.song}>
-      <Image src={item.image} width={70} height={70} alt="cover" className={styles.img}/>
+      <Image
+        src={item.image}
+        width={70}
+        height={70}
+        alt="cover"
+        className={styles.img}
+      />
       <div className={styles.rank}>{item.ranking}</div>
       <div className={styles.songInfo}>
         <div className={titleClassName}>{item.title}</div>

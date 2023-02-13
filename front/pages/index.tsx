@@ -31,7 +31,7 @@ export interface RankingItem {
   singer: string;
   file: string;
   registerDate: string;
-  lickCount: number;
+  likeCount: number;
   like: boolean;
 }
 
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
     );
     const sortedRanking = rankingRes.data.sort(
       (a: RankingItem, b: RankingItem) => {
-        return b.lickCount - a.lickCount;
+        return b.likeCount - a.likeCount;
       },
     );
     const ranking: RankingItem[] = sortedRanking.slice(0, 3);

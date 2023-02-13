@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
-import axios from 'axios';
-
+import { getCookie } from '@/util/cookie';
 import type { RankingItem } from '@/pages';
 
 import styles from '@/styles/main/TodayContest.module.scss';
-import { getCookie } from '@/util/cookie';
 
 function TodayContest(props: { ranking: RankingItem[] }) {
   const { ranking } = props;
@@ -33,7 +32,7 @@ function TodayContest(props: { ranking: RankingItem[] }) {
 
   useEffect(() => {
     axios
-      .get('api/v1/friend/' + storeUser.nickname, {
+      .get(`api/v1/friend/${storeUser.nickname}`, {
         headers: {
           Authorization: getCookie('Authorization'),
         },
@@ -42,7 +41,7 @@ function TodayContest(props: { ranking: RankingItem[] }) {
         profiles.push(...res.data);
       })
       .then(() => {
-        const rank = ranking.map((item, idx) => (
+        const rankData = ranking.map((item, idx) => (
           <tr
             className={styles.item}
             key={item.singingContestId}
@@ -79,7 +78,7 @@ function TodayContest(props: { ranking: RankingItem[] }) {
             <td className={styles.like}>{item.likeCount}</td>
           </tr>
         ));
-        setRank(rank);
+        setRank(rankData);
       });
   }, [ranking]);
 
