@@ -1,6 +1,6 @@
 import styles from '@/styles/error/Error.module.scss';
 
-function NotFound() {
+export default function NotFound() {
   return (
     <div className={styles.container}>
       <div className={styles.title}>404</div>
@@ -15,5 +15,3 @@ function NotFound() {
     </div>
   );
 }
-
-export default NotFound;

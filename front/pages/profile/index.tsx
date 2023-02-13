@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 import ContentForm from '@/components/profile/ContentForm';
 import FriendForm from '@/components/profile/FriendForm';
 
 import styles from '@/styles/profile/Profile.module.scss';
-import { RootState } from '@/redux/store';
 
 function MyPage() {
   // const DUMMY_DATA = {
