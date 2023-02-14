@@ -148,12 +148,12 @@ function Header() {
     axios.post('api/v1/friend/invite/', data);
   };
 
-  const testSSE = () => {
-    console.log(
-      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
-    );
-    axios.post('api/v1/friend/request/', data);
-  };
+  // const testSSE = () => {
+  //   console.log(
+  //     `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
+  //   );
+  //   axios.post('api/v1/friend/request/', data);
+  // };
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
   useEffect(() => {

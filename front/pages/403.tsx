@@ -11,7 +11,7 @@ function Forbidden() {
     <div className={styles.container}>
       <div className={styles.title}>403 Forbidden</div>
       <div className={styles.sub}>
-        You don't have permission to access / on this server.
+        You don&quot;t have permission to access / on this server.
       </div>
       <div className={styles.context}>
         Meanwhile, check out these fresh ideas:

@@ -103,7 +103,7 @@ function Home(props: {
   ranking: RankingItem[];
   res: any;
 }) {
-  const { chartItemA, chartItemB, ranking, res } = props;
+  const { chartItemA, chartItemB, ranking } = props;
   const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
 
