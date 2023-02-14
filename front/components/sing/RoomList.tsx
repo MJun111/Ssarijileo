@@ -11,11 +11,13 @@ import Pagination from '@/components/common/Pagination';
 import styles from '@/styles/sing/RoomList.module.scss';
 
 export interface RoomInfo {
-  id: number;
+  sessionId: string;
   title: string;
-  type: string;
-  lock: boolean;
-  member: number;
+  mode: string;
+  userMaxCount: number;
+  userCount: number;
+  isPublic: string;
+  password: string;
 }
 
 export interface OptionItem {
@@ -52,13 +54,12 @@ function RoomList() {
   for (let i = 0; i < 100; i++) {
     const num = Math.floor(Math.random() * 4) + 1;
     const room = {
-      id: i,
+      sessiond: i,
       title: `방 ${i + 1}`,
       type: sortType[num].mode,
       lock: i % 2 === 0,
       member: i % 2 === 0 ? 2 : 1,
     };
-    currentRoom.push(room);
   }
 
   // 방 목록 (23.02.02 : openvidu와 직접 api 수신중, 콘솔에 결과 출력)
@@ -109,7 +110,7 @@ function RoomList() {
       </div>
       <div className={styles.room}>
         {postData.map(info => (
-          <RoomListItem info={info} key={info.id} />
+          <RoomListItem info={info} key={info.sessionId} />
         ))}
       </div>
       <Pagination
