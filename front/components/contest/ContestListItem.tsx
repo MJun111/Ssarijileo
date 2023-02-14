@@ -12,14 +12,13 @@ type VideoProps = {
 };
 
 function ContestListItem({ info }: VideoProps) {
-  // file도 나중에 추가하기 !!!!!!!!!!!!!!!!!!!!!!!
-  const { singingContestId, nickname, title, singer, likeCount, like } = info;
+  const { singingContestId, file, nickname, title, singer, likeCount, like } =
+    info;
   const [themeMode, setThemeMode] = useState('light');
   const [likeMode, setLikeMode] = useState(like);
   const [modalMode, setModalMode] = useState(false);
   const [nowLike, setNowLike] = useState(likeCount);
   const [singId] = useState(singingContestId);
-  // file = 'video/test.mp4';
 
   const storeTheme = useSelector((state: RootState) => state.theme);
 
@@ -43,8 +42,7 @@ function ContestListItem({ info }: VideoProps) {
 
   // key 필요하면 받아놓기
   const myName = 'zㅣ존예지';
-  // const urlInfo = `${file}#t=0.5`;
-  const urlInfo = 'video/test.mp4#t=0.5';
+  const urlInfo = `${file}#t=0.5`;
   return (
     <>
       {modalMode && (
