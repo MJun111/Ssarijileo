@@ -62,7 +62,7 @@ function ReservList({ session }: any) {
   //   현재 곡 제외 예약 목록만 뽑아내기
   const reserv = reservationList.length > 1 ? reservationList.slice(1) : [];
 
-  const [sessionId, setSessionId] = useState('');
+  const [sessionIdValue, setSessionId] = useState('');
   const storeSessionId = useSelector((state: RootState) => state.sessionId);
 
   useEffect(() => {
@@ -89,7 +89,7 @@ function ReservList({ session }: any) {
                           ? reservationList[0].songId
                           : null,
                       // 임시 세션 아이디
-                      sessionId: sessionId,
+                      sessionId: sessionIdValue,
                     },
                     headers: {
                       Authorization: `${getCookie('Authorization')}`,
