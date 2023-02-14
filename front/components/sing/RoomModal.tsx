@@ -97,7 +97,7 @@ function RoomModal({ setModalOpen }: any) {
       roomW?.postMessage(
         {
           sessionId: undefined,
-          title: title,
+          title,
           mode: 'N',
           userMaxCount: 6,
           isPublic: 'Y',

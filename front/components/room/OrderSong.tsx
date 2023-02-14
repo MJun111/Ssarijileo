@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 
-function OrderSong() {
+function OrderSong(props: { screenShare: any }) {
+  const { screenShare } = props;
   const sourceRef = useRef<AudioBufferSourceNode>();
   const timeRef = useRef<number>(0);
   const [isReady, setIsReady] = useState(false);
@@ -148,11 +149,21 @@ function OrderSong() {
       .then(audioBuffer => {
         const source = audioCtx.createBufferSource();
         source.buffer = audioBuffer;
+        const mp3AudioDestination = audioCtx.createMediaStreamDestination();
+        source.connect(mp3AudioDestination);
         source.connect(audioCtx.destination);
         sourceRef.current = source;
         setIsReady(true);
+        screenShare(audioCtx, mp3AudioDestination);
       });
   }, []);
+
+  useEffect(() => {
+    if (isReady) {
+      console.log('orderSong 시작');
+      start();
+    }
+  }, [isReady]);
 
   return (
     <>
