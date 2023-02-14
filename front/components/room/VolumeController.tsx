@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 import styles from '@/styles/room/VolumeController.module.scss';
 
 import MicControlBar from '../common/MicControlBar';
 import EchoControlBar from '../common/EchoControlBar';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
-import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
 function VolumeController({ setVolumeModal }: any) {
