@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 
@@ -10,15 +10,38 @@ function RoomModal({ setModalOpen }: any) {
     setModalOpen(false);
   };
 
+  const [roomW, setRoomW] = useState<any>();
+
   const createRoom = () => {
-    setModalOpen(false);
     const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
+    setRoomW(roomWindow);
     if (!roomWindow) return;
     roomWindow.resizeTo(1920, 1080);
     roomWindow.onresize = () => {
       roomWindow.resizeTo(1920, 1080);
     };
   };
+
+  const makeRoom = (e: any) => {
+    console.log('모달에서 메세지 수신', e);
+    if (e.data === 'open!!') {
+      console.log('모달에서 이벤트', e.data, roomW);
+      roomW?.postMessage(
+        {
+          sessionId: undefined,
+          title: title,
+          mode: 'N',
+          userMaxCount: 6,
+          isPublic: 'Y',
+          password: null,
+        },
+        '*',
+      );
+      closeModal();
+    }
+  };
+
+  window.addEventListener('message', makeRoom);
 
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
