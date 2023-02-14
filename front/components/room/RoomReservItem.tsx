@@ -3,9 +3,9 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 
+import axios from 'axios';
 import styles from '@/styles/room/RoomReservItem.module.scss';
 import { RootState } from '@/redux/store';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 interface Reserv {
@@ -43,7 +43,7 @@ function RoomReservItem(props: {
   const [userNickname, setUserNickname] = useState('');
   const [ssariState, setSsariState] = useState(0);
   const [reservationList, setReservationList] = useState<Reserv[]>([]);
-  const [sessionId, setSessionId] = useState('');
+  const [sessionIdValue, setSessionId] = useState('');
   const storeUser = useSelector((state: RootState) => state.user);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const storeReserv = useSelector((state: RootState) => state.reserv);
@@ -71,7 +71,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionId,
+          sessionId: sessionIdValue,
           songId: item.songId,
           isPriority: 'Y',
         },
@@ -111,7 +111,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionId,
+          sessionId: sessionIdValue,
           songId: item.songId,
           isPriority: 'Y',
         },
@@ -153,7 +153,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionId,
+          sessionId: sessionIdValue,
           songId: item.songId,
           isPriority: 'N',
         },
