@@ -310,7 +310,7 @@ function Index() {
           <div className={styles.singScreen}>
             <MainScreen
               singMode={mode}
-              subscribers={subscribers}
+              // subscribers={subscribers}
               screenOV={screenOV}
               session={session}
               screenSession={screenSession}

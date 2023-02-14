@@ -50,14 +50,14 @@ export interface NextSong {
 
 export function MainScreen(props: {
   singMode: any;
-  subscribers: any[];
+  // subscribers: any[];
   screenOV: any;
   screenSession: any;
   publisher: any;
   session: any;
 }) {
-  const { singMode, subscribers, screenOV, screenSession, publisher, session } =
-    props;
+  // const { singMode, subscribers, screenOV, screenSession, publisher, session } = props;
+  const { singMode, screenOV, screenSession, publisher, session } = props;
   const [screen, setScreen] = useState<any>(undefined);
   const [nextSong, setNextSong] = useState<NextSong>();
   const [screenPublisher, setScreenPublisher] = useState<any>();
@@ -118,8 +118,8 @@ export function MainScreen(props: {
   // 노래방 상태관리
   useEffect(() => {
     if (nowState === 0) {
-      if (subscribers.length !== 0) dispatch(setSsari(1));
-      // dispatch(setSsari(1));
+      // if (subscribers.length !== 0) dispatch(setSsari(1));
+      dispatch(setSsari(1));
     }
     if (nowState === 1) {
       if (reservList.length > 0) dispatch(setSsari(2));
@@ -161,8 +161,12 @@ export function MainScreen(props: {
   screenSession.on('streamCreated', (event: any) => {
     if (event.stream.typeOfVideo === 'CUSTOM') {
       const subscreen = screenSession.subscribe(event.stream, undefined);
+      if (reservList.length) {
+        if (reservList[0].nickname !== myName) {
+          dispatch(setSsari(6));
+        }
+      }
       setScreen(subscreen);
-      dispatch(setSsari(6));
     }
   });
 
@@ -225,7 +229,12 @@ export function MainScreen(props: {
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
       {[5, 6].includes(nowState) && singMode === 'N' && nextSong && (
-        <Nomal nextSong={nextSong} screenShare={screenShare} screen={screen} />
+        <Nomal
+          nextSong={nextSong}
+          screenShare={screenShare}
+          screen={screen}
+          propState={nowState}
+        />
       )}
       {/* {nowState === 3 &&
         singMode === 'P' &&

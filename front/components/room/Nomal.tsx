@@ -13,14 +13,19 @@ import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 import { getCookie } from '@/util/cookie';
 
-function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
-  const { nextSong, screenShare, screen } = props;
+function Nomal(props: {
+  nextSong: NextSong;
+  screenShare: any;
+  screen: any;
+  propState: any;
+}) {
+  const { nextSong, screenShare, screen, propState } = props;
   const [nowtime, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const dispatch = useDispatch();
 
   // 저장되어있는 상태값 불러오기
-  const [nowState, setNowState] = useState(0);
+  const [nowState, setNowState] = useState(propState);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   useEffect(() => {
     setNowState(storeSsari.ssari);
@@ -135,8 +140,11 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
   }, [nowState]);
 
   useEffect(() => {
+    console.log('nowState!!', nowState);
+    console.log('!!!!!!!!!', videoRef.current);
     if (screen !== undefined && !!videoRef.current) {
       screen.addVideoElement(videoRef.current);
+      console.log('!!!!!!!!!2', videoRef.current);
     }
   }, [screen]);
 
