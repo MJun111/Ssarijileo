@@ -37,7 +37,7 @@ function Index() {
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
   const [screenSession, setScreenSession] = useState<any>(undefined);
-
+  console.log(OV);
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -75,7 +75,7 @@ function Index() {
         Authorization: `${getCookie('Authorization')}`,
         refreshToken: `${getCookie('refreshToken')}`,
       },
-      data: data,
+      data,
     });
     console.log('token1 입니다', token.data);
     return token.data;
