@@ -35,7 +35,7 @@ function RoomReservItem(props: {
   });
   const albumClassName = classNames({
     [styles.album]: true,
-    [styles.isLong]: item.album.length > 15,
+    [styles.isLong]: item.album.length > 8,
   });
 
   const [userNickname, setUserNickname] = useState('');
@@ -59,6 +59,24 @@ function RoomReservItem(props: {
 
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
+    // axios
+    //   .post(
+    //     'api/v1/reservation',
+    //     {
+    //       sessionId: '12345',
+    //       songId: item.songId,
+    //       isPriority: 'Y',
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `${getCookie('Authorization')}`,
+    //         refreshToken: `${getCookie('refreshToken')}`,
+    //       },
+    //     },
+    //   )
+    //   .then(res => {
+    //     console.log(res);
+    //   });
     const newReserv = [...reservationList];
     newReserv.unshift({
       nickname: userNickname,
@@ -81,6 +99,24 @@ function RoomReservItem(props: {
       });
   };
   const secondReserv = () => {
+    // axios
+    //   .post(
+    //     'api/v1/reservation',
+    //     {
+    //       sessionId: '12345',
+    //       songId: item.songId,
+    //       isPriority: 'Y',
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `${getCookie('Authorization')}`,
+    //         refreshToken: `${getCookie('refreshToken')}`,
+    //       },
+    //     },
+    //   )
+    //   .then(res => {
+    //     console.log(res);
+    //   });
     const newReserv = [...reservationList];
     newReserv.splice(1, 0, {
       nickname: userNickname,
@@ -105,6 +141,24 @@ function RoomReservItem(props: {
 
   // 일반예약 (예약목록 맨 뒤에 추가)
   const nomalReserv = () => {
+    // axios
+    //   .post(
+    //     'api/v1/reservation',
+    //     {
+    //       sessionId: '12345',
+    //       songId: item.songId,
+    //       isPriority: 'N',
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `${getCookie('Authorization')}`,
+    //         refreshToken: `${getCookie('refreshToken')}`,
+    //       },
+    //     },
+    //   )
+    //   .then(res => {
+    //     console.log(res);
+    //   });
     const newReserv = [...reservationList];
     newReserv.push({
       nickname: userNickname,

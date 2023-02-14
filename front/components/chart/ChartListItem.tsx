@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import classNames from 'classnames';
+import axios from 'axios';
 import { RootState } from '@/redux/store';
 
 import type { ChartItem } from '@/pages';
 
 import styles from '@/styles/chart/ChartListItem.module.scss';
+import { getCookie } from '@/util/cookie';
 
 function ChartListItem(props: { item: ChartItem }) {
   const { item } = props;
@@ -46,7 +48,7 @@ function ChartListItem(props: { item: ChartItem }) {
   });
   const albumClassName = classNames({
     [styles.album]: true,
-    [styles.isLong]: item.album.length > 20,
+    [styles.isLong]: item.album.length > 11,
   });
   return (
     <>
@@ -66,6 +68,23 @@ function ChartListItem(props: { item: ChartItem }) {
                 className={styles.okBtn}
                 type="button"
                 onClick={() => {
+                  axios
+                    .post(
+                      'api/v1/song/my',
+                      {
+                        songId: item.songId,
+                        isLike: likeMode ? 'N' : 'Y',
+                      },
+                      {
+                        headers: {
+                          Authorization: `${getCookie('Authorization')}`,
+                          refreshToken: `${getCookie('refreshToken')}`,
+                        },
+                      },
+                    )
+                    .then(res => {
+                      console.log(res);
+                    });
                   setLikeMode(!likeMode);
                   setModalMode(false);
                 }}
