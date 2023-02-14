@@ -18,8 +18,7 @@ function Music(props: { likeList: SongInfo[] }) {
 
   useEffect(() => {
     likeList.map((item, idx) => {
-      item.ranking = idx;
-      return item;
+      return Object.assign(item, {ranking : idx + 1});
     });
   }, []);
 
