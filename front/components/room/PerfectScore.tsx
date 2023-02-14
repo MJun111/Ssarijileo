@@ -10,6 +10,66 @@ import styles from '@/styles/room/PerfectScore.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 
 function PerfectScore() {
+  // const { nextSong } = props;
+  const nextSong = {
+    lyricsList: [
+      {
+        lyricsId: 20,
+        verse: '생각이 많은 건 말이야',
+        time: 24,
+      },
+      {
+        lyricsId: 21,
+        verse: '당연히 해야 할 일이야',
+        time: 27,
+      },
+      {
+        lyricsId: 22,
+        verse: '나에겐 우리가 지금 일순위야',
+        time: 29,
+      },
+      {
+        lyricsId: 23,
+        verse: '안전한 유리병을 핑계로',
+        time: 33,
+      },
+      {
+        lyricsId: 24,
+        verse: '바람을 가둬 둔 것 같지만',
+        time: 39,
+      },
+      {
+        lyricsId: 25,
+        verse: '기억나? 그날의 우리가',
+        time: 44,
+      },
+      {
+        lyricsId: 26,
+        verse: '잡았던 그 손엔 말이야',
+        time: 46,
+      },
+      {
+        lyricsId: 27,
+        verse: '설레임보다 커다란 믿음이 담겨서',
+        time: 49,
+      },
+      {
+        lyricsId: 28,
+        verse: '난 함박웃음을 지었지만',
+        time: 53,
+      },
+      {
+        lyricsId: 29,
+        verse: '울음이 날 것도 같았어',
+        time: 56,
+      },
+      {
+        lyricsId: 30,
+        verse: '소중한 건 언제나 두려움이니까',
+        time: 58,
+      },
+    ],
+  };
   const dispatch = useDispatch();
   const dataArrayRef = useRef<Float32Array>(new Float32Array(data.BUFFER_SIZE));
   const pitchDetectorRef = useRef<PitchDetector<Float32Array>>(
@@ -22,6 +82,7 @@ function PerfectScore() {
   const songNoteWindowRef = useRef<number[][]>(
     new Array(data.NOTE_WINDOW_SIZE).fill([0, 0]),
   );
+  const lyricFlag = useRef(true);
   const particles: {
     speed: {
       x: number;
@@ -35,6 +96,7 @@ function PerfectScore() {
   }[] = [];
   const [isStarted, setIsStarted] = useState(false);
   const [isPossibleStop, setIsPossibleStop] = useState(false);
+  const lyrics = nextSong.lyricsList;
 
   const stop = () => {
     musicRef.current?.stop(0);
@@ -59,6 +121,7 @@ function PerfectScore() {
     noteWindow: number[][],
     ctx: CanvasRenderingContext2D,
   ) => {
+    if (noteWindow[halfSize][0] < 10) return;
     const makeParticle = (particleNum: number) => {
       const particleY = canvasHeight - noteWindow[halfSize][0] * 3;
       for (let i = 0; i < particleNum; i++) {
@@ -114,6 +177,47 @@ function PerfectScore() {
     }
   };
 
+  const drawlyrics = (ctx: CanvasRenderingContext2D, currTime: number) => {
+    const deltaTime = currTime - 2.7;
+    if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
+      lyrics.shift();
+      lyricFlag.current = !lyricFlag.current;
+    }
+    let lyricA: string;
+    let lyricB: string;
+    if (lyrics.length > 1) {
+      lyricA = lyricFlag.current ? lyrics[0].verse : lyrics[1].verse;
+      lyricB = lyricFlag.current ? lyrics[1].verse : lyrics[0].verse;
+    } else if (lyrics.length === 1) {
+      lyricA = lyricFlag.current ? lyrics[0].verse : ' ';
+      lyricB = lyricFlag.current ? ' ' : lyrics[0].verse;
+    } else {
+      lyricA = ' ';
+      lyricB = ' ';
+    }
+    if (lyrics[0].verse === '') {
+      lyricA = '간주중';
+      lyricB = '...';
+      ctx.fillStyle = '#00AADF';
+      ctx.fillText(lyricA, canvasWidth / 2, canvasHeight - 50);
+      ctx.fillText(lyricB, canvasWidth / 2, canvasHeight - 20);
+    } else {
+      ctx.textAlign = 'center';
+      ctx.font = '20px Jalnan';
+      if (lyricFlag.current) {
+        ctx.fillStyle = '#00AADF';
+        ctx.fillText(lyricA, canvasWidth * 0.45, canvasHeight - 50);
+        ctx.fillStyle = '#969696';
+        ctx.fillText(lyricB, canvasWidth * 0.55, canvasHeight - 20);
+      } else {
+        ctx.fillStyle = '#969696';
+        ctx.fillText(lyricA, canvasWidth * 0.45, canvasHeight - 50);
+        ctx.fillStyle = '#1f5c7d';
+        ctx.fillText(lyricB, canvasWidth * 0.55, canvasHeight - 20);
+      }
+    }
+  };
+
   const songData: {
     time: number;
     note: number;
@@ -141,6 +245,8 @@ function PerfectScore() {
   });
   let songIndex = 0;
   let block = 1;
+  let scoreText = '';
+  let barColor: number;
   // 메인 로직
   const play = () => {
     if (
@@ -193,7 +299,7 @@ function PerfectScore() {
       songNoteWindow[halfSize][0] !== songNoteWindow[halfSize + 1][0]
     ) {
       let correct = 0;
-      let barColor: number;
+      block = Math.min(block, halfSize);
       for (let i = 0; i < block; i++) {
         if (
           Math.abs(
@@ -205,14 +311,19 @@ function PerfectScore() {
       }
       if (correct > block * 0.5) {
         barColor = 1;
+        scoreText = 'PERFECT';
       } else if (correct > block * 0.3) {
         barColor = 2;
+        scoreText = 'GREAT';
       } else if (correct > block * 0.1) {
         barColor = 3;
+        scoreText = 'GOOD';
       } else if (correct > 0) {
         barColor = 4;
+        scoreText = 'NORMAL';
       } else {
         barColor = 5;
+        scoreText = 'BAD';
       }
       for (let i = 0; i < block; i++) {
         songNoteWindow[halfSize - i][1] = barColor;
@@ -299,20 +410,27 @@ function PerfectScore() {
         ctx.fill();
         musicX += barWidth;
       }
-
-      ctx.beginPath();
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 3;
-      ctx.moveTo(canvasWidth * 0.5, 0);
-      ctx.lineTo(canvasWidth * 0.5, canvasHeight);
-      ctx.fill();
-      ctx.stroke();
-      ctx.closePath();
     };
 
     drawMusicNote();
     drawMicNote();
     drawParticle(songNoteWindow, ctx);
+
+    ctx.beginPath();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 3;
+    ctx.moveTo(canvasWidth * 0.5, 0);
+    ctx.lineTo(canvasWidth * 0.5, canvasHeight - 80);
+    ctx.fill();
+    ctx.stroke();
+    ctx.closePath();
+
+    ctx.font = 'bold 30px Jalnan';
+    ctx.fillStyle = barColorList[barColor];
+    ctx.textAlign = 'center';
+    ctx.fillText(scoreText, canvasWidth * 0.4, 50);
+
+    drawlyrics(ctx, currentTime);
   };
 
   useAnimation(play, 0, [dataArrayRef, pitchDetectorRef, analyser, isStarted]);
