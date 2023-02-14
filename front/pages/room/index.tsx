@@ -16,6 +16,7 @@ import Loading from '@/components/room/Loading';
 
 import styles from '@/styles/Room.module.scss';
 import { setReserv } from '@/redux/store/reservSlice';
+import PerfectScore from '@/components/room/PerfectScore';
 
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
@@ -308,14 +309,15 @@ function Index() {
             ||
           </button>
           <div className={styles.singScreen}>
-            <MainScreen
-              singMode={mode}
-              // subscribers={subscribers}
-              screenOV={screenOV}
-              session={session}
-              screenSession={screenSession}
-              publisher={publisher}
-            />
+            {/*<MainScreen*/}
+            {/*  singMode={mode}*/}
+            {/*  // subscribers={subscribers}*/}
+            {/*  screenOV={screenOV}*/}
+            {/*  session={session}*/}
+            {/*  screenSession={screenSession}*/}
+            {/*  publisher={publisher}*/}
+            {/*/>*/}
+            <PerfectScore />
             {/* {testOnOff ? null : (
               <MainScreen
                 streamManager={screener}
