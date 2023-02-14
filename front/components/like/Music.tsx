@@ -17,7 +17,10 @@ function Music(props: { likeList: SongInfo[] }) {
   }, [themeMode, storeTheme]);
 
   useEffect(() => {
-    likeList.map((item, idx) => (item.ranking = idx));
+    likeList.map((item, idx) => {
+      item.ranking = idx;
+      return item;
+    });
   }, []);
 
   //  페이지
