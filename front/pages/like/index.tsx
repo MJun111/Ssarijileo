@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { GetServerSideProps } from 'next';
 import classnames from 'classnames';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,19 +23,19 @@ export interface RecordInfo {
 function Like() {
   const [recordList, setRecordList] = useState<RecordInfo[]>([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get('api/v1/recording/my', {
-  //       headers: {
-  //         Authorization: `${getCookie('Authorization')}`,
-  //         refreshToken: `${getCookie('refreshToken')}`,
-  //       },
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       setRecordList(res.data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get('api/v1/recording/my', {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        setRecordList(res.data);
+      });
+  }, []);
 
   const [type, setType] = useState('찜목록');
   const musicClass = classnames({
