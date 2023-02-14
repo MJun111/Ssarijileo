@@ -165,7 +165,7 @@ function MakeSample() {
     analyser.smoothingTimeConstant = 0.5;
     analyser.fftSize = 2048;
 
-    fetch('sounds/voice.mp3')
+    fetch('sounds/내꺼하자_vocal.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {

@@ -17,7 +17,7 @@ function MicControlBar() {
   const changeVolume = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setState(Number(e.target.value));
-      dispatch(setVolume(Number(e.target.value) * 2));
+      dispatch(setVolume(Number(e.target.value)));
       e.target.style.background = `
       linear-gradient(to right, #FFE283 0%, #FFE283 ${Math.round(
         volume * 100,
