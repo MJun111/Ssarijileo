@@ -17,28 +17,24 @@ function Nomal(props: {
   nextSong: NextSong;
   screenShare: any;
   screen: any;
-  isNow: boolean;
+  propState: any;
 }) {
-  const { nextSong, screenShare, screen, isNow } = props;
+  const { nextSong, screenShare, screen, propState } = props;
   const [nowtime, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
-
-  // 저장되어있는 상태값 불러오기
-  const [nowState, setNowState] = useState(0);
-  const storeSsari = useSelector((state: RootState) => state.ssari);
   const dispatch = useDispatch();
 
+  // 저장되어있는 상태값 불러오기
+  const [nowState, setNowState] = useState(propState);
+  const storeSsari = useSelector((state: RootState) => state.ssari);
   useEffect(() => {
     setNowState(storeSsari.ssari);
   }, [storeSsari]);
 
-  // 저장되어있는 노래목록 불러오기
-
   const videoRef = useRef<HTMLVideoElement>(null);
-
   const sourceRef = useRef<AudioBufferSourceNode>();
-  const lyrics = nextSong.lyricsList;
   const startTime = useRef<number>(Date.now());
+  const lyrics = nextSong.lyricsList;
 
   const canvasWidth = 910;
   const canvasHeight = 174;
@@ -56,7 +52,7 @@ function Nomal(props: {
     const deltaTime = (Date.now() - startTime.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
-      dispatch(setSsari(2));
+      dispatch(setSsari(7));
       // 예약목록 0번 인덱스 삭제...
       sourceRef.current?.stop(0);
       return;
@@ -107,7 +103,7 @@ function Nomal(props: {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    if (nowState === 3) {
+    if (nowState === 5) {
       console.log('노말');
       fetch('sounds/아무노래MR.mp3')
         .then(response => response.arrayBuffer())
@@ -141,7 +137,6 @@ function Nomal(props: {
             sourceRef.current = source;
             startTime.current = Date.now();
             setIsPlay(true);
-            console.log('재생하고있는데');
             screenShare(audioContext, mp3AudioDestination);
           });
         });
@@ -149,15 +144,18 @@ function Nomal(props: {
   }, [nowState]);
 
   useEffect(() => {
+    console.log('nowState!!', nowState);
+    console.log('!!!!!!!!!', videoRef.current);
     if (screen !== undefined && !!videoRef.current) {
       screen.addVideoElement(videoRef.current);
+      console.log('!!!!!!!!!2', videoRef.current);
     }
   }, [screen]);
 
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {nowState === 3 && isNow && (
+        {nowState === 5 && (
           <canvas
             id="screen-screen"
             width={canvasWidth}
@@ -166,7 +164,7 @@ function Nomal(props: {
             className={styles.canvas}
           />
         )}
-        {nowState === 3 && !isNow && (
+        {nowState === 6 && (
           <video className={styles.video} autoPlay ref={videoRef}>
             <track kind="captions" />
           </video>
@@ -277,7 +275,7 @@ function Nomal(props: {
             sourceRef.current?.stop(0);
             // screenSession.forceunpublish(screen);
             console.log(sourceRef.current);
-            dispatch(setSsari(2));
+            dispatch(setSsari(7));
           }}
           className={styles.nextBtn}
           disabled={!isPlay}
