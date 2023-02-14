@@ -62,6 +62,13 @@ function ReservList({ session }: any) {
   //   현재 곡 제외 예약 목록만 뽑아내기
   const reserv = reservationList.length > 1 ? reservationList.slice(1) : [];
 
+  const [sessionId, setSessionId] = useState('');
+  const storeSessionId = useSelector((state: RootState) => state.sessionId);
+
+  useEffect(() => {
+    setSessionId(storeSessionId.sessionId);
+  }, [storeSessionId]);
+
   return (
     <div className={styles.container}>
       <div className={modalClass}>
@@ -79,10 +86,10 @@ function ReservList({ session }: any) {
                     data: {
                       songId:
                         reservationList.length !== 0
-                          ? reservationList[0].title
-                          : '',
+                          ? reservationList[0].songId
+                          : null,
                       // 임시 세션 아이디
-                      sessionId: '12345',
+                      sessionId: sessionId,
                     },
                     headers: {
                       Authorization: `${getCookie('Authorization')}`,
