@@ -22,6 +22,7 @@ export interface ChartItem {
   singer: string;
   songId: number;
   title: string;
+  favoriteSong: boolean;
 }
 
 export interface RankingItem {

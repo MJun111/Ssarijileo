@@ -11,7 +11,7 @@ function MicControlBar() {
   const dispatch = useDispatch();
   const storeVolume = useSelector((state: RootState) => state.volume);
   useEffect(() => {
-    setState(storeVolume.volume / 2);
+    setState(storeVolume.volume);
   }, [storeVolume]);
 
   const changeVolume = useCallback(

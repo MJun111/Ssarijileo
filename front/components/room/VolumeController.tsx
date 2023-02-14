@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import styles from '@/styles/room/VolumeController.module.scss';
 
@@ -7,12 +7,15 @@ import MicControlBar from '../common/MicControlBar';
 import EchoControlBar from '../common/EchoControlBar';
 import { getCookie } from '@/util/cookie';
 import { RootState } from '@/redux/store';
+import { setEcho } from '@/redux/store/echoSlice';
+import { setVolume } from '@/redux/store/volumeSlice';
 
 function VolumeController({ setVolumeModal }: any) {
   const [echoInfo, setEchoInfo] = useState(0.5);
   const [volumeInfo, setVolumeInfo] = useState(0.5);
   const storeEcho = useSelector((state: RootState) => state.echo);
   const storeVolume = useSelector((state: RootState) => state.volume);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setEchoInfo(storeEcho.echo);
@@ -56,7 +59,7 @@ function VolumeController({ setVolumeModal }: any) {
           onClick={() => {
             axios
               .put(
-                'api/v1/songsetting',
+                'api/v1/song-setting',
                 {
                   eco: echoInfo,
                   volume: volumeInfo,
@@ -70,6 +73,8 @@ function VolumeController({ setVolumeModal }: any) {
               )
               .then(res => {
                 console.log('볼륨, 에코 변경 요청 : ', res.data);
+                dispatch(setEcho(echoInfo));
+                dispatch(setVolume(volumeInfo));
               });
             setVolumeModal(false);
           }}

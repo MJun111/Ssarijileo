@@ -1,15 +1,14 @@
 import Image from 'next/image';
-import { videoInfo } from '@/components/like/Video';
 import styles from '@/styles/contest/ContestListItem.module.scss';
+import { RecordInfo } from '@/pages/like';
+import axios from 'axios';
+import { getCookie } from '@/util/cookie';
 
-type VideoProps = {
-  info: videoInfo;
-};
-
-function VideoItem({ info }: VideoProps) {
+function VideoItem(props: { info: RecordInfo }) {
   // key 필요하면 받아놓기
-  const { url, title, singer } = info;
-  const urlInfo = `${url}#t=0.5`;
+  const { info } = props;
+  const { recordingId, file, title, singer } = info;
+  const urlInfo = `${file}#t=0.5`;
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -36,10 +35,40 @@ function VideoItem({ info }: VideoProps) {
                 {title}-{singer}
               </div>
             </div>
-            <button type="button" className={styles.addBtn}>
+            <button
+              type="button"
+              className={styles.addBtn}
+              onClick={() => {
+                axios
+                  .post(`api/v1/singing-contest/${recordingId}`, null, {
+                    headers: {
+                      Authorization: `${getCookie('Authorization')}`,
+                      refreshToken: `${getCookie('refreshToken')}`,
+                    },
+                  })
+                  .then(res => {
+                    console.log(res.data);
+                  });
+              }}
+            >
               글작성
             </button>
-            <button type="button" className={styles.deleteBtn}>
+            <button
+              type="button"
+              className={styles.deleteBtn}
+              onClick={() => {
+                axios
+                  .delete(`api/v1/recording/${recordingId}`, {
+                    headers: {
+                      Authorization: `${getCookie('Authorization')}`,
+                      refreshToken: `${getCookie('refreshToken')}`,
+                    },
+                  })
+                  .then(res => {
+                    console.log(res.data);
+                  });
+              }}
+            >
               삭제
             </button>
           </div>
