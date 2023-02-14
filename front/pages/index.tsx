@@ -72,7 +72,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
         chartItemA,
         chartItemB,
         ranking,
-        res: { status: 200 },
       },
     };
   } catch (err) {
@@ -91,7 +90,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
         chartItemA: null,
         chartItemB: null,
         ranking: null,
-        res,
       },
     };
   }
@@ -101,7 +99,6 @@ function Home(props: {
   chartItemA: ChartItem[];
   chartItemB: ChartItem[];
   ranking: RankingItem[];
-  res: any;
 }) {
   const { chartItemA, chartItemB, ranking } = props;
   const [themeMode, setThemeMode] = useState('light');

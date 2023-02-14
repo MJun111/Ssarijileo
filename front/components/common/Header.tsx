@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
-import axios from 'axios';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
@@ -251,9 +250,9 @@ function Header() {
         {/* 로그인 상태 */}
         {nowLogin && (
           <div className={styles.icon}>
-            <div onClick={attendRoom} className={styles.toastBox}>
+            <button onClick={attendRoom} className={styles.toastBox}>
               <ToastContainer className={styles.toast} />
-            </div>
+            </button>
             <Image
               src={icons.logout}
               alt="logout"

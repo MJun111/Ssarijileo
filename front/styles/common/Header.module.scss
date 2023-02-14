@@ -152,6 +152,7 @@
 
     .toastBox {
       cursor: pointer;
+      visibility: hidden;
       .toast {
         div {
           background-color: #fff;
