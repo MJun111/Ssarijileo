@@ -9,8 +9,8 @@ export const NOTE_COLOR = {
   skyblue: '#00AADF', // perfect
   green: '#00FF00', // great
   yellow: '#FFD700', // good
-  purple: '#800080', // soso
-  red: '#FF0000', // miss
+  purple: '#800080', // normal
+  red: '#FF0000', // bad
 };
 export const PARTICLE_COUNT = 150;
-export const PARTICLE_COLOR = `rgba(255, 255, 255, 0.5)`;
+export const PARTICLE_COLOR = `rgba(0, 255, 255, 0.75)`;

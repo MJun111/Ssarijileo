@@ -4,19 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
+import { setReserv } from '@/redux/store/reservSlice';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
-
-// import PerfectScore from '@/components/room/PerfectScore';
 import Loading from '@/components/room/Loading';
+// import PerfectScore from '@/components/room/PerfectScore';
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
-import { setReserv } from '@/redux/store/reservSlice';
-import PerfectScore from '@/components/room/PerfectScore';
 
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
@@ -309,15 +307,14 @@ function Index() {
             ||
           </button>
           <div className={styles.singScreen}>
-            {/*<MainScreen*/}
-            {/*  singMode={mode}*/}
-            {/*  // subscribers={subscribers}*/}
-            {/*  screenOV={screenOV}*/}
-            {/*  session={session}*/}
-            {/*  screenSession={screenSession}*/}
-            {/*  publisher={publisher}*/}
-            {/*/>*/}
-            <PerfectScore />
+            <MainScreen
+              singMode={mode}
+              // subscribers={subscribers}
+              screenOV={screenOV}
+              session={session}
+              screenSession={screenSession}
+              publisher={publisher}
+            />
             {/* {testOnOff ? null : (
               <MainScreen
                 streamManager={screener}

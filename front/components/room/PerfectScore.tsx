@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 
-import song from '@/fixtures/Ditto.json';
+import song from '@/fixtures/사건의_지평선.json';
 import * as data from '@/constants/PerfectScoreData';
 import styles from '@/styles/room/PerfectScore.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
@@ -15,10 +15,10 @@ function PerfectScore() {
   const pitchDetectorRef = useRef<PitchDetector<Float32Array>>(
     PitchDetector.forFloat32Array(data.BUFFER_SIZE),
   );
-  const analyserRef = useRef<AnalyserNode>();
   const musicRef = useRef<AudioBufferSourceNode>();
   const startTimeRef = useRef<number>(0);
-  const voiceNoteWindowRef = useRef<number[]>(new Array(data.NOTE_WINDOW_SIZE));
+  const halfSize = data.NOTE_WINDOW_SIZE / 2;
+  const voiceNoteWindowRef = useRef<number[]>(new Array(halfSize));
   const songNoteWindowRef = useRef<number[][]>(
     new Array(data.NOTE_WINDOW_SIZE).fill([0, 0]),
   );
@@ -35,7 +35,6 @@ function PerfectScore() {
   }[] = [];
   const [isStarted, setIsStarted] = useState(false);
   const [isPossibleStop, setIsPossibleStop] = useState(false);
-  const halfSize = data.NOTE_WINDOW_SIZE / 2;
 
   const stop = () => {
     musicRef.current?.stop(0);
@@ -51,14 +50,17 @@ function PerfectScore() {
     return Math.sqrt(ret / buffer.length) < data.SILENCE_THRESHOLD;
   };
 
+  const canvasWidth = 950;
+  const canvasHeight = 350;
+  const canvasRef = useCanvas(canvasWidth, canvasHeight);
+
   // 파티클
   const drawParticle = (
-    noteWindow: number[],
-    flag: boolean,
+    noteWindow: number[][],
     ctx: CanvasRenderingContext2D,
   ) => {
     const makeParticle = (particleNum: number) => {
-      const particleY = canvasHeight - noteWindow[0] * 3;
+      const particleY = canvasHeight - noteWindow[halfSize][0] * 3;
       for (let i = 0; i < particleNum; i++) {
         const speed = {
           x: Math.random() * 2,
@@ -83,22 +85,17 @@ function PerfectScore() {
     };
 
     // 파티클 유지 여부
-    if (!flag) {
-      particles.splice(0, particles.length);
-      makeParticle(data.PARTICLE_COUNT);
-    } else {
-      for (let i = 0; i < particles.length; i++) {
-        const particle = particles[i];
-        particle.startX += particle.speed.x;
-        particle.startY += particle.speed.y;
-        particle.life -= 1;
-        if (particle.life < 0) {
-          particles.splice(i, 1);
-        }
+    for (let i = 0; i < particles.length; i++) {
+      const particle = particles[i];
+      particle.startX += particle.speed.x;
+      particle.startY += particle.speed.y;
+      particle.life -= 1;
+      if (particle.life < 0) {
+        particles.splice(i, 1);
       }
-      if (particles.length < data.PARTICLE_COUNT) {
-        makeParticle(data.PARTICLE_COUNT - particles.length);
-      }
+    }
+    if (particles.length < data.PARTICLE_COUNT) {
+      makeParticle(data.PARTICLE_COUNT - particles.length);
     }
 
     // 파티클 그리기
@@ -127,21 +124,29 @@ function PerfectScore() {
       songData.push(song[i]);
     }
   }
-  let songIndex = 0;
-  let block = 0;
-  const canvasWidth = 950;
-  const canvasHeight = 350;
-  const canvasRef = useCanvas(canvasWidth, canvasHeight);
 
   const voiceNoteWindow = voiceNoteWindowRef.current;
   const songNoteWindow = songNoteWindowRef.current;
 
+  const audioCtx = new AudioContext();
+  const analyser = audioCtx.createAnalyser();
+
+  analyser.minDecibels = data.MIN_DB;
+  analyser.smoothingTimeConstant = data.SMOOTHING_TIME_CONSTANT;
+  analyser.fftSize = data.FFT_SIZE;
+
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    const source = audioCtx.createMediaStreamSource(stream);
+    source.connect(analyser);
+  });
+  let songIndex = 0;
+  let block = 1;
   // 메인 로직
   const play = () => {
     if (
       !dataArrayRef.current ||
       !pitchDetectorRef.current ||
-      !analyserRef.current ||
+      !analyser ||
       !isStarted
     )
       return;
@@ -152,23 +157,20 @@ function PerfectScore() {
     // 음정 분석
     const dataArray = dataArrayRef.current;
     const pitchDetector = pitchDetectorRef.current;
-    const analyser = analyserRef.current;
 
     analyser.getFloatTimeDomainData(dataArray);
 
     const [pitch] = isSilentBuffer(dataArray)
       ? [-1, -1]
       : pitchDetector.findPitch(dataArray, analyser.context.sampleRate);
-
     const freqToNote = (freq: number) => {
       return Math.round(12 * (Math.log(freq / 440.0) / Math.log(2))) + 69;
     };
     // 음정 분석 결과를 노트윈도우에 저장
     let note = freqToNote(pitch);
     if (note < 40 || note > 90) note = -1;
-    // const flag = note === voiceNoteWindow[voiceNoteWindow.length - 1];
     voiceNoteWindow.push(note);
-    if (voiceNoteWindow.length > data.NOTE_WINDOW_SIZE) {
+    if (voiceNoteWindow.length > halfSize) {
       voiceNoteWindow.shift();
     }
 
@@ -177,36 +179,45 @@ function PerfectScore() {
     if (currentTime > songData[songIndex].time) {
       songIndex += 1;
     }
-    if (songNoteWindow[halfSize][0] === songNoteWindow[halfSize - 1][0]) {
+    if (songIndex >= songData.length) {
+      setIsStarted(false);
+      return;
+    }
+    if (
+      songNoteWindow[halfSize][0] !== -1 &&
+      songNoteWindow[halfSize][0] === songNoteWindow[halfSize + 1][0]
+    ) {
       block += 1;
-    } else {
+    } else if (
+      songNoteWindow[halfSize][0] !== -1 &&
+      songNoteWindow[halfSize][0] !== songNoteWindow[halfSize + 1][0]
+    ) {
       let correct = 0;
       let barColor: number;
       for (let i = 0; i < block; i++) {
         if (
-          voiceNoteWindow[data.NOTE_WINDOW_SIZE - i] ===
-          songData[songIndex].note
+          Math.abs(
+            voiceNoteWindow[halfSize - i] - songNoteWindow[halfSize - i][0],
+          ) < 3
         ) {
           correct += 1;
         }
       }
-      if (correct > block * 0.7) {
+      if (correct > block * 0.5) {
         barColor = 1;
-      } else if (correct > block * 0.5) {
-        barColor = 2;
       } else if (correct > block * 0.3) {
-        barColor = 3;
+        barColor = 2;
       } else if (correct > block * 0.1) {
+        barColor = 3;
+      } else if (correct > 0) {
         barColor = 4;
       } else {
         barColor = 5;
       }
       for (let i = 0; i < block; i++) {
-        if (songNoteWindow[halfSize - i]) {
-          songNoteWindow[halfSize - i][1] = barColor;
-        }
+        songNoteWindow[halfSize - i][1] = barColor;
       }
-      block = 0;
+      block = 1;
     }
 
     songNoteWindow.push([songData[songIndex].note, 0]);
@@ -223,15 +234,7 @@ function PerfectScore() {
       for (let i = 0; i < voiceNoteWindow.length; i++) {
         const y = canvasHeight - voiceNoteWindow[i] * 3;
         if (!Number.isNaN(y)) {
-          const gradient = ctx.createLinearGradient(
-            x,
-            y,
-            x + barWidth + 1,
-            y + barHeight,
-          );
-          gradient.addColorStop(0, data.NOTE_COLOR.skyblue);
-          gradient.addColorStop(1, '#fff5f5');
-          ctx.fillStyle = gradient;
+          ctx.fillStyle = `rgba(255, 255, 255, 0.5)`;
         }
 
         ctx.beginPath();
@@ -241,16 +244,16 @@ function PerfectScore() {
           voiceNoteWindow[i] !== voiceNoteWindow[i - 1] &&
           voiceNoteWindow[i] !== voiceNoteWindow[i + 1]
         ) {
-          ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 5, 5, 5]);
+          ctx.roundRect(x, y, barWidth, barHeight, [5, 5, 5, 5]);
         } else if (i !== 0 && voiceNoteWindow[i] !== voiceNoteWindow[i - 1]) {
-          ctx.roundRect(x, y, barWidth + 1, barHeight, [5, 0, 0, 5]);
+          ctx.roundRect(x, y, barWidth, barHeight, [5, 0, 0, 5]);
         } else if (
           i !== voiceNoteWindow.length - 1 &&
           voiceNoteWindow[i] !== voiceNoteWindow[i + 1]
         ) {
-          ctx.roundRect(x, y, barWidth + 1, barHeight, [0, 5, 5, 0]);
+          ctx.roundRect(x, y, barWidth, barHeight, [0, 5, 5, 0]);
         } else {
-          ctx.rect(x, y, barWidth + 1, barHeight);
+          ctx.rect(x, y, barWidth, barHeight);
         }
         ctx.fill();
         x += barWidth;
@@ -307,42 +310,24 @@ function PerfectScore() {
       ctx.closePath();
     };
 
-    // drawMicNote();
     drawMusicNote();
-    // drawParticle(songNoteWindow, flag, ctx);
+    drawMicNote();
+    drawParticle(songNoteWindow, ctx);
   };
 
-  useAnimation(play, 0, [
-    dataArrayRef,
-    pitchDetectorRef,
-    analyserRef,
-    isStarted,
-  ]);
+  useAnimation(play, 0, [dataArrayRef, pitchDetectorRef, analyser, isStarted]);
 
-  // analyser 세팅
+  // 노래 재생
   useEffect(() => {
-    const audioCtx = new AudioContext();
-    const analyser = audioCtx.createAnalyser();
-    analyserRef.current = analyser;
-
-    analyser.minDecibels = data.MIN_DB;
-    analyser.smoothingTimeConstant = data.SMOOTHING_TIME_CONSTANT;
-    analyser.fftSize = data.FFT_SIZE;
-
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      const source = audioCtx.createMediaStreamSource(stream);
-      source.connect(analyser);
-    });
-
     const musicAudioCtx = new AudioContext();
-    fetch('sounds/DittoVoice.mp3')
+    fetch('sounds/사건의지평선_mr.mp3')
       .then(response => response.arrayBuffer())
       .then(arrayBuffer => musicAudioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {
-        const source = musicAudioCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(musicAudioCtx.destination);
-        musicRef.current = source;
+        const musicSource = musicAudioCtx.createBufferSource();
+        musicSource.buffer = audioBuffer;
+        musicSource.connect(musicAudioCtx.destination);
+        musicRef.current = musicSource;
         startTimeRef.current = Date.now();
         setIsStarted(true);
         setTimeout(() => {
