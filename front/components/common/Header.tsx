@@ -250,9 +250,9 @@ function Header() {
         {/* 로그인 상태 */}
         {nowLogin && (
           <div className={styles.icon}>
-            <button onClick={attendRoom} className={styles.toastBox}>
+            <div onClick={attendRoom} className={styles.toastBox}>
               <ToastContainer className={styles.toast} />
-            </button>
+            </div>
             <Image
               src={icons.logout}
               alt="logout"
