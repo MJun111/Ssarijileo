@@ -19,13 +19,13 @@ import { setReserv } from '@/redux/store/reservSlice';
 
 const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 
-interface Reserv {
-  nickname: string;
-  songId: number;
-  isPriority: string;
-  title: string;
-  singer: string;
-}
+// interface Reserv {
+//   nickname: string;
+//   songId: number;
+//   isPriority: string;
+//   title: string;
+//   singer: string;
+// }
 
 function Index() {
   // username
@@ -104,12 +104,12 @@ function Index() {
     setInit(true);
   };
 
-  // 예약 리스트
-  const [reservationList, setReservationList] = useState<Reserv[]>([]);
-  const storeReservList = useSelector((state: RootState) => state.reserv);
-  useEffect(() => {
-    setReservationList(storeReservList.reserv);
-  }, [storeReservList]);
+  // // 예약 리스트
+  // const [reservationList, setReservationList] = useState<Reserv[]>([]);
+  // const storeReservList = useSelector((state: RootState) => state.reserv);
+  // useEffect(() => {
+  //   setReservationList(storeReservList.reserv);
+  // }, [storeReservList]);
 
   const nextSinger = () => {
     session
@@ -312,6 +312,7 @@ function Index() {
               singMode={mode}
               subscribers={subscribers}
               screenOV={screenOV}
+              session={session}
               screenSession={screenSession}
               publisher={publisher}
             />

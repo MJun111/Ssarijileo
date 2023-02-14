@@ -47,7 +47,7 @@ function Nomal(props: { nextSong: NextSong; screenShare: any; screen: any }) {
     const deltaTime = (Date.now() - startTime.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
-      // dispatch(setSsari(2));
+      dispatch(setSsari(7));
       // 예약목록 0번 인덱스 삭제...
       sourceRef.current?.stop(0);
       return;
