@@ -150,10 +150,22 @@
       color: $white;
     }
 
-    .alarm {
+    .toastBox {
       cursor: pointer;
-      margin-right: 10px;
+      .toast {
+        div {
+          background-color: #fff;
+          color: $dark;
+          font-weight: bold;
+          font-family: 'Jalnan', sans-serif;
+
+          div[role=progressbar] {
+            background: var(--color-roomB);
+          }
+        }
+      }
     }
+
     .logout {
       cursor: pointer;
       margin-right: 5px;
