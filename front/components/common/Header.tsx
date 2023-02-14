@@ -135,27 +135,21 @@ function Header() {
 
   const userNickname = storeUser.nickname;
 
-  const data = {
-    fromUserNickname: userNickname,
-    toUserNickname: userNickname,
-    friendId: 1,
-  };
-
-  const testAlarm = () => {
-    console.log(
-      `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 초대를 보냄.`,
-    );
-    axios.post('api/v1/friend/invite/', data);
-  };
-
-  // const testSSE = () => {
-  //   console.log(
-  //     `${data.fromUserNickname} 이 ${data.toUserNickname} 에게 친구요청을 보냄.`,
-  //   );
-  //   axios.post('api/v1/friend/request/', data);
-  // };
-
   const EventSource = EventSourcePolyfill || NativeEventSource;
+
+  const [sessionId, setSessionId] = useState('');
+  const [isInvite, setIsInvite] = useState(false);
+  const attendRoom = () => {
+    if (!isInvite || !sessionId || !storeLogin.login) return;
+    console.log(sessionId);
+    const popupWindow = window.open('room/', 'windowName', 'resizeable');
+    if (!popupWindow) return;
+    popupWindow.resizeTo(1920, 1080);
+    popupWindow.onresize = () => {
+      popupWindow.resizeTo(1920, 1080);
+    };
+  };
+
   useEffect(() => {
     if (storeLogin.login) {
       // const token = getCookie('Authorization');
@@ -167,9 +161,17 @@ function Header() {
       eventSource.onmessage = e => {
         try {
           const msg = JSON.parse(e.data);
-          console.log(msg);
           if (msg.args.type === 'request') {
-            console.log('친구요청이 왔습니다.');
+            const notify = () =>
+              toast(`${msg.fromUserNickname}으로 부터의 친구요청`, {
+                position: 'top-right',
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                draggable: true,
+              });
+            notify();
+            setIsInvite(false);
           } else if (msg.args.type === 'invite') {
             const notify = () =>
               toast(`${msg.fromUserNickname}으로 부터의 초대`, {
@@ -180,9 +182,10 @@ function Header() {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                theme: themeMode === 'light' ? 'light' : 'dark',
               });
             notify();
+            setSessionId(msg.sessionId);
+            setIsInvite(true);
           }
         } catch (err) {
           console.log(err);
@@ -248,15 +251,9 @@ function Header() {
         {/* 로그인 상태 */}
         {nowLogin && (
           <div className={styles.icon}>
-            <Image
-              src={icons.alarm}
-              alt="alarm"
-              width={20}
-              height={20}
-              className={styles.alarm}
-              onClick={testAlarm}
-            />
-            <ToastContainer />
+            <div onClick={attendRoom} className={styles.toastBox}>
+              <ToastContainer className={styles.toast} />
+            </div>
             <Image
               src={icons.logout}
               alt="logout"
