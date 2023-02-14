@@ -175,11 +175,16 @@ function PerfectScore() {
     // 현재 시간에 맞는 노래 데이터 저장
     const currentTime = (Date.now() - startTimeRef.current) / 1000;
     if (currentTime > songData[songIndex].time) {
+      songIndex += 1;
+    }
+    if (songNoteWindow[halfSize][0] === songNoteWindow[halfSize - 1][0]) {
+      block += 1;
+    } else {
       let correct = 0;
       let barColor: number;
       for (let i = 0; i < block; i++) {
         if (
-          voiceNoteWindow[data.NOTE_WINDOW_SIZE - block + i] ===
+          voiceNoteWindow[data.NOTE_WINDOW_SIZE - i] ===
           songData[songIndex].note
         ) {
           correct += 1;
@@ -197,13 +202,14 @@ function PerfectScore() {
         barColor = 5;
       }
       for (let i = 0; i < block; i++) {
-        songNoteWindow[data.NOTE_WINDOW_SIZE - block + i][1] = barColor;
+        if (songNoteWindow[halfSize - i]) {
+          songNoteWindow[halfSize - i][1] = barColor;
+        }
       }
       block = 0;
-      songIndex += 1;
     }
+
     songNoteWindow.push([songData[songIndex].note, 0]);
-    block += 1;
     if (songNoteWindow.length > data.NOTE_WINDOW_SIZE) {
       songNoteWindow.shift();
     }
