@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
-import { setReserv } from '@/redux/store/reservSlice';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
@@ -15,8 +14,8 @@ import Loading from '@/components/room/Loading';
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
-
-const APPLICATION_SERVER_URL = 'http://localhost:5000/';
+import { setReserv } from '@/redux/store/reservSlice';
+import { getCookie } from '@/util/cookie';
 
 // interface Reserv {
 //   nickname: string;
@@ -27,6 +26,7 @@ const APPLICATION_SERVER_URL = 'http://localhost:5000/';
 // }
 
 function Index() {
+  const dispatch = useDispatch();
   // username
   const [myUserName, setMyUserName] = useState('');
   const storeUser = useSelector((state: RootState) => state.user);
@@ -34,13 +34,17 @@ function Index() {
     setMyUserName(storeUser.nickname);
   }, [storeUser]);
 
-  // session Info
-  const mySessionId = '123451';
+  // sessionId (Redux 값받아오기)
+  const [sessionId, setSessionId] = useState<any>(undefined);
+  const [roomInfo, setRoomInfo] = useState();
+  const [isHost, setIsHost] = useState(false);
+
+  // OV
   const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
   const [screenSession, setScreenSession] = useState<any>(undefined);
-
+  console.log(OV);
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -49,7 +53,6 @@ function Index() {
 
   // 초기 상태값
   const [loading, setLoading] = useState(true);
-  const [init, setInit] = useState(false);
 
   // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -58,72 +61,56 @@ function Index() {
   }, [storeTheme]);
 
   // api
-  async function createSession(sessionId: string | string[] | undefined) {
-    const response = await axios.post(
-      `${APPLICATION_SERVER_URL}api/sessions`,
-      { customSessionId: sessionId },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-    return response.data; // The sessionId
-  }
-
-  async function createToken(sessionId: string) {
-    const response = await axios.post(
-      `${APPLICATION_SERVER_URL}api/sessions/${sessionId}/connections`,
-      {
-        kurentoOptions: {
-          allowedFilters: ['GStreamerFilter'],
-        },
-      },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-    return response.data; // The token
-  }
-
   async function getToken() {
-    const sessionId = await createSession(mySessionId);
-    const token = await createToken(sessionId);
-    return token;
+    let host;
+    let data;
+
+    if (isHost) {
+      host = '/host';
+      data = roomInfo;
+    } else {
+      host = '';
+      data = {
+        password: null,
+      };
+    }
+
+    const token = await axios({
+      method: 'POST',
+      url: `api/v1/room/connection/${sessionId}${host}`,
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
+        refreshToken: `${getCookie('refreshToken')}`,
+      },
+      data,
+    });
+    console.log('token1 입니다', token.data);
+    return token.data;
   }
 
-  // OV, session 생성
-  const joinsession = () => {
-    const newOV = new OpenVidu();
-    setOV(newOV);
-    setSession(newOV.initSession());
+  // api screen
+  async function getToken2() {
+    const token = await axios.post(
+      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${sessionId}/connection`,
+      {},
+      {
+        headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+      },
+    );
+    return token.data.token;
+  }
 
-    const newScreenOV = new OpenVidu();
-    setScreenOV(newScreenOV);
-    setScreenSession(newScreenOV.initSession());
-
-    setInit(true);
-  };
-
-  // // 예약 리스트
-  // const [reservationList, setReservationList] = useState<Reserv[]>([]);
-  // const storeReservList = useSelector((state: RootState) => state.reserv);
-  // useEffect(() => {
-  //   setReservationList(storeReservList.reserv);
-  // }, [storeReservList]);
-
-  const nextSinger = () => {
-    session
-      .signal({
-        data: '', // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'nextSinger', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`"${myUserName}"가 싱어, 시그널 성공`);
-      })
-      .catch((error: any) => {
-        console.error('다음 싱어 시그널 에러', error);
-      });
-  };
+  // api delete session
+  // async function deleteSession() {
+  //   const response = await axios({
+  //     method: 'DELETE',
+  //     url: `api/v1/room/${sessionId}`,
+  //     headers: {
+  //       Authorization: `${getCookie('Authorization')}`,
+  //       refreshToken: `${getCookie('refreshToken')}`,
+  //     },
+  //   }).then(() => leaveSession());
+  // }
 
   // singer 화면 위치 바꾸기
   const changeSinger = (from: any) => {
@@ -174,8 +161,6 @@ function Index() {
     }
   };
 
-  const dispatch = useDispatch();
-
   // 사용자가 떠날때
   const leaveSession = () => {
     const mySession = session;
@@ -194,93 +179,102 @@ function Index() {
     window.close();
   };
 
-  // 페이지 입장 후 로딩시작, joinsession
+  // connect 진행!!!!
+  const joinSession = () => {
+    const newOV = new OpenVidu();
+    const mySession = newOV.initSession();
+    setOV(newOV);
+    setSession(mySession);
+
+    const newScreenOV = new OpenVidu();
+    const myScreen = newScreenOV.initSession();
+    setScreenOV(newScreenOV);
+    setScreenSession(myScreen);
+
+    // 다른사람 캠 추가
+    mySession.on('streamCreated', (event: any) => {
+      if (event.stream.typeOfVideo === 'CAMERA') {
+        const subscriber = mySession.subscribe(event.stream, undefined);
+        const newsubscribers = subscribers;
+        newsubscribers.push(subscriber);
+        setSubscribers([...newsubscribers]);
+      }
+    });
+
+    // 참가자가 떠날때
+    mySession.on('streamDestroyed', (event: any) => {
+      deleteSubscriber(event.stream.streamManager);
+    });
+
+    // 다음 singer
+    mySession.on('signal:nextSinger', (event: any) => {
+      changeSinger(event.from);
+    });
+
+    // 내 캠 connect
+    console.log('1. 내캠 커넥트');
+    getToken().then((token: any) => {
+      mySession.connect(token, { clientdata: myUserName }).then(async () => {
+        const newpublisher = await newOV.initPublisherAsync(undefined, {
+          audioSource: undefined,
+          videoSource: undefined,
+          publishAudio: true,
+          publishVideo: true,
+          resolution: '480x480',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false,
+        });
+
+        mySession.publish(newpublisher);
+        publisher.push(newpublisher);
+        setPublisher([...publisher]);
+      });
+    });
+
+    // 화면 공유 connect
+    console.log('2. 화면 공유 커넥트');
+    getToken2().then((tokenScreen: any) => {
+      myScreen.connect(tokenScreen, { cliendData: myUserName });
+      setLoading(false);
+    });
+  };
+
+  // room 생성시 정보 수신
+  const getRoomInfo = (e: any) => {
+    setIsHost(true);
+    const myRoomInfo = e.data;
+    axios
+      .post(
+        'api/v1/room/session',
+        {},
+        {
+          headers: {
+            Authorization: `${getCookie('Authorization')}`,
+            refreshToken: `${getCookie('refreshToken')}`,
+          },
+        },
+      )
+      .then(res => {
+        myRoomInfo.sessionId = res.data;
+        setRoomInfo(myRoomInfo);
+        setSessionId(res.data);
+      });
+  };
+
+  // 페이지 입장 후 로딩시작,
   useEffect(() => {
-    setLoading(true);
-    joinsession();
+    console.log('use 이펙트');
+    window.addEventListener('message', getRoomInfo);
+    window.opener.postMessage('open!!', '*');
   }, []);
 
-  // joinsession 이후 초기 세팅 진행
+  // 세션 아이디 얻으면 연결 시작
   useEffect(() => {
-    if (init) {
-      const mySession = session;
-      const myScreen = screenSession;
-
-      mySession.on('streamCreated', (event: any) => {
-        // 카메라 추가
-        if (event.stream.typeOfVideo === 'CAMERA') {
-          // console.log('카메라 이벤트', event);
-          const subscriber = mySession.subscribe(event.stream, undefined);
-          const newsubscribers = subscribers;
-          newsubscribers.push(subscriber);
-          setSubscribers([...newsubscribers]);
-
-          // 화면공유
-          // } else if (event.stream.typeOfVideo === 'CUSTOM') {
-          //   const subscreen = myScreen.subscribe(event.stream, undefined);
-          //   // console.log('커스텀 이벤트', event);
-          //   setShare(true);
-        }
-      });
-
-      // 참가자가 떠날때
-      mySession.on('streamDestroyed', (event: any) => {
-        // Remove the stream from 'subscribers' array
-        console.log('아아아아앙', event.stream);
-        deleteSubscriber(event.stream.streamManager);
-      });
-
-      // 다음 singer
-      mySession.on('signal:nextSinger', (event: any) => {
-        changeSinger(event.from);
-      });
-
-      // 내 캠 connect
-      getToken().then(token => {
-        mySession
-          .connect(token, { clientdata: myUserName })
-          .then(async () => {
-            const newpublisher = await OV.initPublisherAsync(undefined, {
-              audioSource: undefined, // The source of audio. If undefined default microphone
-              videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
-              resolution: '480x480', // The resolution of your video
-              frameRate: 30, // The frame rate of your video
-              insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-              mirror: false, // Whether to mirror your local video or not
-            });
-
-            // --- Publish your stream ---
-            mySession.publish(newpublisher);
-
-            publisher.push(newpublisher);
-            setPublisher([...publisher]);
-            setLoading(false);
-            // console.log('done##');
-          })
-          .catch((error: any) => {
-            console.log(
-              'There was an error connecting to the session:',
-              error.code,
-              error.message,
-              error,
-            );
-          });
-      });
-
-      // 화면 공유 connect
-      getToken().then(tokenScreen => {
-        myScreen.connect(tokenScreen, { cliendData: myUserName });
-        // .then(() => {
-        //   console.log('화면공유 세션 연결됨');
-        // })
-        // .catch((error: any) => {
-        //   console.log('화면 공유 세션 연결 실패', error.code, error.message);
-        // });
-      });
+    if (sessionId !== undefined) {
+      joinSession();
     }
-  }, [init]);
+  }, [sessionId]);
 
   // 임의로 mode 선언
   const mode = 'N';
@@ -303,26 +297,14 @@ function Index() {
           {singer.map(person => {
             return <MyScreen key={person.id} streamManager={person} />;
           })}
-          <button type="button" onClick={nextSinger}>
-            ||
-          </button>
           <div className={styles.singScreen}>
             <MainScreen
               singMode={mode}
-              // subscribers={subscribers}
               screenOV={screenOV}
               session={session}
               screenSession={screenSession}
               publisher={publisher}
             />
-            {/* {testOnOff ? null : (
-              <MainScreen
-                streamManager={screener}
-                singMode={mode}
-                subscribers={subscribers}
-              />
-            )}
-            {testOnOff ? <PerfectScore /> : null} */}
           </div>
         </div>
         <div className={styles.otherScreen}>

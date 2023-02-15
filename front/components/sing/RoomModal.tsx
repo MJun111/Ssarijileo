@@ -10,16 +10,6 @@ function RoomModal({ setModalOpen }: any) {
     setModalOpen(false);
   };
 
-  const createRoom = () => {
-    setModalOpen(false);
-    const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
-    if (!roomWindow) return;
-    roomWindow.resizeTo(1920, 1080);
-    roomWindow.onresize = () => {
-      roomWindow.resizeTo(1920, 1080);
-    };
-  };
-
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
   const [title, setTitle] = useState('');
@@ -87,6 +77,39 @@ function RoomModal({ setModalOpen }: any) {
       </button>
     );
   });
+
+  const [roomW, setRoomW] = useState<any>();
+
+  const createRoom = () => {
+    const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
+    setRoomW(roomWindow);
+    if (!roomWindow) return;
+    roomWindow.resizeTo(1920, 1080);
+    roomWindow.onresize = () => {
+      roomWindow.resizeTo(1920, 1080);
+    };
+  };
+
+  const makeRoom = (e: any) => {
+    console.log('모달에서 메세지 수신', e);
+    if (e.data === 'open!!') {
+      console.log('모달에서 이벤트', e.data, roomW);
+      roomW?.postMessage(
+        {
+          sessionId: undefined,
+          title,
+          mode: 'N',
+          userMaxCount: 6,
+          isPublic: 'Y',
+          password: null,
+        },
+        '*',
+      );
+      closeModal();
+    }
+  };
+
+  window.addEventListener('message', makeRoom);
 
   return (
     <div className={styles.back}>

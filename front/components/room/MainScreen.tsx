@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -9,9 +9,9 @@ import Nomal from '@/components/room/Nomal';
 import styles from '@/styles/room/Screen.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 import { setReserv } from '@/redux/store/reservSlice';
-// import PerfectScore from './PerfectScore';
-// import OrderSong from './OrderSong';
-// import Guess from './Guess';
+import PerfectScore from './PerfectScore';
+import OrderSong from './OrderSong';
+import Guess from './Guess';
 
 interface Reserv {
   nickname: string;
@@ -217,6 +217,14 @@ export function MainScreen(props: {
     '로딩중\n',
   ];
 
+  // perfect
+  const videoRef = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    if (singMode === 'P' && screenPublisher !== undefined && videoRef.current) {
+      screenPublisher.addVideoElement(videoRef.current);
+    }
+  }, [screenPublisher]);
+
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
@@ -236,22 +244,16 @@ export function MainScreen(props: {
           propState={nowState}
         />
       )}
-      {/* {nowState === 3 &&
-        singMode === 'P' &&
-        reservList[0].nickname === myName && <PerfectScore />} */}
-      {/* {nowState === 3 &&
-        singMode === 'P' &&
-        reservList[0].nickname !== myName && (
-          <video className={styles.video} autoPlay ref={videoRef}>
-            <track kind="captions" />
-          </video>
-        )} */}
-      {/* {nowState === 3 &&
-        singMode === 'O' &&
-        reservList[0].nickname === myName && <OrderSong />}
-      {nowState === 3 &&
-        singMode === 'O' &&
-        reservList[0].nickname !== myName && <Guess />} */}
+      {nowState === 5 && singMode === 'P' && <PerfectScore />}
+      {nowState === 6 && singMode === 'P' && (
+        <video className={styles.video} autoPlay ref={videoRef}>
+          <track kind="captions" />
+        </video>
+      )}
+      {nowState === 5 && singMode === 'O' && (
+        <OrderSong screenShare={screenShare} />
+      )}
+      {nowState === 6 && singMode === 'O' && <Guess />}
     </div>
   );
 }

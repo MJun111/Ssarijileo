@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 import RoomModal from './RoomModal';
 import RoomSearch from '@/components/sing/RoomSearch';
@@ -21,10 +21,6 @@ export interface RoomInfo {
 export interface OptionItem {
   mode: string;
 }
-
-const GET_SESSIONS_URL =
-  'https://taehakssarifirst.store/openvidu/api/sessions/';
-const GET_SESSIONS_HEADER = 'Basic T1BFTlZJRFVBUFA6MTE5NA==';
 
 function RoomList() {
   // 방만들기 모달창
@@ -61,21 +57,23 @@ function RoomList() {
     currentRoom.push(room);
   }
 
-  // 방 목록 (23.02.02 : openvidu와 직접 api 수신중, 콘솔에 결과 출력)
   const [rooms] = useState<RoomInfo[]>(currentRoom);
 
-  // 태학님 수정 예정
-  async function getRoomsInfo() {
-    const response = await axios.get(GET_SESSIONS_URL, {
-      headers: { Authorization: GET_SESSIONS_HEADER },
-    });
-    // setRooms(response.data);
-    console.log('response success, roomList : ', response.data);
-  }
+  // 방 목록 api
+  // async function getRoomsInfo() {
+  //   const response = await axios({
+  //     method: 'GET',
+  //     url: 'api/v1/room/',
+  //     headers: {
+  //       Authorization: `${getCookie('Authorization')}`,
+  //       refreshToken: `${getCookie('refreshToken')}`,
+  //     },
+  //   });
+  //   const roomsInfo = response.data
+  // }
 
   useEffect(() => {
-    console.log('RoomList 입장, 초기 roomList : ', rooms);
-    getRoomsInfo();
+    // getRoomsInfo();
   }, []);
 
   const [filteredRoom, setFilteredRoom] = useState<RoomInfo[]>(rooms);
