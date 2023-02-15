@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
-import styles from '@/styles/like/Music.module.scss';
-import ChartListItem from '@/components/chart/ChartListItem';
-import Pagination from '@/components/common/Pagination';
+import hangul from 'hangul-js';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
+
+import ChartListItem from '@/components/chart/ChartListItem';
+import Pagination from '@/components/common/Pagination';
+
+import styles from '@/styles/like/Music.module.scss';
 
 export interface SongInfo {
   songId: number;
@@ -21,7 +24,7 @@ export interface SongInfo {
 
 function Music() {
   const [likeList, setLikeList] = useState<SongInfo[]>([]);
-  const [musicList, setState] = useState<SongInfo[]>([]);
+  const [filteredLikeList, setFilteredLikeList] = useState<SongInfo[]>([]);
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
   const [themeMode, setThemeMode] = useState('light');
 
@@ -39,7 +42,6 @@ function Music() {
         },
       })
       .then(res => {
-        console.log(res.data);
         res.data.map((item: SongInfo, idx: number) => {
           return Object.assign(item, {
             ranking: idx + 1,
@@ -47,7 +49,7 @@ function Music() {
           });
         });
         setLikeList(res.data);
-        setState(res.data);
+        setFilteredLikeList(res.data);
       });
   }, []);
 
@@ -55,24 +57,41 @@ function Music() {
   const [page, setPage] = useState(1);
   //  노래 목록이 보일 개수
   const limit = 10;
-
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
 
-  const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const eventTarget = e.target as HTMLInputElement;
-    const arr: any[] = [];
-    likeList.forEach((item, idx) => {
-      if (
-        item.title.includes(eventTarget.value) ||
-        item.singer.includes(eventTarget.value)
-      ) {
-        arr.push(likeList[idx]);
-      }
+  const postData = filteredLikeList.slice(offset, offset + limit);
+
+  const searchLike = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === '') {
+      setFilteredLikeList(likeList);
+      return;
+    }
+    const userInput = hangul.disassemble(e.target.value).join('');
+    const searchData = likeList.filter(item => {
+      const title = hangul.disassemble(item.title, true);
+      const singer = hangul.disassemble(item.singer, true);
+      const titleInitial = title
+        .map((t: string[]) => {
+          return t[0];
+        })
+        .join('');
+      const singerInitial = singer
+        .map((t: string[]) => {
+          return t[0];
+        })
+        .join('');
+      return (
+        hangul.search(item.title, userInput) !== -1 ||
+        hangul.search(item.singer, userInput) !== -1 ||
+        titleInitial.startsWith(userInput) ||
+        singerInitial.startsWith(userInput) ||
+        item.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.singer.toLowerCase().includes(e.target.value.toLowerCase())
+      );
     });
-    setState(arr);
+    setFilteredLikeList(searchData);
   };
-  const postData = musicList.slice(offset, offset + limit);
 
   return (
     <div className={styles.container}>
@@ -92,7 +111,7 @@ function Music() {
             className={styles.input}
             type="text"
             placeholder="검색어를 입력하세요..."
-            onChange={searchFriend}
+            onChange={searchLike}
           />
           <Image
             src="img/common/light/light_common_find_image.svg"
@@ -116,7 +135,7 @@ function Music() {
         <Pagination
           limit={limit}
           page={page}
-          totalPosts={musicList.length}
+          totalPosts={filteredLikeList.length}
           setPage={setPage}
         />
       </div>

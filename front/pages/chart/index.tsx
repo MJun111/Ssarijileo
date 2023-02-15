@@ -52,10 +52,6 @@ function Chart(props: {
   const firstDay = new Date(year, month, 1).getDay();
   const week = Math.ceil((day + firstDay) / 7);
 
-  console.log(daily);
-  console.log(weekly);
-  console.log(monthly);
-
   return (
     <>
       <ChartTop day={daily} week={weekly} month={monthly} />

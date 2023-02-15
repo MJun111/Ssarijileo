@@ -3,10 +3,11 @@ import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { RootState } from '@/redux/store';
+import { getCookie } from '@/util/cookie';
 
 import FriendModal from './FriendModal';
+
 import styles from '@/styles/profile/FriendForm.module.scss';
-import { getCookie } from '@/util/cookie';
 
 export interface FriendInfo {
   friendId: number;
@@ -131,7 +132,7 @@ function FriendForm() {
             {friendW.length &&
               friendW.map(item => {
                 return (
-                  <div className={styles.item}>
+                  <div className={styles.item} key={item.friendId}>
                     <div className={styles.profile}>
                       {/* <div className={styles.content}> */}
                       <Image
@@ -145,10 +146,44 @@ function FriendForm() {
                     </div>
                     <div className={styles.name}>{item.nickname}</div>
                     <div className={styles.play}>
-                      <button type="button" className={styles.okBtn}>
+                      <button
+                        type="button"
+                        className={styles.okBtn}
+                        onClick={() => {
+                          axios.put(
+                            'api/v1/friend/',
+                            {
+                              friendId: item.friendId,
+                              status: 'A',
+                            },
+                            {
+                              headers: {
+                                Authorization: `${getCookie('Authorization')}`,
+                              },
+                            },
+                          );
+                        }}
+                      >
                         수락
                       </button>
-                      <button type="button" className={styles.noBtn}>
+                      <button
+                        type="button"
+                        className={styles.noBtn}
+                        onClick={() => {
+                          axios.put(
+                            'api/v1/friend/',
+                            {
+                              friendId: item.friendId,
+                              status: 'X',
+                            },
+                            {
+                              headers: {
+                                Authorization: `${getCookie('Authorization')}`,
+                              },
+                            },
+                          );
+                        }}
+                      >
                         거절
                       </button>
                     </div>
