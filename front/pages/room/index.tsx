@@ -68,7 +68,7 @@ function Index() {
       data = roomInfo;
     } else {
       const roomDetail = await axios({
-        method: 'post',
+        method: 'POST',
         url: `api/v1/room/connection/${sessionVal}`,
         headers: {
           Authorization: `${getCookie('Authorization')}`,
@@ -80,6 +80,7 @@ function Index() {
       data = null;
     }
 
+    console.log(data);
     const token = await axios({
       method: 'POST',
       url: `api/v1/room/connection/${sessionVal}${host}`,

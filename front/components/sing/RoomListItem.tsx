@@ -16,7 +16,6 @@ function RoomListItem({ info }: RoomProps) {
   const { sessionId, title, mode, isPublic, userCount, password } = info;
   const [modalMode, setModalMode] = useState(false);
   const dispatch = useDispatch();
-
   let backClassName = classNames({
     [styles.back]: true,
     [styles.nomal]: true,
