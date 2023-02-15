@@ -28,7 +28,7 @@ function Index() {
 
   // sessionId (Redux 값받아오기)
   const [sessionVal, setSessionVal] = useState<string>('');
-  const [roomInfo, setRoomInfo] = useState();
+  const [roomInfo, setRoomInfo] = useState<any>();
   const [isHost, setIsHost] = useState(false);
   const storeSessionId = useSelector((state: RootState) => state.sessionId);
 
@@ -67,6 +67,15 @@ function Index() {
       host = '/host';
       data = roomInfo;
     } else {
+      const roomDetail = await axios({
+        method: 'get',
+        url: `api/v1/room/connection/${sessionVal}`,
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      });
+      setRoomInfo(roomDetail);
       host = '';
       data = {
         password: null,
@@ -304,7 +313,7 @@ function Index() {
   }, [sessionVal]);
 
   // 임의로 mode 선언
-  const mode = 'N';
+  // const mode = 'N';
 
   // 로딩중 return
   if (loading)
@@ -327,7 +336,7 @@ function Index() {
           <SingerScreen streamManager={singer.length ? singer[0] : undefined} />
           <div className={styles.singScreen}>
             <MainScreen
-              singMode={mode}
+              singMode={roomInfo.mode}
               screenOV={screenOV}
               session={session}
               screenSession={screenSession}
