@@ -126,7 +126,7 @@ function OrderSong(props: { screenShare: any }) {
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#1f5c7d';
     ctx.font = '20px Jalnan';
     const currentTime = Date.now();
     const time = (currentTime - timeRef.current) / 1000;
