@@ -43,7 +43,7 @@ function RoomReservItem(props: {
   const [userNickname, setUserNickname] = useState('');
   const [ssariState, setSsariState] = useState(0);
   const [reservationList, setReservationList] = useState<Reserv[]>([]);
-  const [sessionIdValue, setSessionId] = useState('');
+  const [sessionIdVal, setSessionVal] = useState('');
   const storeUser = useSelector((state: RootState) => state.user);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const storeReserv = useSelector((state: RootState) => state.reserv);
@@ -62,7 +62,7 @@ function RoomReservItem(props: {
   }, [storeReserv]);
 
   useEffect(() => {
-    setSessionId(storeSessionId.sessionId);
+    setSessionVal(storeSessionId.sessionId);
   }, [storeSessionId]);
 
   // 우선예약 (예약목록 맨 앞에 추가)
@@ -71,7 +71,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionIdValue,
+          sessionId: sessionIdVal,
           songId: item.songId,
           isPriority: 'Y',
         },
@@ -111,7 +111,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionIdValue,
+          sessionId: sessionIdVal,
           songId: item.songId,
           isPriority: 'Y',
         },
@@ -153,7 +153,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionIdValue,
+          sessionId: sessionIdVal,
           songId: item.songId,
           isPriority: 'N',
         },
