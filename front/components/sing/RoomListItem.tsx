@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styles from '@/styles/sing/RoomListItem.module.scss';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
 import { RoomInfo } from './RoomList';
-import { RootState } from '@/redux/store';
 // import axios from 'axios';
 // import { getCookie } from '@/util/cookie';
 
