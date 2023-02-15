@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-import styles from '@/styles/profile/FriendModal.module.scss';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import styles from '@/styles/profile/FriendModal.module.scss';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
 
@@ -45,9 +45,9 @@ function FriendModal({ setModalOpen }: RoomProps) {
     setFriendList(arr);
   };
 
-  const listItems = friendList.map((item, idx) => {
+  const listItems = friendList.map(item => {
     return (
-      <div className={styles.item} key={idx}>
+      <div className={styles.item}>
         <Image
           src={item.image}
           width={40}

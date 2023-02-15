@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 import styles from '@/styles/like/Music.module.scss';
 import ChartListItem from '@/components/chart/ChartListItem';
 import Pagination from '@/components/common/Pagination';
 import { RootState } from '@/redux/store';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 export interface SongInfo {

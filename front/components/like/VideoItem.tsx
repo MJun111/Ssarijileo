@@ -1,7 +1,7 @@
 import Image from 'next/image';
+import axios from 'axios';
 import styles from '@/styles/contest/ContestListItem.module.scss';
 import { RecordInfo } from '@/pages/like';
-import axios from 'axios';
 import { getCookie } from '@/util/cookie';
 
 function VideoItem(props: { info: RecordInfo }) {

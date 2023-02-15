@@ -35,14 +35,15 @@ function FriendForm() {
       })
       .then(res => {
         const friendList = [...res.data];
-        let w = [] as FriendInfo[];
-        let a = [] as FriendInfo[];
+        const w = [] as FriendInfo[];
+        const a = [] as FriendInfo[];
         friendList.map((item, idx) => {
           if (item.status === 'W') {
             w.push(friendList[idx]);
           } else if (item.status === 'A') {
             a.push(friendList[idx]);
           }
+          return;
         });
         setFriendWList(w);
         setFriendAList(a);
@@ -132,9 +133,9 @@ function FriendForm() {
           <div className={styles.fix}>
             {/* 상단 고정 (친구요청) */}
             {friendW.length &&
-              friendW.map((item, idx) => {
+              friendW.map(item => {
                 return (
-                  <div className={styles.item} key={idx}>
+                  <div className={styles.item}>
                     <div className={styles.profile}>
                       {/* <div className={styles.content}> */}
                       <Image
