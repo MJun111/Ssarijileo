@@ -28,6 +28,7 @@ function MyPage() {
 
   useEffect(() => {
     setProfileImg(storeUser.img);
+    setNicknameValue(storeUser.nickname);
   }, [storeUser]);
 
   useEffect(() => {
