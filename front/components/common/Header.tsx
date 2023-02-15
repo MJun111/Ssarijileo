@@ -139,15 +139,19 @@ function Header() {
 
   const [sessionId, setSessionId] = useState('');
   const [isInvite, setIsInvite] = useState(false);
-  const attendRoom = () => {
-    if (!isInvite || !sessionId || !storeLogin.login) return;
-    console.log(sessionId);
-    const popupWindow = window.open('room/', 'windowName', 'resizeable');
-    if (!popupWindow) return;
-    popupWindow.resizeTo(1920, 1080);
-    popupWindow.onresize = () => {
+  const clickToast = () => {
+    if (isInvite) {
+      console.log(sessionId);
+      const popupWindow = window.open('room/', 'windowName', 'resizeable');
+      if (!popupWindow) return;
       popupWindow.resizeTo(1920, 1080);
-    };
+      popupWindow.onresize = () => {
+        popupWindow.resizeTo(1920, 1080);
+      };
+      popupWindow.focus();
+    } else {
+      window.location.replace('profile/');
+    }
   };
 
   useEffect(() => {
@@ -259,7 +263,7 @@ function Header() {
         {/* 로그인 상태 */}
         {nowLogin && (
           <div className={styles.icon}>
-            <div onClick={attendRoom} className={styles.toastBox}>
+            <div onClick={clickToast} className={styles.toastBox}>
               <ToastContainer className={styles.toast} />
             </div>
             <Image

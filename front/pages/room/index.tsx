@@ -206,6 +206,24 @@ function Index() {
     window.close();
   };
 
+  const doNotRefresh = (e: any) => {
+    if (
+      (e.ctrlKey && (e.keyCode === 78 || e.keyCode === 82)) ||
+      e.keyCode === 116
+    ) {
+      e.preventDefault();
+      alert('새로고침을 할 수 없습니다.');
+    }
+  };
+  document.onkeydown = doNotRefresh;
+
+  const bodyElt = document.querySelector('body');
+  bodyElt!.setAttribute('oncontextmenu', 'return false;');
+
+  window.addEventListener('beforeunload', e => {
+    leaveSession();
+  });
+
   // connect 진행!!!!
   const joinSession = () => {
     const newOV = new OpenVidu();

@@ -8,6 +8,7 @@ import { getCookie } from '@/util/cookie';
 import FriendModal from './FriendModal';
 
 import styles from '@/styles/profile/FriendForm.module.scss';
+import hangul from 'hangul-js';
 
 export interface FriendInfo {
   friendId: number;
@@ -23,7 +24,12 @@ function FriendForm() {
   // 친구 상태
   const [friendA, setFriendAList] = useState<FriendInfo[]>([]);
   // 모든 user
-  const [friend, setFriendList] = useState<FriendInfo[]>([]);
+  const [friendList, setFriendListList] = useState<FriendInfo[]>([]);
+  const [filteredFriendList, setFilteredFriendList] = useState<FriendInfo[]>(
+    [],
+  );
+  const [isAccept, setIsAccept] = useState(0);
+
   const storeUser = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
@@ -44,25 +50,32 @@ function FriendForm() {
         });
         setFriendWList(w);
         setFriendAList(a);
-        setFriendList(friendList);
-        console.log('친구목록 요청 : ', friendW);
-        console.log('친구목록 요청 : ', friendA);
+        setFriendListList(friendList);
       });
-  }, [storeUser]);
-
-  const [friendList, setState] = useState(friend);
+  }, [storeUser, isAccept]);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const eventTarget = e.target as HTMLInputElement;
-    const arr: any[] = [];
-    friendList.forEach((item, idx) => {
-      if (item.nickname.includes(eventTarget.value)) {
-        arr.push(friend[idx]);
-      }
+    if (e.target.value === '') {
+      setFilteredFriendList(friendList);
+      return;
+    }
+    const userInput = hangul.disassemble(e.target.value).join('');
+    const searchData = friendList.filter(item => {
+      const nickname = hangul.disassemble(item.nickname, true);
+      const nicknameInitial = nickname
+        .map((t: string[]) => {
+          return t[0];
+        })
+        .join('');
+      return (
+        hangul.search(item.nickname, userInput) !== -1 ||
+        nicknameInitial.startsWith(userInput) ||
+        item.nickname.toLowerCase().includes(e.target.value.toLowerCase())
+      );
     });
-
-    setState(arr);
+    setFilteredFriendList(searchData);
   };
+
   const listItems = friendA?.map(item => {
     return (
       <div className={styles.item} key={item.nickname}>
@@ -76,7 +89,35 @@ function FriendForm() {
           />
         </div>
         <div className={styles.name}>{item.nickname}</div>
-        <button type="button" className={styles.okBtn}>
+        <button
+          type="button"
+          className={styles.okBtn}
+          onClick={() => {
+            axios
+              .put(
+                'api/v1/friend/',
+                {
+                  friendId: item.friendId,
+                  status: 'X',
+                },
+                {
+                  headers: {
+                    Authorization: `${getCookie('Authorization')}`,
+                  },
+                },
+              )
+              .then(() => {
+                const newFriend = friendA.filter(
+                  friend => friend.friendId !== item.friendId,
+                );
+                setFriendAList(newFriend);
+                const newFilterFriend = filteredFriendList.filter(
+                  friend => friend.friendId !== item.friendId,
+                );
+                setFilteredFriendList(newFilterFriend);
+              });
+          }}
+        >
           친구삭제
         </button>
       </div>
@@ -129,28 +170,28 @@ function FriendForm() {
         <div className={styles.table}>
           <div className={styles.fix}>
             {/* 상단 고정 (친구요청) */}
-            {friendW.length &&
-              friendW.map(item => {
-                return (
-                  <div className={styles.item} key={item.friendId}>
-                    <div className={styles.profile}>
-                      {/* <div className={styles.content}> */}
-                      <Image
-                        className={styles.img}
-                        src={item.image}
-                        width={45}
-                        height={45}
-                        alt="profile"
-                      />
-                      {/* </div> */}
-                    </div>
-                    <div className={styles.name}>{item.nickname}</div>
-                    <div className={styles.play}>
-                      <button
-                        type="button"
-                        className={styles.okBtn}
-                        onClick={() => {
-                          axios.put(
+            {friendW.map(item => {
+              return (
+                <div className={styles.item} key={item.friendId}>
+                  <div className={styles.profile}>
+                    {/* <div className={styles.content}> */}
+                    <Image
+                      className={styles.img}
+                      src={item.image}
+                      width={45}
+                      height={45}
+                      alt="profile"
+                    />
+                    {/* </div> */}
+                  </div>
+                  <div className={styles.name}>{item.nickname}</div>
+                  <div className={styles.play}>
+                    <button
+                      type="button"
+                      className={styles.okBtn}
+                      onClick={() => {
+                        axios
+                          .put(
                             'api/v1/friend/',
                             {
                               friendId: item.friendId,
@@ -161,35 +202,54 @@ function FriendForm() {
                                 Authorization: `${getCookie('Authorization')}`,
                               },
                             },
-                          );
-                        }}
-                      >
-                        수락
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.noBtn}
-                        onClick={() => {
-                          axios.put(
-                            'api/v1/friend/',
-                            {
-                              friendId: item.friendId,
-                              status: 'X',
+                          )
+                          .then(() => {
+                            const newFriend = friendW.filter(
+                              friend => friend.friendId !== item.friendId,
+                            );
+                            setFriendWList(newFriend);
+                            const newFilterFriend = filteredFriendList.filter(
+                              friend => friend.friendId !== item.friendId,
+                            );
+                            setFilteredFriendList(newFilterFriend);
+                            setIsAccept(isAccept + 1);
+                          });
+                      }}
+                    >
+                      수락
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.noBtn}
+                      onClick={() => {
+                        axios.put(
+                          'api/v1/friend/',
+                          {
+                            friendId: item.friendId,
+                            status: 'X',
+                          },
+                          {
+                            headers: {
+                              Authorization: `${getCookie('Authorization')}`,
                             },
-                            {
-                              headers: {
-                                Authorization: `${getCookie('Authorization')}`,
-                              },
-                            },
-                          );
-                        }}
-                      >
-                        거절
-                      </button>
-                    </div>
+                          },
+                        );
+                        const newFriend = friendW.filter(
+                          friend => friend.friendId !== item.friendId,
+                        );
+                        setFriendWList(newFriend);
+                        const newFilterFriend = filteredFriendList.filter(
+                          friend => friend.friendId !== item.friendId,
+                        );
+                        setFilteredFriendList(newFilterFriend);
+                      }}
+                    >
+                      거절
+                    </button>
                   </div>
-                );
-              })}
+                </div>
+              );
+            })}
           </div>
           <div className={styles.friendList}>{listItems}</div>
         </div>

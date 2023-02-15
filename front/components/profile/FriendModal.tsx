@@ -94,12 +94,19 @@ function FriendModal({ setModalOpen }: RoomProps) {
                 },
               )
               .then(res => {
-                console.log(res.data);
-                axios.post('api/v1/friend/invite', {
+                axios.post('api/v1/friend/request', {
                   fromUserNickname: storeUser.nickname,
                   toUserNickname: item.nickname,
                   friendId: res.data.friendId,
                 });
+                const newFriendList = friendList.filter(
+                  friend => friend.nickname !== item.nickname,
+                );
+                setFriendList(newFriendList);
+                const newFilteredFriendList = filteredFriendList.filter(
+                  friend => friend.nickname !== item.nickname,
+                );
+                setFilteredFriendList(newFilteredFriendList);
               });
           }}
         />
