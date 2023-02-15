@@ -105,7 +105,7 @@ function Nomal(props: {
   useEffect(() => {
     if (nowState === 5) {
       console.log('노말');
-      fetch('sounds/아무노래_MR.mp3')
+      fetch('sounds/사건의지평선_mr.mp3')
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
           const audioContext = new AudioContext();

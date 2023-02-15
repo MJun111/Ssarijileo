@@ -78,7 +78,11 @@ function FriendModal({ setModalOpen }: RoomProps) {
                 },
               )
               .then(res => {
-                console.log(res.data);
+                axios.post('api/v1/friend/invite', {
+                  fromUserNickname: storeUser.nickname,
+                  toUserNickname: item.nickname,
+                  friendId: res.data.friendId,
+                });
               });
           }}
         />
