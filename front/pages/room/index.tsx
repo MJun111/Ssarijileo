@@ -13,15 +13,9 @@ import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
 import Loading from '@/components/room/Loading';
+import SingerScreen from '@/components/room/SingerScreen';
 
 import styles from '@/styles/Room.module.scss';
-<<<<<<< HEAD
-import { setReserv } from '@/redux/store/reservSlice';
-import { getCookie } from '@/util/cookie';
-import { setSessionId } from '@/redux/store/sessionIdSlice';
-import SingerScreen from '@/components/room/SingerScreen';
-=======
->>>>>>> 194d4b1 ([Add] friend)
 
 function Index() {
   const dispatch = useDispatch();
