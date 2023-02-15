@@ -72,6 +72,7 @@ function Guess() {
       <div className={styles.content}>
         <div className={styles.lyric}>{lyricList}</div>
         <div className={styles.btnList}>
+          <canvas id="screen-creen"></canvas>
           <Image
             className={styles.o}
             src="img/ssari/ssari_o_image.svg"

@@ -5,8 +5,8 @@ import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
-import { getCookie } from '@/util/cookie';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { getCookie } from '@/util/cookie';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
@@ -304,7 +304,6 @@ function Index() {
         .then(res => {
           myRoomInfo.sessionId = res.data;
           setRoomInfo(myRoomInfo);
-          console.log('백에서 받은 세션 아이디', res.data);
           dispatch(setSessionId(res.data));
         });
     }
@@ -312,7 +311,6 @@ function Index() {
 
   // 페이지 입장 후 로딩시작,
   useEffect(() => {
-    console.log('use 이펙트');
     window.addEventListener('message', getRoomInfo, true);
     setTimeout(() => {
       window.opener.postMessage('open!!', '*');

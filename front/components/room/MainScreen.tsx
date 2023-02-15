@@ -172,15 +172,11 @@ export function MainScreen(props: {
 
   // 화면 공유
   const screenShare = (audioContext: any, mp3AudioDestination: any) => {
-    let videoYN;
-    if (singMode === 'O') {
-      videoYN = false;
-    }
     publisher[0].publishAudio(false);
     screenOV
       .getUserMedia({
         audioSource: undefined,
-        videoSource: videoYN,
+        videoSource: undefined,
         resolution: '910x174',
         frameRate: 30,
       })
