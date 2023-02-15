@@ -66,7 +66,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
       },
     );
     const ranking: RankingItem[] = sortedRanking.slice(0, 3);
-    // const ranking: any = JSON.parse(JSON.stringify(rankingRes.data));
 
     return {
       props: {
