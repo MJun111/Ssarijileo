@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { GetServerSideProps } from 'next';
 
 import axios from 'axios';
+import { RootState } from '@/redux/store';
 
 import { useCookie } from '@/hooks/useCookie';
 import MainTop from '@/components/main/MainTop';
@@ -13,7 +14,6 @@ import TodayContest from '@/components/main/TodayContest';
 import Team from '@/components/main/Team';
 
 import styles from '@/styles/Home.module.scss';
-import { RootState } from '@/redux/store';
 
 export interface ChartItem {
   album: string;
