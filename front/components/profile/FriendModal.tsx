@@ -100,11 +100,11 @@ function FriendModal({ setModalOpen }: RoomProps) {
                   friendId: res.data.friendId,
                 });
                 const newFriendList = friendList.filter(
-                  friend => friend.nickname !== item.nickname,
+                  f => f.nickname !== item.nickname,
                 );
                 setFriendList(newFriendList);
                 const newFilteredFriendList = filteredFriendList.filter(
-                  friend => friend.nickname !== item.nickname,
+                  f => f.nickname !== item.nickname,
                 );
                 setFilteredFriendList(newFilteredFriendList);
               });

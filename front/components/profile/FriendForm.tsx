@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import hangul from 'hangul-js';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
 
 import FriendModal from './FriendModal';
-
 import styles from '@/styles/profile/FriendForm.module.scss';
-import hangul from 'hangul-js';
 
 export interface FriendInfo {
   friendId: number;
@@ -41,11 +40,11 @@ function FriendForm() {
         },
       })
       .then(res => {
-        const friendList = [...res.data];
-        const w: FriendInfo[] = friendList.filter(item => {
+        const friend = [...res.data];
+        const w: FriendInfo[] = friend.filter(item => {
           return item.status === 'W';
         });
-        const a: FriendInfo[] = friendList.filter(item => {
+        const a: FriendInfo[] = friend.filter(item => {
           return item.status === 'A';
         });
         setFriendWList(w);

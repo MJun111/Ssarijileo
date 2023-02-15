@@ -218,9 +218,9 @@ function Index() {
   document.onkeydown = doNotRefresh;
 
   const bodyElt = document.querySelector('body');
-  bodyElt!.setAttribute('oncontextmenu', 'return false;');
+  bodyElt?.setAttribute('oncontextmenu', 'return false;');
 
-  window.addEventListener('beforeunload', e => {
+  window.addEventListener('beforeunload', () => {
     leaveSession();
   });
 
