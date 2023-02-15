@@ -32,9 +32,17 @@ function RoomSearch(props: {
   const changeMode = (e: React.MouseEvent<HTMLElement>) => {
     const eventTarget = e.target as HTMLElement;
     setSortType(eventTarget.innerText);
+    let modeType = '';
+    if (eventTarget.innerText === '일반모드') {
+      modeType = 'N';
+    } else if (eventTarget.innerText === '퍼펙트스코어') {
+      modeType = 'P';
+    } else if (eventTarget.innerText === '가사맞추기') {
+      modeType = 'O';
+    }
     const sortedData =
       eventTarget.innerText !== 'Default'
-        ? rooms.filter(room => room.mode === eventTarget.innerText)
+        ? rooms.filter(room => room.mode === modeType)
         : rooms;
     const filteredData =
       searchText !== ''

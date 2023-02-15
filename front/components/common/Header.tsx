@@ -15,6 +15,8 @@ import Dropdown from '@/components/common/Dropdown';
 
 import styles from '@/styles/common/Header.module.scss';
 import { setCookie } from '@/util/cookie';
+import { setProfile } from '@/redux/store/profileSlice';
+import { setSessionId } from '@/redux/store/sessionIdSlice';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
@@ -24,7 +26,7 @@ function Header() {
   const [nowLogin, setNowLogin] = useState(false);
   const [checked, setChecked] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [profile, setProfile] = useState('');
+  const [profileImg, setProfileImg] = useState('');
   const dispatch = useDispatch();
 
   const storeLogin = useSelector((state: RootState) => state.login);
@@ -54,7 +56,7 @@ function Header() {
   }, [storeLogin]);
 
   useEffect(() => {
-    setProfile(storeUser.img);
+    setProfileImg(storeUser.img);
   }, [storeUser]);
 
   const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -137,11 +139,10 @@ function Header() {
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
 
-  const [sessionId, setSessionId] = useState('');
   const [isInvite, setIsInvite] = useState(false);
   const clickToast = () => {
     if (isInvite) {
-      console.log(sessionId);
+      // console.log();
       const popupWindow = window.open('room/', 'windowName', 'resizeable');
       if (!popupWindow) return;
       popupWindow.resizeTo(1920, 1080);
@@ -150,6 +151,7 @@ function Header() {
       };
       popupWindow.focus();
     } else {
+      dispatch(setProfile('친구 목록'));
       window.location.replace('profile/');
     }
   };
@@ -188,7 +190,8 @@ function Header() {
                 progress: undefined,
               });
             notify();
-            setSessionId(msg.sessionId);
+            dispatch(setSessionId(msg.sessionId));
+            // setSession(msg.sessionId);
             setIsInvite(true);
           }
         } catch (err) {
@@ -276,7 +279,7 @@ function Header() {
             />
             <Link href="profile/" key="profile">
               <Image
-                src={profile}
+                src={profileImg}
                 alt="profile"
                 width={50}
                 height={50}

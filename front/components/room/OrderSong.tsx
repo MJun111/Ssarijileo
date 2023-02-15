@@ -12,75 +12,13 @@ function OrderSong(props: {
     audioContext: AudioContext,
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => void;
+  nextSong: any;
 }) {
-  const { screenShare } = props;
+  const { screenShare, nextSong } = props;
   const dispatch = useDispatch();
   const sourceRef = useRef<AudioBufferSourceNode>();
   const timeRef = useRef<number>(0);
   const [isStarted, setIsStarted] = useState(false);
-
-  const lyrics = [
-    {
-      lyricsId: 20,
-      verse: '생각이 많은 건 말이야',
-      startTime: 24,
-    },
-    {
-      lyricsId: 21,
-      verse: '당연히 해야 할 일이야',
-      startTime: 27,
-    },
-    {
-      lyricsId: 22,
-      verse: '나에겐 우리가 지금 일순위야',
-      startTime: 29,
-    },
-    {
-      lyricsId: 23,
-      verse: '안전한 유리병을 핑계로',
-      startTime: 33,
-    },
-    {
-      lyricsId: 24,
-      verse: '바람을 가둬 둔 것 같지만',
-      startTime: 39,
-    },
-    {
-      lyricsId: 25,
-      verse: '기억나? 그날의 우리가',
-      startTime: 44,
-    },
-    {
-      lyricsId: 26,
-      verse: '잡았던 그 손엔 말이야',
-      startTime: 46,
-    },
-    {
-      lyricsId: 27,
-      verse: '설레임보다 커다란 믿음이 담겨서',
-      startTime: 49,
-    },
-    {
-      lyricsId: 28,
-      verse: '난 함박웃음을 지었지만',
-      startTime: 53,
-    },
-    {
-      lyricsId: 29,
-      verse: '울음이 날 것도 같았어',
-      startTime: 56,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 31,
-      verse: '',
-      startTime: 62,
-    },
-  ];
 
   const pontSize = 20;
   const maxLen = 15;
@@ -97,12 +35,12 @@ function OrderSong(props: {
       randomCanvas.push({ y, x });
     }
   }
-  const currentIdx = Math.min(randomCanvas.length, lyrics.length);
+  const currentIdx = Math.min(randomCanvas.length, nextSong.lyrics.length);
   const isUsed = Array(randomCanvas.length).fill(false);
   const dataArray: {
     lyricsId: number;
     verse: string;
-    startTime: number;
+    time: number;
     x: number;
     y: number;
     idx: number;
@@ -115,7 +53,7 @@ function OrderSong(props: {
       continue;
     }
     isUsed[randomIdx] = true;
-    const data = { ...lyrics[i], x: 0, y: 0, idx: randomIdx };
+    const data = { ...nextSong.lyrics[i], x: 0, y: 0, idx: randomIdx };
     data.x = randomCanvas[randomIdx].x + 10 - Math.random() * 20;
     data.y = randomCanvas[randomIdx].y + 10 - Math.random() * 20;
     dataArray.push(data);
@@ -134,17 +72,22 @@ function OrderSong(props: {
     const currentTime = Date.now();
     const time = (currentTime - timeRef.current) / 1000;
     if (dataArray.length > 1) {
-      if (dataArray[1].startTime < time) {
-        if (currentIdx < lyrics.length) {
+      if (dataArray[1].time < time) {
+        if (currentIdx < nextSong.lyrics.length) {
           const randomIdx = dataArray[0].idx;
-          const data = { ...lyrics[currentIdx], x: 0, y: 0, idx: randomIdx };
+          const data = {
+            ...nextSong.lyrics[currentIdx],
+            x: 0,
+            y: 0,
+            idx: randomIdx,
+          };
           data.x = randomCanvas[randomIdx].x + 10 - Math.random() * 20;
           data.y = randomCanvas[randomIdx].y + 10 - Math.random() * 20;
           dataArray.push(data);
         }
         dataArray.shift();
       }
-    } else if (dataArray[0].startTime < time) {
+    } else if (dataArray[0].time < time) {
       return;
     }
     dataArray.forEach(data => {

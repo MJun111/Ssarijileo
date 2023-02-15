@@ -29,14 +29,29 @@
       grid-template-columns: repeat(2, 1fr);
       margin: auto;
       height: 220px;
-      overflow: hidden;
+      overflow-y: scroll;
 
       .item {
         width: 380px;
         height: auto;
-        // padding: 10px;
+        padding: 10px;
         text-align-last: center;
       }
+    }
+    .lyric::-webkit-scrollbar {
+      width: 10px; /* 스크롤바의 너비 */
+    }
+
+    .lyric::-webkit-scrollbar-thumb {
+      height: 30%; /* 스크롤바의 길이 */
+      background: var(--color-roomB); /* 스크롤바의 색상 */
+      border-radius: 10px;
+    }
+
+    .lyric::-webkit-scrollbar-track {
+      margin: 10px;
+      background: var(--color-linearB); /*스크롤바 뒷 배경 색상*/
+      border-radius: 10px;
     }
     .btnList {
       display: flex;

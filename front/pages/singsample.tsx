@@ -4,7 +4,7 @@ function SingSample() {
   const screenShare = () => {
     console.log(1);
   };
-  return <OrderSong screenShare={screenShare} />;
+  return <OrderSong screenShare={screenShare} nextSong={undefined} />;
 }
 
 export default SingSample;

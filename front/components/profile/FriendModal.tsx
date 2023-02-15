@@ -12,7 +12,7 @@ type RoomProps = {
   setModalOpen: any;
 };
 
-interface friendInfo {
+export interface friendInfo {
   nickname: string;
   image: string;
 }
