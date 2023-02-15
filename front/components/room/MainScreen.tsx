@@ -285,10 +285,10 @@ export function MainScreen(props: {
   // perfect
   const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (singMode === 'P' && screenPublisher !== undefined && videoRef.current) {
-      screenPublisher.addVideoElement(videoRef.current);
+    if (singMode === 'P' && screen !== undefined && videoRef.current) {
+      screen.addVideoElement(videoRef.current);
     }
-  }, [screenPublisher]);
+  }, [screen]);
 
   return (
     <div className={styles.modeScreen}>

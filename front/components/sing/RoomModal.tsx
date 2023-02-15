@@ -12,7 +12,7 @@ function RoomModal({ setModalOpen }: any) {
 
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
-  const [newtitle, setTitle] = useState('');
+  const [newtitle, setTitle] = useState('방');
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 20) {
       setTitleWarning(true);
@@ -36,7 +36,7 @@ function RoomModal({ setModalOpen }: any) {
   });
 
   // 라디오 값 관리
-  const [newMode, setnewMode] = useState('');
+  const [newMode, setnewMode] = useState('O');
 
   const arrA = ['N', 'P', 'R', 'O'];
   const arrB = ['일반노래방', '퍼펙트싱어', '이어부르기', '가사 맞추기'];

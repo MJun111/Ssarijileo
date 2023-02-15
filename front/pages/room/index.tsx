@@ -66,14 +66,14 @@ function Index() {
       data = roomInfo;
     } else {
       const roomDetail = await axios({
-        method: 'POST',
-        url: `api/v1/room/connection/${sessionVal}`,
+        method: 'GET',
+        url: `api/v1/room/${sessionVal}`,
         headers: {
           Authorization: `${getCookie('Authorization')}`,
           refreshToken: `${getCookie('refreshToken')}`,
         },
       });
-      setRoomInfo(roomDetail);
+      setRoomInfo(roomDetail.data);
       host = '';
       data = null;
     }
