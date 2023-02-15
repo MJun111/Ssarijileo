@@ -15,7 +15,10 @@ import { getCookie } from '@/util/cookie';
 
 function Nomal(props: {
   nextSong: NextSong;
-  screenShare: any;
+  screenShare: (
+    audioContext: AudioContext,
+    mp3AudioDestination: MediaStreamAudioDestinationNode,
+  ) => void;
   screen: any;
   propState: any;
 }) {

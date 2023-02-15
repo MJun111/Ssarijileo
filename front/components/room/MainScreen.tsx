@@ -44,7 +44,7 @@ export interface NextSong {
   image: string;
   file: string;
   releaseDate: string;
-  note: null;
+  note: string;
   lyricsList: Lyrics[];
 }
 
@@ -137,6 +137,7 @@ export function MainScreen(props: {
         const response = res.data;
         const runtime = res.data.time.split(':');
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
+        // response.note = JSON.parse(res.data.note);
         setNextSong(response);
         console.log(response);
         if (reservList[0].nickname === myName) {
@@ -160,18 +161,21 @@ export function MainScreen(props: {
   // 다른 사람이 노래 부르기 시작하면 state를 6으로
   screenSession.on('streamCreated', (event: any) => {
     if (event.stream.typeOfVideo === 'CUSTOM') {
-      const subscreen = screenSession.subscribe(event.stream, undefined);
+      const subScreen = screenSession.subscribe(event.stream, undefined);
       if (reservList.length) {
         if (reservList[0].nickname !== myName) {
           dispatch(setSsari(6));
         }
       }
-      setScreen(subscreen);
+      setScreen(subScreen);
     }
   });
 
   // 화면 공유
-  const screenShare = (audioContext: any, mp3AudioDestination: any) => {
+  const screenShare = (
+    audioContext: AudioContext,
+    mp3AudioDestination: MediaStreamAudioDestinationNode,
+  ) => {
     publisher[0].publishAudio(false);
     screenOV
       .getUserMedia({
@@ -244,8 +248,8 @@ export function MainScreen(props: {
           propState={nowState}
         />
       )}
-      {nowState === 5 && singMode === 'P' && (
-        <PerfectScore screenShare={screenShare} />
+      {nowState === 5 && singMode === 'P' && nextSong && (
+        <PerfectScore screenShare={screenShare} nextSong={nextSong} />
       )}
       {nowState === 6 && singMode === 'P' && (
         <video className={styles.video} autoPlay ref={videoRef}>
