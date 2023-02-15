@@ -7,7 +7,7 @@ function SingSample() {
   };
   return (
     <>
-      <PerfectScore />
+      <PerfectScore screenShare={screenShare} />
       <OrderSong screenShare={screenShare} />
     </>
   );
