@@ -11,14 +11,6 @@ import Pagination from '@/components/common/Pagination';
 import styles from '@/styles/sing/RoomList.module.scss';
 import { getCookie } from '@/util/cookie';
 
-// export interface RoomInfo {
-//   id: number;
-//   title: string;
-//   type: string;
-//   lock: boolean;
-//   member: number;
-// }
-
 export interface RoomInfo {
   sessionId: string;
   title: string;
@@ -51,22 +43,7 @@ function RoomList() {
     { mode: 'N' },
     { mode: 'P' },
     { mode: 'O' },
-    // { mode: '이어부르기' },
   ];
-
-  // 방 목록
-  // const currentRoom: RoomInfo[] = [];
-  // for (let i = 0; i < 100; i++) {
-  //   const num = Math.floor(Math.random() * 4) + 1;
-  //   const room = {
-  //     id: i,
-  //     title: `방 ${i + 1}`,
-  //     type: sortType[num].mode,
-  //     lock: i % 2 === 0,
-  //     member: i % 2 === 0 ? 2 : 1,
-  //   };
-  //   currentRoom.push(room);
-  // }
 
   const [rooms, setRooms] = useState<RoomInfo[]>([]);
   const [filteredRoom, setFilteredRoom] = useState<RoomInfo[]>([]);

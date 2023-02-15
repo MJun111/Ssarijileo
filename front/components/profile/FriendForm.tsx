@@ -161,6 +161,7 @@ function FriendForm() {
                             },
                           },
                         );
+                        window.alert(`${item.nickname} 님의 친구요청 수락`);
                       }}
                     >
                       수락
@@ -181,6 +182,7 @@ function FriendForm() {
                             },
                           },
                         );
+                        window.alert(`${item.nickname} 님의 친구요청 거절`);
                       }}
                     >
                       거절

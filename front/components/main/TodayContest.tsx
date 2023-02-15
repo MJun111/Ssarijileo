@@ -25,11 +25,6 @@ function TodayContest(props: { ranking: RankingItem[] }) {
     image: string;
   }[] = [];
 
-  const findProfile = (nickname: string) => {
-    const profile = profiles.find(item => item.nickname === nickname);
-    return profile ? profile.image : 'img/profile/profile_add_friend_image.svg';
-  };
-
   useEffect(() => {
     axios
       .get(`api/v1/friend/${storeUser.nickname}`, {
@@ -63,14 +58,13 @@ function TodayContest(props: { ranking: RankingItem[] }) {
               />
             </td>
             <td className={styles.profile}>
-              <div className={styles.content}>
-                <Image
-                  src={findProfile(item.file)}
-                  width={30}
-                  height={30}
-                  alt="profile"
-                />
-              </div>
+              <Image
+                className={styles.content}
+                src={item.image}
+                width={60}
+                height={60}
+                alt="profile"
+              />
             </td>
             <td className={styles.name}>{item.nickname}</td>
             <td className={styles.title}>{item.title}</td>
