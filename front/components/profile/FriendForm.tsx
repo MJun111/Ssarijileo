@@ -35,15 +35,11 @@ function FriendForm() {
       })
       .then(res => {
         const friendList = [...res.data];
-        const w: FriendInfo[] = friendList.map(item => {
-          if (item.status === 'W') {
-            return item;
-          }
+        const w: FriendInfo[] = friendList.filter(item => {
+          return item.status === 'W';
         });
-        const a: FriendInfo[] = friendList.map(item => {
-          if (item.status === 'A') {
-            return item;
-          }
+        const a: FriendInfo[] = friendList.filter(item => {
+          return item.status === 'A';
         });
         setFriendWList(w);
         setFriendAList(a);
