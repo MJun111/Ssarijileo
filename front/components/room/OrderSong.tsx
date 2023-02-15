@@ -178,6 +178,7 @@ function OrderSong(props: {
 
   return (
     <canvas
+      id="screen-screen"
       ref={canvasRef}
       width={canvasWidth}
       height={canvasHeight}
