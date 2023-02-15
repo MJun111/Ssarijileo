@@ -14,6 +14,7 @@ import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
 
 import styles from '@/styles/common/Header.module.scss';
+import { setCookie } from '@/util/cookie';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
@@ -199,6 +200,14 @@ function Header() {
     }
   }, []);
 
+  const allDelCookies = () => {
+    setNowLogin(false);
+    dispatch(setLogin(false));
+    setCookie('Authorization', '', 0);
+    setCookie('refreshToken', '', 0);
+    window.location.replace('/');
+  };
+
   return (
     <header className={styles.header}>
       {modalOpen && <LoginModal setModalOpen={setModalOpen} />}
@@ -259,11 +268,7 @@ function Header() {
               width={15}
               height={15}
               className={styles.logout}
-              onClick={() => {
-                setNowLogin(false);
-                dispatch(setLogin(false));
-                window.location.replace('/');
-              }}
+              onClick={allDelCookies}
             />
             <Link href="profile/" key="profile">
               <Image
