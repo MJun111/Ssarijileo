@@ -13,12 +13,7 @@ function RoomFooter({ session, publisher }: any) {
   const [friendModalOpen, setFriendModalOpen] = useState(false);
   const [reservModalOpen, setReservModalOpen] = useState(false);
   const [chatModalOpen, setChatModalOpen] = useState(false);
-  const [chatList, setChatList] = useState([
-    {
-      message: '채팅 입력창이에요',
-      name: '싸리질러',
-    },
-  ]);
+  const [chatList, setChatList] = useState<any>([]);
   const [cam, setCam] = useState(true);
   const [mic, setMic] = useState(true);
 
@@ -35,10 +30,7 @@ function RoomFooter({ session, publisher }: any) {
   // 채팅 듣기 on
   const chatOn = () => {
     session.on('signal:chat', (event: any) => {
-      const newChat = {
-        message: event.data,
-        name: '이수민',
-      };
+      const newChat = JSON.parse(event.data);
       chatList.push(newChat);
       setChatList([...chatList]);
     });
@@ -47,16 +39,10 @@ function RoomFooter({ session, publisher }: any) {
   // 채팅 보내기
   const sendChat = (sendMassage: string) => {
     session.signal({
-      data: sendMassage, // Any string (optional)
-      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-      type: 'chat', // The type of message (optional)
+      data: sendMassage,
+      to: [],
+      type: 'chat',
     });
-    // .then(() => {
-    //   console.log(`"${sendMassage}"라고 채팅 보내기 성공`);
-    // })
-    // .catch((error: any) => {
-    //   console.error('채팅 보내기 에러', error);
-    // });
   };
 
   // 렌더링시 실행

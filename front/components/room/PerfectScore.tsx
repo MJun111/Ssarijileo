@@ -9,8 +9,9 @@ import * as data from '@/constants/PerfectScoreData';
 import styles from '@/styles/room/PerfectScore.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 
-function PerfectScore() {
+function PerfectScore(props: { screenShare: any }) {
   // const { nextSong } = props;
+  const { screenShare } = props;
   const nextSong = {
     lyricsList: [
       {
@@ -178,7 +179,7 @@ function PerfectScore() {
   };
 
   const drawlyrics = (ctx: CanvasRenderingContext2D, currTime: number) => {
-    const deltaTime = currTime - 2.7;
+    const deltaTime = currTime;
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
       lyrics.shift();
       lyricFlag.current = !lyricFlag.current;
@@ -446,11 +447,16 @@ function PerfectScore() {
         musicSource.connect(musicAudioCtx.destination);
         musicRef.current = musicSource;
         startTimeRef.current = Date.now();
+        const mp3AudioDestination =
+          musicAudioCtx.createMediaStreamDestination();
+        musicSource.connect(mp3AudioDestination);
+        musicSource.onended = () => {
+          dispatch(setSsari(7));
+        };
         setIsStarted(true);
-        setTimeout(() => {
-          musicRef.current?.start();
-          setIsPossibleStop(true);
-        }, 2700);
+        screenShare(musicAudioCtx, mp3AudioDestination);
+        musicRef.current?.start();
+        setIsPossibleStop(true);
       });
   }, []);
 

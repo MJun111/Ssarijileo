@@ -244,7 +244,9 @@ export function MainScreen(props: {
           propState={nowState}
         />
       )}
-      {nowState === 5 && singMode === 'P' && <PerfectScore />}
+      {nowState === 5 && singMode === 'P' && (
+        <PerfectScore screenShare={screenShare} />
+      )}
       {nowState === 6 && singMode === 'P' && (
         <video className={styles.video} autoPlay ref={videoRef}>
           <track kind="captions" />
