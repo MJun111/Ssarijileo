@@ -68,7 +68,7 @@ function Index() {
       data = roomInfo;
     } else {
       const roomDetail = await axios({
-        method: 'get',
+        method: 'post',
         url: `api/v1/room/connection/${sessionVal}`,
         headers: {
           Authorization: `${getCookie('Authorization')}`,
@@ -77,19 +77,17 @@ function Index() {
       });
       setRoomInfo(roomDetail);
       host = '';
-      data = {
-        password: null,
-      };
+      data = null;
     }
 
     const token = await axios({
       method: 'POST',
       url: `api/v1/room/connection/${sessionVal}${host}`,
+      data,
       headers: {
         Authorization: `${getCookie('Authorization')}`,
         refreshToken: `${getCookie('refreshToken')}`,
       },
-      data,
     });
     console.log('token1 입니다', token.data);
     return token.data;

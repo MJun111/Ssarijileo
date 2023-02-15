@@ -129,67 +129,68 @@ function FriendForm() {
         <div className={styles.table}>
           <div className={styles.fix}>
             {/* 상단 고정 (친구요청) */}
-            {friendW.length &&
-              friendW.map(item => {
-                return (
-                  <div className={styles.item} key={item.friendId}>
-                    <div className={styles.profile}>
-                      {/* <div className={styles.content}> */}
-                      <Image
-                        className={styles.img}
-                        src={item.image}
-                        width={45}
-                        height={45}
-                        alt="profile"
-                      />
-                      {/* </div> */}
-                    </div>
-                    <div className={styles.name}>{item.nickname}</div>
-                    <div className={styles.play}>
-                      <button
-                        type="button"
-                        className={styles.okBtn}
-                        onClick={() => {
-                          axios.put(
-                            'api/v1/friend/',
-                            {
-                              friendId: item.friendId,
-                              status: 'A',
-                            },
-                            {
-                              headers: {
-                                Authorization: `${getCookie('Authorization')}`,
-                              },
-                            },
-                          );
-                        }}
-                      >
-                        수락
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.noBtn}
-                        onClick={() => {
-                          axios.put(
-                            'api/v1/friend/',
-                            {
-                              friendId: item.friendId,
-                              status: 'X',
-                            },
-                            {
-                              headers: {
-                                Authorization: `${getCookie('Authorization')}`,
-                              },
-                            },
-                          );
-                        }}
-                      >
-                        거절
-                      </button>
-                    </div>
+            {friendW.map(item => {
+              return (
+                <div className={styles.item} key={item.friendId}>
+                  <div className={styles.profile}>
+                    {/* <div className={styles.content}> */}
+                    <Image
+                      className={styles.img}
+                      src={item.image}
+                      width={45}
+                      height={45}
+                      alt="profile"
+                    />
+                    {/* </div> */}
                   </div>
-                );
-              })}
+                  <div className={styles.name}>{item.nickname}</div>
+                  <div className={styles.play}>
+                    <button
+                      type="button"
+                      className={styles.okBtn}
+                      onClick={() => {
+                        axios.put(
+                          'api/v1/friend/',
+                          {
+                            friendId: item.friendId,
+                            status: 'A',
+                          },
+                          {
+                            headers: {
+                              Authorization: `${getCookie('Authorization')}`,
+                            },
+                          },
+                        );
+                        window.alert(`${item.nickname} 님의 친구요청 수락`);
+                      }}
+                    >
+                      수락
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.noBtn}
+                      onClick={() => {
+                        axios.put(
+                          'api/v1/friend/',
+                          {
+                            friendId: item.friendId,
+                            status: 'X',
+                          },
+                          {
+                            headers: {
+                              Authorization: `${getCookie('Authorization')}`,
+                            },
+                          },
+                        );
+                        window.alert(`${item.nickname} 님의 친구요청 거절`);
+                      }}
+                    >
+                      거절
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
           <div className={styles.friendList}>{listItems}</div>
         </div>

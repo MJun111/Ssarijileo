@@ -34,6 +34,7 @@ export interface RankingItem {
   registerDate: string;
   likeCount: number;
   like: boolean;
+  image: string;
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
