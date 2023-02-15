@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { getCookie } from '@/util/cookie';
 
 import ContentForm from '@/components/profile/ContentForm';
 import FriendForm from '@/components/profile/FriendForm';
@@ -30,8 +31,11 @@ function MyPage() {
   }, [storeUser]);
 
   useEffect(() => {
-    setNicknameValue(storeUser.nickname);
-  });
+    const token = getCookie('Authorization');
+    if (!token) {
+      window.location.href = '/';
+    }
+  }, []);
 
   useEffect(() => {
     setType(storeProfile.profile);

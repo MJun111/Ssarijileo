@@ -1,4 +1,7 @@
+import { useEffect } from 'react';
 import Image from 'next/image';
+
+import { getCookie } from '@/util/cookie';
 
 import TopImg from '@/components/common/TopImg';
 import SingTop from '@/components/sing/SingTop';
@@ -8,6 +11,12 @@ import SoundBar from '@/components/common/SoundBar';
 import styles from '@/styles/sing/Sing.module.scss';
 
 function Index() {
+  useEffect(() => {
+    const token = getCookie('Authorization');
+    if (!token) {
+      window.location.href = '/';
+    }
+  }, []);
   return (
     <div className={styles.container}>
       <TopImg />

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { GetServerSideProps } from 'next';
 
 import axios from 'axios';
+import { RootState } from '@/redux/store';
 
 import { useCookie } from '@/hooks/useCookie';
 import MainTop from '@/components/main/MainTop';
@@ -13,7 +14,6 @@ import TodayContest from '@/components/main/TodayContest';
 import Team from '@/components/main/Team';
 
 import styles from '@/styles/Home.module.scss';
-import { RootState } from '@/redux/store';
 
 export interface ChartItem {
   album: string;
@@ -41,6 +41,21 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const cookieString = context.req.headers.cookie || '';
   const cookies = useCookie(cookieString);
   const token = cookies.Authorization;
+  if (!token) {
+    const chartRes = await axios.get(
+      'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
+    );
+    const chartItemA: ChartItem[] = chartRes.data.slice(0, 5);
+    const chartItemB: ChartItem[] = chartRes.data.slice(5, 10);
+
+    return {
+      props: {
+        chartItemA,
+        chartItemB,
+        ranking: null,
+      },
+    };
+  }
   try {
     const chartRes = await axios.get(
       'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
@@ -76,21 +91,10 @@ export const getServerSideProps: GetServerSideProps = async context => {
       },
     };
   } catch (err) {
-    const res = JSON.parse(JSON.stringify(err));
-    if (res?.status === 403) {
-      return {
-        redirect: {
-          destination: '/403',
-          permanent: false,
-        },
-      };
-    }
-
     return {
-      props: {
-        chartItemA: null,
-        chartItemB: null,
-        ranking: null,
+      redirect: {
+        destination: '/403',
+        permanent: false,
       },
     };
   }
@@ -115,17 +119,23 @@ function Home(props: {
     }_team_info_image.svg`,
   };
 
+  const contestComponant = ranking ? (
+    <TodayContest ranking={ranking} />
+  ) : (
+    <div className={styles.noContest}>
+      <p>오늘의 공모전이 없습니다.</p>
+    </div>
+  );
+
   return (
     <main className={styles.main}>
       <MainTop />
       <div className={styles.container}>
         <SoundBar />
-        {chartItemA && chartItemB && (
-          <TodayChart chartItemA={chartItemA} chartItemB={chartItemB} />
-        )}
-        {chartItemA && chartItemB && <SoundBar />}
-        {ranking && <TodayContest ranking={ranking} />}
-        {ranking && <SoundBar />}
+        <TodayChart chartItemA={chartItemA} chartItemB={chartItemB} />
+        <SoundBar />
+        {contestComponant}
+        <SoundBar />
         <Team img={img} />
       </div>
     </main>

@@ -23,6 +23,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const cookieString = context.req.headers.cookie || '';
   const cookies = useCookie(cookieString);
   const token = cookies.Authorization;
+  if (!token) return { redirect: { destination: '/', permanent: false } };
   try {
     const videoRes = await axios.get(
       'http://i8b302.p.ssafy.io:8000/api/v1/singing-contest',
@@ -32,9 +33,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
         },
       },
     );
-
-    const videoList: VideoInfo[] = videoRes.data;
-
+    const videoList: VideoInfo[] = videoRes.data || [];
     return {
       props: {
         videoList,
@@ -42,8 +41,9 @@ export const getServerSideProps: GetServerSideProps = async context => {
     };
   } catch (err) {
     return {
-      props: {
-        videoList: null,
+      redirect: {
+        destination: '/403',
+        permanent: false,
       },
     };
   }

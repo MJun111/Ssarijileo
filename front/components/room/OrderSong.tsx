@@ -5,6 +5,8 @@ import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 import { setSsari } from '@/redux/store/ssariSlice';
 
+import styles from '@/styles/room/OrderSong.module.scss';
+
 function OrderSong(props: { screenShare: any }) {
   const { screenShare } = props;
   const dispatch = useDispatch();
@@ -126,9 +128,8 @@ function OrderSong(props: { screenShare: any }) {
     if (!isStarted) return;
     const ctx = canvasRef.current?.getContext('2d');
     if (!ctx) return;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = 'white';
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = '#1f5c7d';
     ctx.font = '20px Jalnan';
     const currentTime = Date.now();
     const time = (currentTime - timeRef.current) / 1000;
@@ -172,7 +173,12 @@ function OrderSong(props: { screenShare: any }) {
 
   return (
     <>
-      <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />
+      <canvas
+        ref={canvasRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        className={styles.canvas}
+      />
       <button onClick={start} disabled={!isReady || isStarted} type="button">
         Start
       </button>

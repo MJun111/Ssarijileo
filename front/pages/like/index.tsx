@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { setLike } from '@/redux/store/likeSlice';
 import { RootState } from '@/redux/store';
 
-import styles from '@/styles/like/Like.module.scss';
 import Music from '@/components/like/Music';
 import Video from '@/components/like/Video';
 import SoundBar from '@/components/common/SoundBar';
+
+import styles from '@/styles/like/Like.module.scss';
+import { getCookie } from '@/util/cookie';
 
 export interface RecordInfo {
   recordingId: number;
@@ -29,10 +30,19 @@ function Like() {
     [styles.isSelect]: type === '녹화본',
   });
   const dispatch = useDispatch();
+
   const storeLike = useSelector((state: RootState) => state.like);
   useEffect(() => {
     setType(storeLike.like);
-  });
+  }, [storeLike]);
+
+  useEffect(() => {
+    const token = getCookie('Authorization');
+    if (!token) {
+      window.location.href = '/login';
+    }
+  }, []);
+
   return (
     <>
       <div className={styles.container}>

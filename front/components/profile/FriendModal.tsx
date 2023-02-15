@@ -100,6 +100,14 @@ function FriendModal({ setModalOpen }: RoomProps) {
                   toUserNickname: item.nickname,
                   friendId: res.data.friendId,
                 });
+                const newFriendList = friendList.filter(
+                  f => f.nickname !== item.nickname,
+                );
+                setFriendList(newFriendList);
+                const newFilteredFriendList = filteredFriendList.filter(
+                  f => f.nickname !== item.nickname,
+                );
+                setFilteredFriendList(newFilteredFriendList);
               });
           }}
         />

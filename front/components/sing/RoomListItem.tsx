@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
-import styles from '@/styles/sing/RoomListItem.module.scss';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
 import { RoomInfo } from './RoomList';
 // import axios from 'axios';
 // import { getCookie } from '@/util/cookie';
+
+import styles from '@/styles/sing/RoomListItem.module.scss';
 
 type RoomProps = {
   info: RoomInfo;
@@ -84,6 +85,9 @@ function RoomListItem({ info }: RoomProps) {
       popupWindow.onresize = () => {
         popupWindow.resizeTo(1920, 1080);
       };
+      if (popupWindow.closed) {
+        console.log('closed');
+      }
     }
   };
 

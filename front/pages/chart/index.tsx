@@ -16,45 +16,39 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const cookieString = context.req.headers.cookie || '';
   const cookies = useCookie(cookieString);
   const token = cookies.Authorization;
-  try {
-    const dailyRes = await axios.get(
-      'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
-      {
-        headers: {
-          Authorization: token,
-        },
+  if (!token) return { redirect: { destination: '/', permanent: false } };
+  const dailyRes = await axios.get(
+    'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
+    {
+      headers: {
+        Authorization: token,
       },
-    );
-    const weeklyRes = await axios.get(
-      'http://i8b302.p.ssafy.io:8000/api/v1/ranking/weekly',
-      {
-        headers: {
-          Authorization: token,
-        },
+    },
+  );
+  const weeklyRes = await axios.get(
+    'http://i8b302.p.ssafy.io:8000/api/v1/ranking/weekly',
+    {
+      headers: {
+        Authorization: token,
       },
-    );
-    const monthlyRes = await axios.get(
-      'http://i8b302.p.ssafy.io:8000/api/v1/ranking/monthly',
-      {
-        headers: {
-          Authorization: token,
-        },
+    },
+  );
+  const monthlyRes = await axios.get(
+    'http://i8b302.p.ssafy.io:8000/api/v1/ranking/monthly',
+    {
+      headers: {
+        Authorization: token,
       },
-    );
+    },
+  );
 
-    return {
-      props: {
-        daily: dailyRes.data,
-        weekly: weeklyRes.data,
-        monthly: monthlyRes.data,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      props: {},
-    };
-  }
+  return {
+    props: {
+      daily: dailyRes.data,
+      weekly: weeklyRes.data,
+      monthly: monthlyRes.data,
+    },
+  };
 };
 
 function Chart(props: {
