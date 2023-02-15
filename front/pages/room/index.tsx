@@ -37,7 +37,6 @@ function Index() {
   }, [storeSessionId]);
 
   // OV
-  const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
   const [screenSession, setScreenSession] = useState<any>(undefined);
@@ -166,7 +165,6 @@ function Index() {
       },
     }).then(() => {
       leaveScreen();
-      setOV(null);
       setScreenOV(null);
       setSession(undefined);
       setScreenSession(undefined);
@@ -191,7 +189,6 @@ function Index() {
     }
 
     leaveScreen();
-    setOV(null);
     setScreenOV(null);
     setSession(undefined);
     setScreenSession(undefined);
@@ -226,7 +223,6 @@ function Index() {
   const joinSession = () => {
     const newOV = new OpenVidu();
     const mySession = newOV.initSession();
-    setOV(newOV);
     setSession(mySession);
 
     const newScreenOV = new OpenVidu();
@@ -357,8 +353,7 @@ function Index() {
           <SingerScreen streamManager={singer.length ? singer[0] : undefined} />
           <div className={styles.singScreen}>
             <MainScreen
-              // singMode={roomInfo.mode}
-              singMode={'O'}
+              singMode={roomInfo.mode}
               screenOV={screenOV}
               session={session}
               screenSession={screenSession}

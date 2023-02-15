@@ -172,7 +172,7 @@ export function MainScreen(props: {
 
   // 화면 공유
   const screenShare = (audioContext: any, mp3AudioDestination: any) => {
-    let videoYN = undefined;
+    let videoYN;
     if (singMode === 'O') {
       videoYN = false;
     }

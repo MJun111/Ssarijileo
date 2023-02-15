@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
 import { RoomInfo } from './RoomList';
-import axios from 'axios';
-import { getCookie } from '@/util/cookie';
+// import axios from 'axios';
+// import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomListItem.module.scss';
 
