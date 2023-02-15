@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-
 import axios from 'axios';
+import hangul from 'hangul-js';
 import { useSelector } from 'react-redux';
-import styles from '@/styles/profile/FriendModal.module.scss';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
-import hangul from 'hangul-js';
+
+import styles from '@/styles/profile/FriendModal.module.scss';
 
 type RoomProps = {
   setModalOpen: any;

@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import * as hangul from 'hangul-js';
 
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
+import { RootState } from '@/redux/store';
 
 import styles from '@/styles/room/RoomFriend.module.scss';
 
