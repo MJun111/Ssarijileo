@@ -10,20 +10,11 @@ import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
 import Loading from '@/components/room/Loading';
-// import PerfectScore from '@/components/room/PerfectScore';
-// import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
 import { setReserv } from '@/redux/store/reservSlice';
 import { getCookie } from '@/util/cookie';
-
-// interface Reserv {
-//   nickname: string;
-//   songId: number;
-//   isPriority: string;
-//   title: string;
-//   singer: string;
-// }
+import { setSessionId } from '@/redux/store/sessionIdSlice';
 
 function Index() {
   const dispatch = useDispatch();
@@ -35,9 +26,14 @@ function Index() {
   }, [storeUser]);
 
   // sessionId (Redux 값받아오기)
-  const [sessionId, setSessionId] = useState<any>(undefined);
+  const [sessionVal, setSessionVal] = useState<string>('');
   const [roomInfo, setRoomInfo] = useState();
   const [isHost, setIsHost] = useState(false);
+  const storeSessionId = useSelector((state: RootState) => state.sessionId);
+
+  useEffect(() => {
+    setSessionVal(storeSessionId.sessionId);
+  }, [storeSessionId]);
 
   // OV
   const [OV, setOV] = useState<any>(undefined);
@@ -45,6 +41,7 @@ function Index() {
   const [session, setSession] = useState<any>(undefined);
   const [screenSession, setScreenSession] = useState<any>(undefined);
   console.log(OV);
+
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
@@ -77,7 +74,7 @@ function Index() {
 
     const token = await axios({
       method: 'POST',
-      url: `api/v1/room/connection/${sessionId}${host}`,
+      url: `api/v1/room/connection/${sessionVal}${host}`,
       headers: {
         Authorization: `${getCookie('Authorization')}`,
         refreshToken: `${getCookie('refreshToken')}`,
@@ -91,7 +88,7 @@ function Index() {
   // api screen
   async function getToken2() {
     const token = await axios.post(
-      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${sessionId}/connection`,
+      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${sessionVal}/connection`,
       {},
       {
         headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
@@ -99,18 +96,6 @@ function Index() {
     );
     return token.data.token;
   }
-
-  // api delete session
-  // async function deleteSession() {
-  //   const response = await axios({
-  //     method: 'DELETE',
-  //     url: `api/v1/room/${sessionId}`,
-  //     headers: {
-  //       Authorization: `${getCookie('Authorization')}`,
-  //       refreshToken: `${getCookie('refreshToken')}`,
-  //     },
-  //   }).then(() => leaveSession());
-  // }
 
   // singer 화면 위치 바꾸기
   const changeSinger = (from: any) => {
@@ -161,10 +146,40 @@ function Index() {
     }
   };
 
+  // api delete session
+  async function deleteSession() {
+    axios({
+      method: 'DELETE',
+      url: `api/v1/room/${sessionVal}`,
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
+        refreshToken: `${getCookie('refreshToken')}`,
+      },
+    }).then(() => {
+      leaveScreen();
+      setOV(null);
+      setScreenOV(null);
+      setSession(undefined);
+      setScreenSession(undefined);
+      setScreenPublisher(undefined);
+      setPublisher([]);
+      setSubscribers([]);
+      setSinger([]);
+      dispatch(setReserv([]));
+      window.close();
+    });
+  }
+
   // 사용자가 떠날때
-  const leaveSession = () => {
+  const leaveSession = async () => {
     const mySession = session;
-    if (mySession) mySession.disconnect();
+    if (mySession) {
+      mySession.disconnect();
+    }
+
+    if (isHost) {
+      deleteSession();
+    }
 
     leaveScreen();
     setOV(null);
@@ -206,6 +221,11 @@ function Index() {
       deleteSubscriber(event.stream.streamManager);
     });
 
+    // 세션이 없어졌을 때
+    mySession.on('sessionDisconnected', () => {
+      leaveSession();
+    });
+
     // 다음 singer
     mySession.on('signal:nextSinger', (event: any) => {
       changeSinger(event.from);
@@ -242,24 +262,26 @@ function Index() {
 
   // room 생성시 정보 수신
   const getRoomInfo = (e: any) => {
-    setIsHost(true);
-    const myRoomInfo = e.data;
-    axios
-      .post(
-        'api/v1/room/session',
-        {},
-        {
-          headers: {
-            Authorization: `${getCookie('Authorization')}`,
-            refreshToken: `${getCookie('refreshToken')}`,
+    if (isHost === false) {
+      setIsHost(true);
+      const myRoomInfo = e.data;
+      axios
+        .post(
+          'api/v1/room/session',
+          {},
+          {
+            headers: {
+              Authorization: `${getCookie('Authorization')}`,
+              refreshToken: `${getCookie('refreshToken')}`,
+            },
           },
-        },
-      )
-      .then(res => {
-        myRoomInfo.sessionId = res.data;
-        setRoomInfo(myRoomInfo);
-        setSessionId(res.data);
-      });
+        )
+        .then(res => {
+          myRoomInfo.sessionId = res.data;
+          setRoomInfo(myRoomInfo);
+          dispatch(setSessionId(res.data));
+        });
+    }
   };
 
   // 페이지 입장 후 로딩시작,
@@ -271,10 +293,10 @@ function Index() {
 
   // 세션 아이디 얻으면 연결 시작
   useEffect(() => {
-    if (sessionId !== undefined) {
+    if (sessionVal !== '') {
       joinSession();
     }
-  }, [sessionId]);
+  }, [sessionVal]);
 
   // 임의로 mode 선언
   const mode = 'N';
