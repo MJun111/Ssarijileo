@@ -1,16 +1,15 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
-
-import { getCookie } from '@/util/cookie';
+import { useDispatch } from 'react-redux';
 
 import TopImg from '@/components/common/TopImg';
 import SingTop from '@/components/sing/SingTop';
 import RoomList from '@/components/sing/RoomList';
 import SoundBar from '@/components/common/SoundBar';
 
-import styles from '@/styles/sing/Sing.module.scss';
-import { useDispatch } from 'react-redux';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { getCookie } from '@/util/cookie';
+import styles from '@/styles/sing/Sing.module.scss';
 
 function Index() {
   const dispatch = useDispatch();
