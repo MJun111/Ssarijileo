@@ -21,6 +21,7 @@ export interface SongInfo {
 
 function Music() {
   const [likeList, setLikeList] = useState<SongInfo[]>([]);
+  const [musicList, setState] = useState<SongInfo[]>([]);
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
   const [themeMode, setThemeMode] = useState('light');
 
@@ -46,7 +47,7 @@ function Music() {
           });
         });
         setLikeList(res.data);
-        console.log('!!!!!!!', likeList);
+        setState(res.data);
       });
   }, []);
 
@@ -57,8 +58,6 @@ function Music() {
 
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
-
-  const [musicList, setState] = useState<SongInfo[]>(likeList);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
@@ -71,10 +70,8 @@ function Music() {
         arr.push(likeList[idx]);
       }
     });
-
     setState(arr);
   };
-  console.log('ddd', musicList);
   const postData = musicList.slice(offset, offset + limit);
 
   return (

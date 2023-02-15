@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import styles from '@/styles/like/Video.module.scss';
 import VideoItem from '@/components/like/VideoItem';
 import Pagination from '../common/Pagination';
 import { RecordInfo } from '@/pages/like';
+import { getCookie } from '@/util/cookie';
 
-function Video(props: { recordList: RecordInfo[] }) {
-  const { recordList } = props;
+function Video() {
+  // const { recordList } = props;
+  const [recordList, setRecordList] = useState<RecordInfo[]>([]);
+  const [musicList, setState] = useState<RecordInfo[]>([]);
+
+  useEffect(() => {
+    axios
+      .get('api/v1/recording/my', {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        setRecordList(res.data);
+        setState(res.data);
+      });
+  }, []);
   //  페이지
   const [page, setPage] = useState(1);
   //  방 목록이 보일 개수
   const limit = 9;
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
-
-  const [musicList, setState] = useState<RecordInfo[]>(recordList);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
@@ -30,7 +47,7 @@ function Video(props: { recordList: RecordInfo[] }) {
 
     setState(arr);
   };
-  const postData = musicList?.slice(offset, offset + limit);
+  const postData = musicList.slice(offset, offset + limit);
 
   return (
     <div className={styles.container}>
@@ -62,7 +79,7 @@ function Video(props: { recordList: RecordInfo[] }) {
         </div>
       </div>
       <div className={styles.room}>
-        {postData?.map(info => (
+        {postData.map(info => (
           <VideoItem info={info} key={info.recordingId} />
         ))}
       </div>
@@ -70,7 +87,7 @@ function Video(props: { recordList: RecordInfo[] }) {
         <Pagination
           limit={limit}
           page={page}
-          totalPosts={recordList ? recordList.length : 0}
+          totalPosts={recordList.length}
           setPage={setPage}
         />
       </div>

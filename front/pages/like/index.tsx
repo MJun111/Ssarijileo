@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import classnames from 'classnames';
 
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { setLike } from '@/redux/store/likeSlice';
 import { RootState } from '@/redux/store';
 
@@ -10,7 +9,6 @@ import styles from '@/styles/like/Like.module.scss';
 import Music from '@/components/like/Music';
 import Video from '@/components/like/Video';
 import SoundBar from '@/components/common/SoundBar';
-import { getCookie } from '@/util/cookie';
 
 export interface RecordInfo {
   recordingId: number;
@@ -21,22 +19,6 @@ export interface RecordInfo {
 }
 
 function Like() {
-  const [recordList, setRecordList] = useState<RecordInfo[]>([]);
-
-  useEffect(() => {
-    axios
-      .get('api/v1/recording/my', {
-        headers: {
-          Authorization: `${getCookie('Authorization')}`,
-          refreshToken: `${getCookie('refreshToken')}`,
-        },
-      })
-      .then(res => {
-        console.log(res.data);
-        setRecordList(res.data);
-      });
-  }, []);
-
   const [type, setType] = useState('찜목록');
   const musicClass = classnames({
     [styles.music]: true,
@@ -81,7 +63,7 @@ function Like() {
         </div>
         <div className={styles.list}>
           {type === '찜목록' && <Music />}
-          {type === '녹화본' && <Video recordList={recordList} />}
+          {type === '녹화본' && <Video />}
         </div>
       </div>
       <SoundBar />

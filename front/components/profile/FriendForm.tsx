@@ -146,7 +146,10 @@ function FriendForm() {
                     <div className={styles.name}>{item.nickname}</div>
                     <div className={styles.play}>
                       <button type="button" className={styles.okBtn}>
-                        친구수락
+                        수락
+                      </button>
+                      <button type="button" className={styles.noBtn}>
+                        거절
                       </button>
                     </div>
                   </div>
