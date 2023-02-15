@@ -15,6 +15,7 @@ import styles from '@/styles/Room.module.scss';
 import { setReserv } from '@/redux/store/reservSlice';
 import { getCookie } from '@/util/cookie';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
+import SingerScreen from '@/components/room/SingerScreen';
 
 function Index() {
   const dispatch = useDispatch();
@@ -94,6 +95,7 @@ function Index() {
         headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
       },
     );
+    console.log(token.data.token);
     return token.data.token;
   }
 
@@ -191,6 +193,7 @@ function Index() {
     setSubscribers([]);
     setSinger([]);
     dispatch(setReserv([]));
+    dispatch(setSessionId(''));
     window.close();
   };
 
@@ -279,6 +282,7 @@ function Index() {
         .then(res => {
           myRoomInfo.sessionId = res.data;
           setRoomInfo(myRoomInfo);
+          console.log('백에서 받은 세션 아이디', res.data);
           dispatch(setSessionId(res.data));
         });
     }
@@ -293,6 +297,7 @@ function Index() {
 
   // 세션 아이디 얻으면 연결 시작
   useEffect(() => {
+    console.log('현재 세션아이디', sessionVal);
     if (sessionVal !== '') {
       joinSession();
     }
@@ -316,9 +321,10 @@ function Index() {
       <RoomHeader leaveRoom={leaveSession} session={session} />
       <div className={styles.screen}>
         <div className={styles.mainScreen}>
-          {singer.map(person => {
+          {/* {singer.map(person => {
             return <MyScreen key={person.id} streamManager={person} />;
-          })}
+          })} */}
+          <SingerScreen streamManager={singer.length ? singer[0] : undefined} />
           <div className={styles.singScreen}>
             <MainScreen
               singMode={mode}

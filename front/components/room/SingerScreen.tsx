@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 
 import styles from '@/styles/room/Screen.module.scss';
 
-function MyScreen({ streamManager }: any) {
+function SingerScreen({ streamManager }: any) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const screen = streamManager;
 
@@ -13,7 +13,7 @@ function MyScreen({ streamManager }: any) {
   }, [screen]);
 
   return (
-    <div className={styles.myScreen}>
+    <div className={styles.singerScreen}>
       <video className={styles.video} autoPlay ref={videoRef}>
         <track kind="captions" />
       </video>
@@ -21,4 +21,4 @@ function MyScreen({ streamManager }: any) {
   );
 }
 
-export default MyScreen;
+export default SingerScreen;

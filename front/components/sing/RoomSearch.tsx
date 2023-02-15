@@ -34,7 +34,7 @@ function RoomSearch(props: {
     setSortType(eventTarget.innerText);
     const sortedData =
       eventTarget.innerText !== 'Default'
-        ? rooms.filter(room => room.type === eventTarget.innerText)
+        ? rooms.filter(room => room.mode === eventTarget.innerText)
         : rooms;
     const filteredData =
       searchText !== ''
@@ -52,7 +52,7 @@ function RoomSearch(props: {
     setSearchText(e.target.value);
     const sortedData =
       sortType !== 'Default'
-        ? rooms.filter(room => room.type === sortType)
+        ? rooms.filter(room => room.mode === sortType)
         : rooms;
     if (e.target.value === '') {
       setFilteredRoom(sortedData);
