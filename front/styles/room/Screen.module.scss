@@ -21,6 +21,17 @@
   }
 }
 
+.singerScreen {
+  @include container();
+  width: 350px;
+  height: 350px;
+  .video {
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+  }
+}
+
 .myScreen,
 .otherScreen {
   @include container();

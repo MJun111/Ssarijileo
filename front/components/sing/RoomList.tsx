@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-// import axios from 'axios';
+import axios from 'axios';
 
 import RoomModal from './RoomModal';
 import RoomSearch from '@/components/sing/RoomSearch';
@@ -9,13 +9,24 @@ import RoomListItem from '@/components/sing/RoomListItem';
 import Pagination from '@/components/common/Pagination';
 
 import styles from '@/styles/sing/RoomList.module.scss';
+import { getCookie } from '@/util/cookie';
+
+// export interface RoomInfo {
+//   id: number;
+//   title: string;
+//   type: string;
+//   lock: boolean;
+//   member: number;
+// }
 
 export interface RoomInfo {
-  id: number;
+  sessionId: string;
   title: string;
-  type: string;
-  lock: boolean;
-  member: number;
+  mode: string;
+  userMaxCount: number;
+  userCount: number;
+  isPublic: string;
+  password: string;
 }
 
 export interface OptionItem {
@@ -37,46 +48,47 @@ function RoomList() {
   // 방 종류
   const sortType = [
     { mode: 'Default' },
-    { mode: '일반모드' },
-    { mode: '퍼펙트스코어' },
-    { mode: '이어부르기' },
-    { mode: '가사 맞추기' },
+    { mode: 'N' },
+    { mode: 'P' },
+    { mode: 'O' },
+    // { mode: '이어부르기' },
   ];
 
   // 방 목록
-  const currentRoom: RoomInfo[] = [];
-  for (let i = 0; i < 100; i++) {
-    const num = Math.floor(Math.random() * 4) + 1;
-    const room = {
-      id: i,
-      title: `방 ${i + 1}`,
-      type: sortType[num].mode,
-      lock: i % 2 === 0,
-      member: i % 2 === 0 ? 2 : 1,
-    };
-    currentRoom.push(room);
-  }
-
-  const [rooms] = useState<RoomInfo[]>(currentRoom);
-
-  // 방 목록 api
-  // async function getRoomsInfo() {
-  //   const response = await axios({
-  //     method: 'GET',
-  //     url: 'api/v1/room/',
-  //     headers: {
-  //       Authorization: `${getCookie('Authorization')}`,
-  //       refreshToken: `${getCookie('refreshToken')}`,
-  //     },
-  //   });
-  //   const roomsInfo = response.data
+  // const currentRoom: RoomInfo[] = [];
+  // for (let i = 0; i < 100; i++) {
+  //   const num = Math.floor(Math.random() * 4) + 1;
+  //   const room = {
+  //     id: i,
+  //     title: `방 ${i + 1}`,
+  //     type: sortType[num].mode,
+  //     lock: i % 2 === 0,
+  //     member: i % 2 === 0 ? 2 : 1,
+  //   };
+  //   currentRoom.push(room);
   // }
 
-  useEffect(() => {
-    // getRoomsInfo();
-  }, []);
+  const [rooms, setRooms] = useState<RoomInfo[]>([]);
+  const [filteredRoom, setFilteredRoom] = useState<RoomInfo[]>([]);
+  // 방 목록 api
+  async function getRoomsInfo() {
+    const response = await axios({
+      method: 'GET',
+      url: 'api/v1/room/',
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
+        refreshToken: `${getCookie('refreshToken')}`,
+      },
+    });
+    // const roomsInfo = response.data;
+    console.log(response.data);
+    setRooms(response.data);
+    setFilteredRoom(response.data);
+  }
 
-  const [filteredRoom, setFilteredRoom] = useState<RoomInfo[]>(rooms);
+  useEffect(() => {
+    getRoomsInfo();
+  }, []);
 
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
@@ -107,7 +119,7 @@ function RoomList() {
       </div>
       <div className={styles.room}>
         {postData.map(info => (
-          <RoomListItem info={info} key={info.id} />
+          <RoomListItem info={info} />
         ))}
       </div>
       <Pagination

@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
-import { RoomInfo } from './RoomList';
+import { useDispatch } from 'react-redux';
 import styles from '@/styles/sing/RoomListItem.module.scss';
+import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { RoomInfo } from './RoomList';
 
 type RoomProps = {
   info: RoomInfo;
 };
 
 function RoomListItem({ info }: RoomProps) {
-  const { title, type, lock, member } = info;
+  const { sessionId, title, mode, isPublic, userCount, password } = info;
   const [modalMode, setModalMode] = useState(false);
+  const dispatch = useDispatch();
+
   let backClassName = classNames({
     [styles.back]: true,
     [styles.nomal]: true,
@@ -19,7 +23,7 @@ function RoomListItem({ info }: RoomProps) {
     [styles.type]: true,
     [styles.nomal]: true,
   });
-  if (type === '퍼펙트스코어') {
+  if (mode === 'P') {
     backClassName = classNames({
       [styles.back]: true,
       [styles.perfect]: true,
@@ -28,7 +32,7 @@ function RoomListItem({ info }: RoomProps) {
       [styles.type]: true,
       [styles.perfect]: true,
     });
-  } else if (type === '이어부르기') {
+  } else if (mode === 'else') {
     backClassName = classNames({
       [styles.back]: true,
       [styles.relay]: true,
@@ -37,7 +41,7 @@ function RoomListItem({ info }: RoomProps) {
       [styles.type]: true,
       [styles.relay]: true,
     });
-  } else if (type === '가사 맞추기') {
+  } else if (mode === 'O') {
     backClassName = classNames({
       [styles.back]: true,
       [styles.guess]: true,
@@ -49,15 +53,15 @@ function RoomListItem({ info }: RoomProps) {
   }
 
   // 비밀번호 관리
-  const [password, setPassword] = useState('');
+  const [roomPassword, setPassword] = useState('');
   const changePwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
   // 임시 비밀번호
-  const pwd = '1234';
+  const pwd = password;
   const openWindow = () => {
     // lock일 경우 비밀번호 창 띄우기
-    if (lock) {
+    if (isPublic === 'Y') {
       setModalMode(true);
     } else {
       const popupWindow = window.open('room/', 'windowName', 'resizeable');
@@ -94,8 +98,9 @@ function RoomListItem({ info }: RoomProps) {
                 className={styles.okBtn}
                 type="button"
                 onClick={() => {
-                  if (password === pwd) {
+                  if (roomPassword === pwd) {
                     setModalMode(false);
+                    dispatch(setSessionId(sessionId));
                     const popupWindow = window.open(
                       'room/',
                       'windowName',
@@ -137,7 +142,7 @@ function RoomListItem({ info }: RoomProps) {
           <div className={backClassName}>
             <div className={styles.top}>
               <div className={styles.title}>{title}</div>
-              <div className={typeClassName}>{type}</div>
+              <div className={typeClassName}>{mode}</div>
             </div>
             <Image
               src="img/common/common_play_image.svg"
@@ -149,7 +154,7 @@ function RoomListItem({ info }: RoomProps) {
             <div className={styles.bottom}>
               <div className={styles.lock}>
                 <div className={styles.type}>
-                  {lock ? '비공개방' : '공개방'}
+                  {isPublic === 'Y' ? '비공개방' : '공개방'}
                 </div>
                 <Image
                   src="img/room/room_private_image.svg"
@@ -165,7 +170,7 @@ function RoomListItem({ info }: RoomProps) {
                   height={36}
                   alt="member"
                 />
-                <div className={styles.count}>{member}/10</div>
+                <div className={styles.count}>{userCount}/10</div>
               </div>
             </div>
           </div>
