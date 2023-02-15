@@ -13,6 +13,7 @@ import reservSlice from './reservSlice';
 import userSlice from './userSlice';
 import ssariSlice from './ssariSlice';
 import sessionIdSlice from './sessionIdSlice';
+import profileSlice from './profileSlice';
 
 const rootReducer = combineReducers({
   theme: themeSlice.reducer,
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   user: userSlice.reducer,
   ssari: ssariSlice.reducer,
   sessionId: sessionIdSlice.reducer,
+  profile: profileSlice.reducer,
 });
 
 const persistConfig = {

@@ -1,7 +1,7 @@
 // Path: 'profile/'
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
 
@@ -9,23 +9,25 @@ import ContentForm from '@/components/profile/ContentForm';
 import FriendForm from '@/components/profile/FriendForm';
 
 import styles from '@/styles/profile/Profile.module.scss';
+import { setProfile } from '@/redux/store/profileSlice';
 
 function MyPage() {
   const [themeMode, setThemeMode] = useState('light');
   const [type, setType] = useState('계정 관리');
   const [nicknameValue, setNicknameValue] = useState('');
-  const [profile, setProfile] = useState('');
+  const [profileImg, setProfileImg] = useState('');
 
   const storeTheme: any = useSelector((state: RootState) => state.theme);
   const storeUser: any = useSelector((state: RootState) => state.user);
+  const storeProfile: any = useSelector((state: RootState) => state.profile);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setThemeMode(storeTheme.theme);
   }, [storeTheme]);
 
   useEffect(() => {
-    setProfile(storeUser.img);
-    setNicknameValue(storeUser.nickname);
+    setProfileImg(storeUser.img);
   }, [storeUser]);
 
   useEffect(() => {
@@ -35,14 +37,18 @@ function MyPage() {
     }
   }, []);
 
+  useEffect(() => {
+    setType(storeProfile.profile);
+  }, [storeProfile]);
+
   return (
     <div className={styles.container}>
       <div className={styles.box}>
         <div className={styles.sidebar}>
           <div className={styles.profileImg}>
-            {profile && (
+            {profileImg && (
               <Image
-                src={profile}
+                src={profileImg}
                 alt="profile"
                 className={styles.profile}
                 width={100}
@@ -56,6 +62,7 @@ function MyPage() {
             type="button"
             className={styles.btn}
             onClick={() => {
+              dispatch(setProfile('계정 관리'));
               setType('계정 관리');
             }}
           >
@@ -65,6 +72,7 @@ function MyPage() {
             type="button"
             className={styles.btn}
             onClick={() => {
+              dispatch(setProfile('친구 목록'));
               setType('친구 목록');
             }}
           >

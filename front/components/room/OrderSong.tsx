@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { useDispatch } from 'react-redux';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
+import { setSsari } from '@/redux/store/ssariSlice';
 
 import styles from '@/styles/room/OrderSong.module.scss';
 
 function OrderSong(props: { screenShare: any }) {
   const { screenShare } = props;
+  const dispatch = useDispatch();
   const sourceRef = useRef<AudioBufferSourceNode>();
   const timeRef = useRef<number>(0);
   const [isReady, setIsReady] = useState(false);
@@ -141,7 +144,6 @@ function OrderSong(props: { screenShare: any }) {
   };
 
   useAnimation(draw, 0);
-
   useEffect(() => {
     const audioCtx = new AudioContext();
     fetch('sounds/사건의지평선_mr.mp3')
@@ -156,6 +158,9 @@ function OrderSong(props: { screenShare: any }) {
         sourceRef.current = source;
         setIsReady(true);
         screenShare(audioCtx, mp3AudioDestination);
+        source.onended = () => {
+          dispatch(setSsari(7));
+        };
       });
   }, []);
 

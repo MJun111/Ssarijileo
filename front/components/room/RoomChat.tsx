@@ -4,17 +4,36 @@ import classNames from 'classnames';
 
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 import styles from '@/styles/room/RoomChat.module.scss';
 
 function RoomChat({ setModalOpen, sendChat, chatList }: any) {
-  // 내 닉네임
-  const myName = '이수민';
+  // 닉네임, 프로필
+  const [myUserName, setMyUserName] = useState('');
+  const storeUser = useSelector((state: RootState) => state.user);
+  useEffect(() => {
+    setMyUserName(storeUser.nickname);
+  }, [storeUser]);
+
+  const [myImg, setMyImg] = useState('');
+  const storeImg = useSelector((state: RootState) => state.user);
+  useEffect(() => {
+    setMyImg(storeImg.img);
+  }, [storeImg]);
 
   // 현재 입력하는 채팅정보
+  const [chatInfo, setChatInfo] = useState<any>();
   const [sendMessage, setChat] = useState('');
   const changeChat = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const eventTarget = e.target as HTMLTextAreaElement;
+    const mychatInfo = {
+      name: myUserName,
+      img: myImg,
+      message: eventTarget.value,
+    };
+    setChatInfo(JSON.stringify(mychatInfo));
     setChat(eventTarget.value);
   };
 
@@ -28,9 +47,9 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
   // 보낼 채팅 메세지 전달
   const upChat = () => {
     if (sendMessage.trim() === '') return;
-    sendChat(sendMessage);
+    sendChat(chatInfo);
     setChat('');
-    console.log('upChat', sendMessage);
+    console.log('upChat', chatInfo);
   };
 
   const keyUpChat = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -47,8 +66,8 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
     //   내가 보낸 것과 다른 사람이 보낸 거 class로 차이 나타내기
     const chatClass = classNames({
       [styles.chat]: true,
-      [styles.myChat]: myName === item.name,
-      [styles.otherChat]: myName !== item.name,
+      [styles.myChat]: myUserName === item.name,
+      [styles.otherChat]: myUserName !== item.name,
     });
 
     return (
@@ -56,7 +75,7 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
         <div className={styles.profileInfo}>
           <div className={styles.profile}>
             <Image
-              src="icon/header/dark/dark_profile_icon.svg"
+              src={item.img}
               width={20}
               height={20}
               alt="profile"
