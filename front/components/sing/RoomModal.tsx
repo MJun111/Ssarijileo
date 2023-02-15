@@ -38,29 +38,29 @@ function RoomModal({ setModalOpen }: any) {
   // 라디오 값 관리
   const [mode, setMode] = useState('');
 
-  const arrA = ['nomal', 'perfect', 'relay', 'guess'];
+  const arrA = ['N', 'P', 'R', 'O'];
   const arrB = ['일반노래방', '퍼펙트싱어', '이어부르기', '가사 맞추기'];
   const Mode = arrA.map((str: string, idx) => {
     let btnClass = '';
     if (idx === 0) {
       btnClass = classNames({
-        [styles.nomal]: str === 'nomal',
-        [styles.nowNomal]: mode === 'nomal',
+        [styles.nomal]: str === 'N',
+        [styles.nowNomal]: mode === 'N',
       });
     } else if (idx === 1) {
       btnClass = classNames({
-        [styles.perfect]: str === 'perfect',
-        [styles.nowPerfect]: mode === 'perfect',
+        [styles.perfect]: str === 'P',
+        [styles.nowPerfect]: mode === 'P',
       });
     } else if (idx === 2) {
       btnClass = classNames({
-        [styles.relay]: str === 'relay',
-        [styles.nowRelay]: mode === 'relay',
+        [styles.relay]: str === 'R',
+        [styles.nowRelay]: mode === 'R',
       });
     } else {
       btnClass = classNames({
-        [styles.guess]: str === 'guess',
-        [styles.nowGuess]: mode === 'guess',
+        [styles.guess]: str === 'O',
+        [styles.nowGuess]: mode === 'O',
       });
     }
 
@@ -98,7 +98,7 @@ function RoomModal({ setModalOpen }: any) {
         {
           sessionId: undefined,
           title,
-          mode: 'N',
+          mode,
           userMaxCount: 6,
           isPublic: 'Y',
           password: null,

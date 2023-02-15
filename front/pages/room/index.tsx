@@ -313,7 +313,7 @@ function Index() {
   }, [sessionVal]);
 
   // 임의로 mode 선언
-  const mode = 'N';
+  // const mode = 'N';
 
   // 로딩중 return
   if (loading)
@@ -336,7 +336,7 @@ function Index() {
           <SingerScreen streamManager={singer.length ? singer[0] : undefined} />
           <div className={styles.singScreen}>
             <MainScreen
-              singMode={mode}
+              singMode={roomInfo.mode}
               screenOV={screenOV}
               session={session}
               screenSession={screenSession}
