@@ -10,17 +10,36 @@ import SoundBar from '@/components/common/SoundBar';
 import ChartList from '@/components/chart/ChartList';
 
 import styles from '@/styles/chart/Chart.module.scss';
+import { useCookie } from '@/hooks/useCookie';
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async context => {
+  const cookieString = context.req.headers.cookie || '';
+  const cookies = useCookie(cookieString);
+  const token = cookies.Authorization;
   try {
     const dailyRes = await axios.get(
       'http://i8b302.p.ssafy.io:8000/api/v1/ranking/daily',
+      {
+        headers: {
+          Authorization: token,
+        },
+      },
     );
     const weeklyRes = await axios.get(
       'http://i8b302.p.ssafy.io:8000/api/v1/ranking/weekly',
+      {
+        headers: {
+          Authorization: token,
+        },
+      },
     );
     const monthlyRes = await axios.get(
       'http://i8b302.p.ssafy.io:8000/api/v1/ranking/monthly',
+      {
+        headers: {
+          Authorization: token,
+        },
+      },
     );
 
     return {
