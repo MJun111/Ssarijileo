@@ -7,15 +7,19 @@ import { setSsari } from '@/redux/store/ssariSlice';
 
 import styles from '@/styles/room/OrderSong.module.scss';
 
-function OrderSong(props: { screenShare: any }) {
+function OrderSong(props: {
+  screenShare: (
+    audioContext: AudioContext,
+    mp3AudioDestination: MediaStreamAudioDestinationNode,
+  ) => void;
+}) {
   const { screenShare } = props;
   const dispatch = useDispatch();
   const sourceRef = useRef<AudioBufferSourceNode>();
   const timeRef = useRef<number>(0);
-  const [isReady, setIsReady] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
 
-  const DUMMY_DATA = [
+  const lyrics = [
     {
       lyricsId: 20,
       verse: '생각이 많은 건 말이야',
@@ -78,27 +82,22 @@ function OrderSong(props: { screenShare: any }) {
     },
   ];
 
-  const start = () => {
-    setIsStarted(true);
-    sourceRef.current?.start();
-    timeRef.current = Date.now();
-  };
   const pontSize = 20;
   const maxLen = 15;
-  const lyricLen = DUMMY_DATA.length - 1;
-  const boxSize = 310 / (Math.floor(lyricLen / 3) + (lyricLen % 3 ? 1 : 0));
-  const randomCanvas = [];
+  const randomCanvas: {
+    y: number;
+    x: number;
+  }[] = [];
 
   let flag = false;
-  for (let y = pontSize + 10; y < 350; y += boxSize) {
-    let x = flag ? 210 : 10;
+  for (let y = pontSize + 30; y < 320; y += 40) {
+    let x = flag ? 210 : 50;
     flag = !flag;
-    for (; x + pontSize * maxLen < 950; x += pontSize * maxLen + 15) {
+    for (; x + pontSize * maxLen < 930; x += pontSize * maxLen + 70) {
       randomCanvas.push({ y, x });
     }
   }
-
-  const trimData = DUMMY_DATA.slice(0, randomCanvas.length);
+  const currentIdx = Math.min(randomCanvas.length, lyrics.length);
   const isUsed = Array(randomCanvas.length).fill(false);
   const dataArray: {
     lyricsId: number;
@@ -106,16 +105,17 @@ function OrderSong(props: { screenShare: any }) {
     startTime: number;
     x: number;
     y: number;
+    idx: number;
   }[] = [];
 
-  for (let i = 0; i < trimData.length; i++) {
+  for (let i = 0; i < currentIdx; i++) {
     const randomIdx = Math.floor(Math.random() * randomCanvas.length);
     if (isUsed[randomIdx]) {
       i -= 1;
       continue;
     }
     isUsed[randomIdx] = true;
-    const data = { ...trimData[i], x: 0, y: 0 };
+    const data = { ...lyrics[i], x: 0, y: 0, idx: randomIdx };
     data.x = randomCanvas[randomIdx].x + 10 - Math.random() * 20;
     data.y = randomCanvas[randomIdx].y + 10 - Math.random() * 20;
     dataArray.push(data);
@@ -134,7 +134,16 @@ function OrderSong(props: { screenShare: any }) {
     const currentTime = Date.now();
     const time = (currentTime - timeRef.current) / 1000;
     if (dataArray.length > 1) {
-      if (dataArray[1].startTime < time) dataArray.shift();
+      if (dataArray[1].startTime < time) {
+        if (currentIdx < lyrics.length) {
+          const randomIdx = dataArray[0].idx;
+          const data = { ...lyrics[currentIdx], x: 0, y: 0, idx: randomIdx };
+          data.x = randomCanvas[randomIdx].x + 10 - Math.random() * 20;
+          data.y = randomCanvas[randomIdx].y + 10 - Math.random() * 20;
+          dataArray.push(data);
+        }
+        dataArray.shift();
+      }
     } else if (dataArray[0].startTime < time) {
       return;
     }
@@ -144,6 +153,7 @@ function OrderSong(props: { screenShare: any }) {
   };
 
   useAnimation(draw, 0);
+
   useEffect(() => {
     const audioCtx = new AudioContext();
     fetch('sounds/사건의지평선_mr.mp3')
@@ -155,8 +165,10 @@ function OrderSong(props: { screenShare: any }) {
         const mp3AudioDestination = audioCtx.createMediaStreamDestination();
         source.connect(mp3AudioDestination);
         source.connect(audioCtx.destination);
+        timeRef.current = Date.now();
         sourceRef.current = source;
-        setIsReady(true);
+        sourceRef.current.start();
+        setIsStarted(true);
         screenShare(audioCtx, mp3AudioDestination);
         source.onended = () => {
           dispatch(setSsari(7));
@@ -164,25 +176,13 @@ function OrderSong(props: { screenShare: any }) {
       });
   }, []);
 
-  useEffect(() => {
-    if (isReady) {
-      console.log('orderSong 시작');
-      start();
-    }
-  }, [isReady]);
-
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        width={canvasWidth}
-        height={canvasHeight}
-        className={styles.canvas}
-      />
-      <button onClick={start} disabled={!isReady || isStarted} type="button">
-        Start
-      </button>
-    </>
+    <canvas
+      ref={canvasRef}
+      width={canvasWidth}
+      height={canvasHeight}
+      className={styles.canvas}
+    />
   );
 }
 
