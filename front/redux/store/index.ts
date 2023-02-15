@@ -12,6 +12,7 @@ import storage from 'redux-persist/lib/storage';
 import reservSlice from './reservSlice';
 import userSlice from './userSlice';
 import ssariSlice from './ssariSlice';
+import sessionIdSlice from './sessionIdSlice';
 
 const rootReducer = combineReducers({
   theme: themeSlice.reducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   reserv: reservSlice.reducer,
   user: userSlice.reducer,
   ssari: ssariSlice.reducer,
+  sessionId: sessionIdSlice.reducer,
 });
 
 const persistConfig = {
@@ -38,6 +40,7 @@ const persistConfig = {
     'reserv',
     'user',
     'ssari',
+    'sessionId',
   ],
 };
 

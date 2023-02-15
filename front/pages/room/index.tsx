@@ -9,14 +9,21 @@ import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
-
-// import PerfectScore from '@/components/room/PerfectScore';
 import Loading from '@/components/room/Loading';
+// import PerfectScore from '@/components/room/PerfectScore';
 // import RoomController from '@/components/room/RoomController';
 
 import styles from '@/styles/Room.module.scss';
 import { setReserv } from '@/redux/store/reservSlice';
 import { getCookie } from '@/util/cookie';
+
+// interface Reserv {
+//   nickname: string;
+//   songId: number;
+//   isPriority: string;
+//   title: string;
+//   singer: string;
+// }
 
 function Index() {
   const dispatch = useDispatch();
