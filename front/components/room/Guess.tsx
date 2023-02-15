@@ -58,6 +58,7 @@ function Guess(props: { session: any; nextSong: any }) {
                 });
             }}
           />
+          <canvas id="screen-creen">.</canvas>
         </div>
       </div>
     </div>

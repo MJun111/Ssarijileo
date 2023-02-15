@@ -5,8 +5,8 @@ import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
-import { getCookie } from '@/util/cookie';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { getCookie } from '@/util/cookie';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
@@ -37,11 +37,9 @@ function Index() {
   }, [storeSessionId]);
 
   // OV
-  const [OV, setOV] = useState<any>(undefined);
   const [screenOV, setScreenOV] = useState<any>(undefined);
   const [session, setSession] = useState<any>(undefined);
   const [screenSession, setScreenSession] = useState<any>(undefined);
-  console.log(OV);
 
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
@@ -68,14 +66,14 @@ function Index() {
       data = roomInfo;
     } else {
       const roomDetail = await axios({
-        method: 'POST',
-        url: `api/v1/room/connection/${sessionVal}`,
+        method: 'GET',
+        url: `api/v1/room/${sessionVal}`,
         headers: {
           Authorization: `${getCookie('Authorization')}`,
           refreshToken: `${getCookie('refreshToken')}`,
         },
       });
-      setRoomInfo(roomDetail);
+      setRoomInfo(roomDetail.data);
       host = '';
       data = null;
     }
@@ -167,7 +165,6 @@ function Index() {
       },
     }).then(() => {
       leaveScreen();
-      setOV(null);
       setScreenOV(null);
       setSession(undefined);
       setScreenSession(undefined);
@@ -192,7 +189,6 @@ function Index() {
     }
 
     leaveScreen();
-    setOV(null);
     setScreenOV(null);
     setSession(undefined);
     setScreenSession(undefined);
@@ -227,7 +223,6 @@ function Index() {
   const joinSession = () => {
     const newOV = new OpenVidu();
     const mySession = newOV.initSession();
-    setOV(newOV);
     setSession(mySession);
 
     const newScreenOV = new OpenVidu();
@@ -293,6 +288,7 @@ function Index() {
   const getRoomInfo = (e: any) => {
     if (isHost === false) {
       setIsHost(true);
+      console.log('방정보 받은거', e.data);
       const myRoomInfo = e.data;
       axios
         .post(
@@ -308,7 +304,6 @@ function Index() {
         .then(res => {
           myRoomInfo.sessionId = res.data;
           setRoomInfo(myRoomInfo);
-          console.log('백에서 받은 세션 아이디', res.data);
           dispatch(setSessionId(res.data));
         });
     }
@@ -316,9 +311,10 @@ function Index() {
 
   // 페이지 입장 후 로딩시작,
   useEffect(() => {
-    console.log('use 이펙트');
-    window.addEventListener('message', getRoomInfo);
-    window.opener.postMessage('open!!', '*');
+    window.addEventListener('message', getRoomInfo, true);
+    setTimeout(() => {
+      window.opener.postMessage('open!!', '*');
+    }, 1000);
   }, []);
 
   // 세션 아이디 얻으면 연결 시작
@@ -330,7 +326,9 @@ function Index() {
   }, [sessionVal]);
 
   // 임의로 mode 선언
-  // const mode = 'N';
+  useEffect(() => {
+    console.log('방 정보', roomInfo);
+  }, [roomInfo]);
 
   // 로딩중 return
   if (loading)

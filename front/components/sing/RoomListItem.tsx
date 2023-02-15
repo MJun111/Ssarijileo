@@ -91,6 +91,7 @@ function RoomListItem({ info }: RoomProps) {
     // });
     // console.log(response);
 
+    dispatch(setSessionId(sessionId));
     // lock일 경우 비밀번호 창 띄우기
     if (isPublic === 'N') {
       setModalMode(true);

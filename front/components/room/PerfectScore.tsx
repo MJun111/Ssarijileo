@@ -1,76 +1,23 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { PitchDetector } from 'pitchy';
 import { useDispatch } from 'react-redux';
+import { setSsari } from '@/redux/store/ssariSlice';
+
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 
-import song from '@/fixtures/사건의_지평선.json';
 import * as data from '@/constants/PerfectScoreData';
+import { NextSong } from '@/components/room/MainScreen';
 import styles from '@/styles/room/PerfectScore.module.scss';
-import { setSsari } from '@/redux/store/ssariSlice';
 
-function PerfectScore(props: { screenShare: any }) {
-  // const { nextSong } = props;
-  const { screenShare } = props;
-  const nextSong = {
-    lyricsList: [
-      {
-        lyricsId: 20,
-        verse: '생각이 많은 건 말이야',
-        time: 24,
-      },
-      {
-        lyricsId: 21,
-        verse: '당연히 해야 할 일이야',
-        time: 27,
-      },
-      {
-        lyricsId: 22,
-        verse: '나에겐 우리가 지금 일순위야',
-        time: 29,
-      },
-      {
-        lyricsId: 23,
-        verse: '안전한 유리병을 핑계로',
-        time: 33,
-      },
-      {
-        lyricsId: 24,
-        verse: '바람을 가둬 둔 것 같지만',
-        time: 39,
-      },
-      {
-        lyricsId: 25,
-        verse: '기억나? 그날의 우리가',
-        time: 44,
-      },
-      {
-        lyricsId: 26,
-        verse: '잡았던 그 손엔 말이야',
-        time: 46,
-      },
-      {
-        lyricsId: 27,
-        verse: '설레임보다 커다란 믿음이 담겨서',
-        time: 49,
-      },
-      {
-        lyricsId: 28,
-        verse: '난 함박웃음을 지었지만',
-        time: 53,
-      },
-      {
-        lyricsId: 29,
-        verse: '울음이 날 것도 같았어',
-        time: 56,
-      },
-      {
-        lyricsId: 30,
-        verse: '소중한 건 언제나 두려움이니까',
-        time: 58,
-      },
-    ],
-  };
+function PerfectScore(props: {
+  screenShare: (
+    audioContext: AudioContext,
+    mp3AudioDestination: MediaStreamAudioDestinationNode,
+  ) => void;
+  nextSong: NextSong;
+}) {
+  const { screenShare, nextSong } = props;
   const dispatch = useDispatch();
   const dataArrayRef = useRef<Float32Array>(new Float32Array(data.BUFFER_SIZE));
   const pitchDetectorRef = useRef<PitchDetector<Float32Array>>(
@@ -224,11 +171,15 @@ function PerfectScore(props: { screenShare: any }) {
     note: number;
     cnt: number;
   }[] = [];
-  for (let i = 0; i < song.length; i++) {
-    if (song[i].cnt > 2) {
-      songData.push(song[i]);
-    }
-  }
+  const song = nextSong.note;
+  console.log('song', song);
+  // for (let i = 0; i < song.length; i++) {
+  //   console.log('song[i]', song[i]);
+  //   if (song[i].cnt > 2) {
+  //     songData.push(song[i]);
+  //   }
+  // }
+  // console.log('songData', songData);
 
   const voiceNoteWindow = voiceNoteWindowRef.current;
   const songNoteWindow = songNoteWindowRef.current;
@@ -459,12 +410,6 @@ function PerfectScore(props: { screenShare: any }) {
         setIsPossibleStop(true);
       });
   }, []);
-
-  // useEffect(() => {
-  //   if (screen !== undefined && !!videoRef) {
-  //     screen.addVideoElement(videoRef.current);
-  //   }
-  // }, [screen]);
 
   return (
     <>

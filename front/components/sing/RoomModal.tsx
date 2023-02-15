@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 
@@ -12,7 +12,7 @@ function RoomModal({ setModalOpen }: any) {
 
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
-  const [title, setTitle] = useState('');
+  const [newtitle, setTitle] = useState('방');
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 20) {
       setTitleWarning(true);
@@ -36,7 +36,7 @@ function RoomModal({ setModalOpen }: any) {
   });
 
   // 라디오 값 관리
-  const [mode, setMode] = useState('');
+  const [newMode, setnewMode] = useState('O');
 
   const arrA = ['N', 'P', 'R', 'O'];
   const arrB = ['일반노래방', '퍼펙트싱어', '이어부르기', '가사 맞추기'];
@@ -45,22 +45,22 @@ function RoomModal({ setModalOpen }: any) {
     if (idx === 0) {
       btnClass = classNames({
         [styles.nomal]: str === 'N',
-        [styles.nowNomal]: mode === 'N',
+        [styles.nowNomal]: newMode === 'N',
       });
     } else if (idx === 1) {
       btnClass = classNames({
         [styles.perfect]: str === 'P',
-        [styles.nowPerfect]: mode === 'P',
+        [styles.nowPerfect]: newMode === 'P',
       });
     } else if (idx === 2) {
       btnClass = classNames({
         [styles.relay]: str === 'R',
-        [styles.nowRelay]: mode === 'R',
+        [styles.nowRelay]: newMode === 'R',
       });
     } else {
       btnClass = classNames({
         [styles.guess]: str === 'O',
-        [styles.nowGuess]: mode === 'O',
+        [styles.nowGuess]: newMode === 'O',
       });
     }
 
@@ -70,7 +70,7 @@ function RoomModal({ setModalOpen }: any) {
         className={btnClass}
         type="button"
         onClick={() => {
-          setMode(str);
+          setnewMode(str);
         }}
       >
         {arrB[idx]}
@@ -78,11 +78,9 @@ function RoomModal({ setModalOpen }: any) {
     );
   });
 
-  const [roomW, setRoomW] = useState<any>();
-
+  // 팝업창에 정보 전달
   const createRoom = () => {
     const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
-    setRoomW(roomWindow);
     if (!roomWindow) return;
     roomWindow.resizeTo(1920, 1080);
     roomWindow.onresize = () => {
@@ -91,25 +89,24 @@ function RoomModal({ setModalOpen }: any) {
   };
 
   const makeRoom = (e: any) => {
-    console.log('모달에서 메세지 수신', e);
-    if (e.data === 'open!!') {
-      console.log('모달에서 이벤트', e.data, roomW);
-      roomW?.postMessage(
-        {
-          sessionId: undefined,
-          title,
-          mode,
-          userMaxCount: 6,
-          isPublic: 'Y',
-          password: null,
-        },
-        '*',
-      );
-      closeModal();
-    }
+    e.source.postMessage(
+      {
+        sessionId: undefined,
+        title: newtitle,
+        mode: newMode,
+        userMaxCount: 6,
+        isPublic: 'Y',
+        password: null,
+      },
+      '*',
+    );
+    window.removeEventListener('message', makeRoom);
+    closeModal();
   };
 
-  window.addEventListener('message', makeRoom);
+  useEffect(() => {
+    window.addEventListener('message', makeRoom, true);
+  }, []);
 
   return (
     <div className={styles.back}>
@@ -131,7 +128,7 @@ function RoomModal({ setModalOpen }: any) {
             type="text"
             placeholder="방 제목을 입력하세요..."
             className={titleClass}
-            value={title}
+            value={newtitle}
             onChange={changeTitle}
           />
           <div className={styles.mode}>{Mode}</div>
