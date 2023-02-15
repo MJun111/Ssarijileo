@@ -1,47 +1,86 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import styles from '@/styles/profile/FriendModal.module.scss';
+import { RootState } from '@/redux/store';
+import { getCookie } from '@/util/cookie';
 
 type RoomProps = {
   setModalOpen: any;
-  friend: any[];
 };
 
-function FriendModal({ setModalOpen, friend }: RoomProps) {
-  const [friendList, setState] = useState(friend);
+interface friendInfo {
+  nickname: string;
+  image: string;
+}
+
+function FriendModal({ setModalOpen }: RoomProps) {
+  const [friendList, setFriendList] = useState<friendInfo[]>([]);
+  const storeUser = useSelector((state: RootState) => state.user);
+  let friend = [] as friendInfo[];
+  useEffect(() => {
+    axios
+      .get(`api/v1/friend/${storeUser.nickname}`, {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      })
+      .then(res => {
+        friend = [...res.data];
+        setFriendList(friend);
+      });
+  }, []);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
-    const arr: any[] = [];
+    const arr: friendInfo[] = [];
     friend.forEach((item, idx) => {
-      if (item.name.includes(eventTarget.value)) {
+      if (item.nickname.includes(eventTarget.value)) {
         arr.push(friend[idx]);
       }
     });
-
-    setState(arr);
+    setFriendList(arr);
   };
 
   const listItems = friendList.map(item => {
     return (
       <div className={styles.item}>
-        <div className={styles.profile}>
-          <Image
-            src={item.profile}
-            width={20}
-            height={20}
-            alt="profile"
-            className={styles.profileIcon}
-          />
-        </div>
-        <div className={styles.name}>{item.name}</div>
+        <Image
+          src={item.image}
+          width={40}
+          height={40}
+          alt="profile"
+          className={styles.profileIcon}
+        />
+        <div className={styles.name}>{item.nickname}</div>
         <Image
           src="img/profile/profile_add_friend_image.svg"
           width={20}
           height={20}
           alt="add-friend"
           className={styles.invite}
+          onClick={() => {
+            axios
+              .post(
+                'api/v1/friend',
+                {
+                  fromUserNickname: storeUser.nickname,
+                  toUserNickname: item.nickname,
+                },
+                {
+                  headers: {
+                    Authorization: `${getCookie('Authorization')}`,
+                    refreshToken: `${getCookie('refreshToken')}`,
+                  },
+                },
+              )
+              .then(res => {
+                console.log(res.data);
+              });
+          }}
         />
       </div>
     );

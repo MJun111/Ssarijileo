@@ -1,72 +1,80 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { RootState } from '@/redux/store';
 
 import FriendModal from './FriendModal';
-
 import styles from '@/styles/profile/FriendForm.module.scss';
+import { getCookie } from '@/util/cookie';
+
+export interface FriendInfo {
+  friendId: number;
+  image: string;
+  nickname: string;
+  state: string;
+}
 
 function FriendForm() {
   const [modalOpen, setModalOpen] = useState(false);
-  const friend = [
-    {
-      profile: 'icon/header/dark/dark_profile_icon.svg',
-      name: '김태학',
-      // play: '22회',
-    },
-    {
-      profile: 'icon/header/dark/dark_profile_icon.svg',
-      name: '길상욱',
-      // play: '22회',
-    },
-    {
-      profile: 'icon/header/dark/dark_profile_icon.svg',
-      name: '김명준',
-      // play: '22회',
-    },
-    {
-      profile: 'icon/header/dark/dark_profile_icon.svg',
-      name: '김소윤',
-      // play: '22회',
-    },
-    {
-      profile: 'icon/header/dark/dark_profile_icon.svg',
-      name: '서예지',
-      // play: '22회',
-    },
-    {
-      profile: 'icon/header/dark/dark_profile_icon.svg',
-      name: '이수민',
-      // play: '22회',
-    },
-  ];
+  // 요청 상태
+  const [friendW, setFriendWList] = useState<FriendInfo[]>([]);
+  // 친구 상태
+  const [friendA, setFriendAList] = useState<FriendInfo[]>([]);
+  // 모든 user
+  const [friend, setFriendList] = useState<FriendInfo[]>([]);
+  const storeUser = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    axios
+      .get(`api/v1/friend/my/${storeUser.nickname}`, {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      })
+      .then(res => {
+        const friendList = [...res.data];
+        const w: FriendInfo[] = friendList.filter(item => {
+          return item.status === 'W';
+        });
+        const a: FriendInfo[] = friendList.filter(item => {
+          return item.status === 'A';
+        });
+        setFriendWList(w);
+        setFriendAList(a);
+        setFriendList(friendList);
+        console.log('친구목록 요청 : ', friendW);
+        console.log('친구목록 요청 : ', friendA);
+      });
+  }, [storeUser]);
+
   const [friendList, setState] = useState(friend);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
     const arr: any[] = [];
-    friend.forEach((item, idx) => {
-      if (item.name.includes(eventTarget.value)) {
+    friendList.forEach((item, idx) => {
+      if (item.nickname.includes(eventTarget.value)) {
         arr.push(friend[idx]);
       }
     });
 
     setState(arr);
   };
-  const listItems = friendList.map(item => {
+  const listItems = friendA?.map(item => {
     return (
-      <div className={styles.item} key={item.name}>
+      <div className={styles.item} key={item.nickname}>
         <div className={styles.profile}>
-          <div className={styles.content}>
-            <Image
-              className={styles.img}
-              src={item.profile}
-              width={30}
-              height={30}
-              alt="profile"
-            />
-          </div>
+          <Image
+            className={styles.img}
+            src={item.image}
+            width={30}
+            height={30}
+            alt="profile"
+          />
         </div>
-        <div className={styles.name}>{item.name}</div>
+        <div className={styles.name}>{item.nickname}</div>
         <button type="button" className={styles.okBtn}>
           친구삭제
         </button>
@@ -75,7 +83,7 @@ function FriendForm() {
   });
   return (
     <div className={styles.contentForm}>
-      {modalOpen && <FriendModal setModalOpen={setModalOpen} friend={friend} />}
+      {modalOpen && <FriendModal setModalOpen={setModalOpen} />}
       <div className={styles.top}>
         <button
           type="button"
@@ -120,44 +128,30 @@ function FriendForm() {
         <div className={styles.table}>
           <div className={styles.fix}>
             {/* 상단 고정 (친구요청) */}
-            <div className={styles.item}>
-              <div className={styles.profile}>
-                <div className={styles.content}>
-                  <Image
-                    className={styles.img}
-                    src="icon/header/dark/dark_profile_icon.svg"
-                    width={30}
-                    height={30}
-                    alt="profile"
-                  />
-                </div>
-              </div>
-              <div className={styles.name}>누구세요</div>
-              <div className={styles.play}>
-                <button type="button" className={styles.okBtn}>
-                  친구수락
-                </button>
-              </div>
-            </div>
-            <div className={styles.item}>
-              <div className={styles.profile}>
-                <div className={styles.content}>
-                  <Image
-                    src="icon/header/dark/dark_profile_icon.svg"
-                    width={30}
-                    height={30}
-                    alt="profile"
-                    className={styles.img}
-                  />
-                </div>
-              </div>
-              <div className={styles.name}>누구세요</div>
-              <div className={styles.play}>
-                <button type="button" className={styles.okBtn}>
-                  친구수락
-                </button>
-              </div>
-            </div>
+            {friendW.length &&
+              friendW.map(item => {
+                return (
+                  <div className={styles.item}>
+                    <div className={styles.profile}>
+                      {/* <div className={styles.content}> */}
+                      <Image
+                        className={styles.img}
+                        src={item.image}
+                        width={45}
+                        height={45}
+                        alt="profile"
+                      />
+                      {/* </div> */}
+                    </div>
+                    <div className={styles.name}>{item.nickname}</div>
+                    <div className={styles.play}>
+                      <button type="button" className={styles.okBtn}>
+                        친구수락
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
           </div>
           <div className={styles.friendList}>{listItems}</div>
         </div>

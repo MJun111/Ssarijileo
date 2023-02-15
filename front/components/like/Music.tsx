@@ -1,25 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
+import axios from 'axios';
 import styles from '@/styles/like/Music.module.scss';
 import ChartListItem from '@/components/chart/ChartListItem';
 import Pagination from '@/components/common/Pagination';
-import { SongInfo } from '@/pages/like';
+import { RootState } from '@/redux/store';
+import { getCookie } from '@/util/cookie';
 
-function Music(props: { likeList: SongInfo[] }) {
-  const { likeList } = props;
+export interface SongInfo {
+  songId: number;
+  title: string;
+  singer: string;
+  album: string;
+  image: string;
+  releaseDate: string;
+  ranking: number;
+  favoriteSong: boolean;
+}
+
+function Music() {
+  const [likeList, setLikeList] = useState<SongInfo[]>([]);
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
   const [themeMode, setThemeMode] = useState('light');
 
-  const storeTheme = useSelector<any>(state => state.theme);
+  const storeTheme = useSelector((state: RootState) => state.theme);
   useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
+    setThemeMode(storeTheme.theme);
   }, [themeMode, storeTheme]);
 
   useEffect(() => {
-    likeList.map((item, idx) => {
-      return Object.assign(item, { ranking: idx + 1 });
-    });
+    axios
+      .get('api/v1/song/my', {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        res.data.map((item: SongInfo, idx: number) => {
+          return Object.assign(item, {
+            ranking: idx + 1,
+            favoriteSong: true,
+          });
+        });
+        setLikeList(res.data);
+        console.log('!!!!!!!', likeList);
+      });
   }, []);
 
   //  페이지
@@ -30,7 +58,7 @@ function Music(props: { likeList: SongInfo[] }) {
   // 게시할 부분만 잘라서 전달
   const offset = (page - 1) * limit;
 
-  const [musicList, setState] = useState(likeList);
+  const [musicList, setState] = useState<SongInfo[]>(likeList);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     const eventTarget = e.target as HTMLInputElement;
@@ -46,6 +74,7 @@ function Music(props: { likeList: SongInfo[] }) {
 
     setState(arr);
   };
+  console.log('ddd', musicList);
   const postData = musicList.slice(offset, offset + limit);
 
   return (

@@ -15,7 +15,7 @@ function ChartListItem(props: { item: ChartItem }) {
 
   // 다크모드 상태관리
   const [themeMode, setThemeMode] = useState('light');
-  const [likeMode, setLikeMode] = useState(false);
+  const [likeMode, setLikeMode] = useState(item.favoriteSong);
   const [modalMode, setModalMode] = useState(false);
 
   const storeTheme = useSelector((state: RootState) => state.theme);
