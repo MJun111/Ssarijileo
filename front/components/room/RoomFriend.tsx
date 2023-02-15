@@ -15,6 +15,9 @@ import { getCookie } from '@/util/cookie';
 function RoomFriend({ setModalOpen }: any) {
   const [allFriendList, setAllFriendList] = useState<friendInfo[]>([]);
   const [friendList, setFriendList] = useState<friendInfo[]>([]);
+  const storeUser = useSelector((state: RootState) => state.user);
+  const storeSessionId = useSelector((state: RootState) => state.sessionId);
+
   useEffect(() => {
     axios
       .get(`api/v1/friend/${storeUser.nickname}`, {
@@ -28,10 +31,6 @@ function RoomFriend({ setModalOpen }: any) {
         setFriendList(res.data);
       });
   }, []);
-
-  const storeUser = useSelector((state: RootState) => state.user);
-  const storeSessionId = useSelector((state: RootState) => state.sessionId);
-
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === '') {
       setFriendList(allFriendList);

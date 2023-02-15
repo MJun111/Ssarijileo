@@ -76,9 +76,7 @@ function RoomListItem({ info }: RoomProps) {
   const pwd = password;
   const openWindow = async () => {
     if (userCount === 6) {
-      window.alert(
-        '현재 이 방은 최대인원입니다.' + '\n' + '다른 방을 이용해주세요.',
-      );
+      window.alert('현재 이 방은 최대인원입니다. 다른 방을 이용해주세요.');
       return;
     }
     dispatch(setSessionId(sessionId));
