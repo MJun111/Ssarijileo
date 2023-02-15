@@ -9,9 +9,13 @@ import RoomList from '@/components/sing/RoomList';
 import SoundBar from '@/components/common/SoundBar';
 
 import styles from '@/styles/sing/Sing.module.scss';
+import { useDispatch } from 'react-redux';
+import { setSessionId } from '@/redux/store/sessionIdSlice';
 
 function Index() {
+  const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(setSessionId(''));
     const token = getCookie('Authorization');
     if (!token) {
       window.location.href = '/';

@@ -4,8 +4,8 @@ import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
 import { RoomInfo } from './RoomList';
-// import axios from 'axios';
-// import { getCookie } from '@/util/cookie';
+import axios from 'axios';
+import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomListItem.module.scss';
 
@@ -63,7 +63,7 @@ function RoomListItem({ info }: RoomProps) {
   // 임시 비밀번호
   const pwd = password;
   const openWindow = async () => {
-    dispatch(setSessionId(sessionId));
+    // dispatch(setSessionId(''));
     // console.log('클릭');
     // const response = await axios({
     //   method: 'DELETE',
@@ -75,6 +75,7 @@ function RoomListItem({ info }: RoomProps) {
     // });
     // console.log(response);
 
+    dispatch(setSessionId(sessionId));
     // lock일 경우 비밀번호 창 띄우기
     if (isPublic === 'N') {
       setModalMode(true);

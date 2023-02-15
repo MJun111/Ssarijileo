@@ -125,7 +125,7 @@ export function MainScreen(props: {
       if (reservList.length > 0) dispatch(setSsari(2));
     }
     if (nowState === 2) {
-      setCycle(1);
+      setCycle(2);
       axios({
         method: 'GET',
         url: `api/v1/song/detail/${reservList[0].songId}`,
@@ -172,11 +172,15 @@ export function MainScreen(props: {
 
   // 화면 공유
   const screenShare = (audioContext: any, mp3AudioDestination: any) => {
+    let videoYN = undefined;
+    if (singMode === 'O') {
+      videoYN = false;
+    }
     publisher[0].publishAudio(false);
     screenOV
       .getUserMedia({
         audioSource: undefined,
-        videoSource: undefined,
+        videoSource: videoYN,
         resolution: '910x174',
         frameRate: 30,
       })
