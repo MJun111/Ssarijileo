@@ -28,7 +28,7 @@ function Index() {
 
   // sessionId (Redux 값받아오기)
   const [sessionVal, setSessionVal] = useState<string>('');
-  const [roomInfo, setRoomInfo] = useState();
+  const [roomInfo, setRoomInfo] = useState<any>();
   const [isHost, setIsHost] = useState(false);
   const storeSessionId = useSelector((state: RootState) => state.sessionId);
 
@@ -67,6 +67,15 @@ function Index() {
       host = '/host';
       data = roomInfo;
     } else {
+      const roomDetail = await axios({
+        method: 'get',
+        url: `api/v1/room/connection/${sessionVal}`,
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      });
+      setRoomInfo(roomDetail);
       host = '';
       data = {
         password: null,

@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import styles from '@/styles/sing/RoomListItem.module.scss';
 import { setSessionId } from '@/redux/store/sessionIdSlice';
 import { RoomInfo } from './RoomList';
+// import axios from 'axios';
+// import { getCookie } from '@/util/cookie';
 
 type RoomProps = {
   info: RoomInfo;
@@ -57,11 +59,23 @@ function RoomListItem({ info }: RoomProps) {
   const changePwd = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
   // 임시 비밀번호
   const pwd = password;
-  const openWindow = () => {
+  const openWindow = async () => {
+    // console.log('클릭');
+    // const response = await axios({
+    //   method: 'DELETE',
+    //   url: `api/v1/room/${sessionId}`,
+    //   headers: {
+    //     Authorization: `${getCookie('Authorization')}`,
+    //     refreshToken: `${getCookie('refreshToken')}`,
+    //   },
+    // });
+    // console.log(response);
+
     // lock일 경우 비밀번호 창 띄우기
-    if (isPublic === 'Y') {
+    if (isPublic === 'N') {
       setModalMode(true);
     } else {
       const popupWindow = window.open('room/', 'windowName', 'resizeable');
@@ -154,7 +168,7 @@ function RoomListItem({ info }: RoomProps) {
             <div className={styles.bottom}>
               <div className={styles.lock}>
                 <div className={styles.type}>
-                  {isPublic === 'Y' ? '비공개방' : '공개방'}
+                  {isPublic === 'N' ? '비공개방' : '공개방'}
                 </div>
                 <Image
                   src="img/room/room_private_image.svg"
