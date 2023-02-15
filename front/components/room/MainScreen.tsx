@@ -171,6 +171,7 @@ export function MainScreen(props: {
     }
   });
 
+  let userMicStream: MediaStream | null = null;
   // 화면 공유
   const screenShare = (
     audioContext: AudioContext,
@@ -186,7 +187,8 @@ export function MainScreen(props: {
       })
       .then(async () => {
         // audioSource
-        const userMicStream = await navigator.mediaDevices.getUserMedia({
+        userMicStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
           audio: true,
         });
         const userContext = audioContext.createMediaStreamSource(userMicStream);
@@ -206,6 +208,65 @@ export function MainScreen(props: {
         setScreenPublisher(newScreenPublisher);
         screenSession.publish(newScreenPublisher);
       });
+  };
+
+  let videoRecorder: MediaRecorder | null = null;
+  let videoBlob: Blob | null = null;
+
+  const sendRecording = () => {
+    if (!videoRecorder || !videoBlob) return;
+    const formData = new FormData();
+    const fileName = new Date().toISOString();
+    const file = new File([videoBlob], fileName, {
+      type: 'video/mp4',
+    });
+    console.log(file);
+    formData.append('file', file);
+    axios
+      .post(
+        'api/v1/recording',
+        {
+          data: {
+            songId: reservList[0].songId,
+            formData,
+          },
+        },
+        {
+          headers: {
+            Authorization: getCookie('token'),
+          },
+        },
+      )
+      .then(res => {
+        console.log(res);
+      });
+  };
+
+  const recordStart = () => {
+    dispatch(setSsari(5));
+    if (!userMicStream) return;
+    const videoData: Blob[] = [];
+    videoRecorder = new MediaRecorder(userMicStream, {
+      mimeType: 'video/mp4; codecs="avc1.424028, mp4a.40.2"',
+    });
+    videoRecorder.ondataavailable = (event: any) => {
+      if (event.data.size > 0) {
+        videoData.push(event.data);
+      }
+    };
+    videoRecorder.onstop = () => {
+      videoBlob = new Blob(videoData, { type: 'video/webm' });
+      // 이벤트 실행 시에 서버로 파일 POST
+      sendRecording();
+    };
+    videoRecorder.start();
+  };
+
+  const recordStop = () => {
+    dispatch(setSsari(7));
+    if (!videoRecorder) return;
+    videoRecorder.stop();
+    videoRecorder = null;
   };
 
   // 다른사람 노래부르는 화면 송출 끝날때
@@ -232,12 +293,22 @@ export function MainScreen(props: {
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
-      {nowState === 0 && <CommonState title={title[0]} />}
-      {nowState === 1 && <CommonState title={title[1]} />}
-      {nowState === 2 && <CommonState title={title[2]} />}
+      {nowState === 0 && (
+        <CommonState title={title[0]} recordStart={recordStart} />
+      )}
+      {nowState === 1 && (
+        <CommonState title={title[1]} recordStart={recordStart} />
+      )}
+      {nowState === 2 && (
+        <CommonState title={title[2]} recordStart={recordStart} />
+      )}
       {/* 대기 상태 */}
-      {nowState === 3 && <CommonState title={title[0]} />}
-      {nowState === 4 && <CommonState title={title[3]} />}
+      {nowState === 3 && (
+        <CommonState title={title[0]} recordStart={recordStart} />
+      )}
+      {nowState === 4 && (
+        <CommonState title={title[3]} recordStart={recordStart} />
+      )}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
       {[5, 6].includes(nowState) && singMode === 'N' && nextSong && (
@@ -246,6 +317,7 @@ export function MainScreen(props: {
           screenShare={screenShare}
           screen={screen}
           propState={nowState}
+          recordStop={recordStop}
         />
       )}
       {nowState === 5 && singMode === 'P' && nextSong && (

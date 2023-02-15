@@ -9,9 +9,10 @@ import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 import { NextSong } from '@/components/room/MainScreen';
 
-import styles from '@/styles/room/Nomal.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 import { getCookie } from '@/util/cookie';
+
+import styles from '@/styles/room/Nomal.module.scss';
 
 function Nomal(props: {
   nextSong: NextSong;
@@ -21,8 +22,9 @@ function Nomal(props: {
   ) => void;
   screen: any;
   propState: any;
+  recordStop: () => void;
 }) {
-  const { nextSong, screenShare, screen, propState } = props;
+  const { nextSong, screenShare, screen, propState, recordStop } = props;
   const [nowtime, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const dispatch = useDispatch();
@@ -56,6 +58,7 @@ function Nomal(props: {
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
       dispatch(setSsari(7));
+      recordStop();
       // 예약목록 0번 인덱스 삭제...
       sourceRef.current?.stop(0);
       return;
@@ -276,6 +279,7 @@ function Nomal(props: {
                 console.log('노래 취소 요청 응답 : ', res.data);
               });
             sourceRef.current?.stop(0);
+            recordStop();
             // screenSession.forceunpublish(screen);
             console.log(sourceRef.current);
             dispatch(setSsari(7));

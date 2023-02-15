@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import styles from '@/styles/room/CommonState.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
+
+import styles from '@/styles/room/CommonState.module.scss';
 
 interface Reserv {
   nickname: string;
@@ -13,7 +14,8 @@ interface Reserv {
   singer: string;
 }
 
-function CommonState({ title }: any) {
+function CommonState(props: { title: string; recordStart: () => void }) {
+  const { title, recordStart } = props;
   const [time, setTime] = useState(0);
 
   // 저장되어있는 상태값 불러오기
@@ -72,9 +74,7 @@ function CommonState({ title }: any) {
                 type="button"
                 className={styles.back}
                 disabled={reservList[0].nickname !== userInfo}
-                onClick={() => {
-                  dispatch(setSsari(5));
-                }}
+                onClick={recordStart}
               >
                 <Image
                   src="img/room/room_video_image.svg"
