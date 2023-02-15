@@ -27,7 +27,7 @@ function TodayContest(props: { ranking: RankingItem[] }) {
 
   const findProfile = (nickname: string) => {
     const profile = profiles.find(item => item.nickname === nickname);
-    return profile ? profile.image : 'img/main/main_profile_image.svg';
+    return profile ? profile.image : 'img/profile/profile_add_friend_image.svg';
   };
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function TodayContest(props: { ranking: RankingItem[] }) {
             <td className={styles.profile}>
               <div className={styles.content}>
                 <Image
-                  src={findProfile(item.nickname)}
+                  src={findProfile(item.file)}
                   width={30}
                   height={30}
                   alt="profile"

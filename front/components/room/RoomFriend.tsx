@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 import * as hangul from 'hangul-js';
 
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
+import { RootState } from '@/redux/store';
 
 import styles from '@/styles/room/RoomFriend.module.scss';
 
@@ -37,6 +40,9 @@ function RoomFriend({ setModalOpen }: any) {
   const [allFriendList] = useState(friend);
   const [friendList, setFriendList] = useState(friend);
 
+  const storeUser = useSelector((state: RootState) => state.user);
+  const storeSessionId = useSelector((state: RootState) => state.sessionId);
+
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === '') {
       setFriendList(allFriendList);
@@ -65,7 +71,17 @@ function RoomFriend({ setModalOpen }: any) {
           />
         </div>
         <div className={styles.name}>{item.name}</div>
-        <button type="button" className={styles.invite}>
+        <button
+          type="button"
+          className={styles.invite}
+          onClick={() => {
+            axios.post('api/v1/friend/invite', {
+              fromUserNickname: storeUser.nickname,
+              toUserNickname: item.name,
+              sessionId: storeSessionId,
+            });
+          }}
+        >
           초대하기
         </button>
       </div>

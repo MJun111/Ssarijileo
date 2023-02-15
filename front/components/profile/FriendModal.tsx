@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-
 import axios from 'axios';
+import hangul from 'hangul-js';
 import { useSelector } from 'react-redux';
-import styles from '@/styles/profile/FriendModal.module.scss';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
+
+import styles from '@/styles/profile/FriendModal.module.scss';
 
 type RoomProps = {
   setModalOpen: any;
@@ -18,6 +19,9 @@ interface friendInfo {
 
 function FriendModal({ setModalOpen }: RoomProps) {
   const [friendList, setFriendList] = useState<friendInfo[]>([]);
+  const [filteredFriendList, setFilteredFriendList] = useState<friendInfo[]>(
+    [],
+  );
   const storeUser = useSelector((state: RootState) => state.user);
   let friend = [] as friendInfo[];
   useEffect(() => {
@@ -29,25 +33,37 @@ function FriendModal({ setModalOpen }: RoomProps) {
         },
       })
       .then(res => {
-        friend = [...res.data];
+        friend = res.data;
         setFriendList(friend);
+        setFilteredFriendList(friend);
       });
   }, []);
 
   const searchFriend = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const eventTarget = e.target as HTMLInputElement;
-    const arr: friendInfo[] = [];
-    friend.forEach((item, idx) => {
-      if (item.nickname.includes(eventTarget.value)) {
-        arr.push(friend[idx]);
-      }
+    if (e.target.value === '') {
+      setFilteredFriendList(friendList);
+      return;
+    }
+    const userInput = hangul.disassemble(e.target.value).join('');
+    const searchData = friendList.filter(item => {
+      const nickname = hangul.disassemble(item.nickname, true);
+      const nicknameInitial = nickname
+        .map((t: string[]) => {
+          return t[0];
+        })
+        .join('');
+      return (
+        hangul.search(item.nickname, userInput) !== -1 ||
+        nicknameInitial.startsWith(userInput) ||
+        item.nickname.toLowerCase().includes(e.target.value.toLowerCase())
+      );
     });
-    setFriendList(arr);
+    setFilteredFriendList(searchData);
   };
 
-  const listItems = friendList.map(item => {
+  const listItems = filteredFriendList.map(item => {
     return (
-      <div className={styles.item}>
+      <div className={styles.item} key={item.nickname}>
         <Image
           src={item.image}
           width={40}
@@ -79,6 +95,11 @@ function FriendModal({ setModalOpen }: RoomProps) {
               )
               .then(res => {
                 console.log(res.data);
+                axios.post('api/v1/friend/invite', {
+                  fromUserNickname: storeUser.nickname,
+                  toUserNickname: item.nickname,
+                  friendId: res.data.friendId,
+                });
               });
           }}
         />

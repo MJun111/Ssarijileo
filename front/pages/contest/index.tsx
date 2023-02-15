@@ -38,24 +38,19 @@ export const getServerSideProps: GetServerSideProps = async context => {
     return {
       props: {
         videoList,
-        res: { status: 200 },
       },
     };
   } catch (err) {
-    const res = JSON.parse(JSON.stringify(err));
     return {
       props: {
         videoList: null,
-        res,
       },
     };
   }
 };
 
-function Contest(props: { videoList: VideoInfo[]; res: any }) {
-  const { videoList, res } = props;
-  console.log(videoList);
-  console.log('status : ', res);
+function Contest(props: { videoList: VideoInfo[] }) {
+  const { videoList } = props;
   return (
     <>
       <ContestTop />

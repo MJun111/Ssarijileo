@@ -212,7 +212,7 @@ function PerfectScore() {
       } else {
         ctx.fillStyle = '#969696';
         ctx.fillText(lyricA, canvasWidth * 0.45, canvasHeight - 50);
-        ctx.fillStyle = '#1f5c7d';
+        ctx.fillStyle = '#00AADF';
         ctx.fillText(lyricB, canvasWidth * 0.55, canvasHeight - 20);
       }
     }
@@ -415,6 +415,7 @@ function PerfectScore() {
     drawMusicNote();
     drawMicNote();
     drawParticle(songNoteWindow, ctx);
+    drawlyrics(ctx, currentTime);
 
     ctx.beginPath();
     ctx.strokeStyle = '#fff';
@@ -429,8 +430,6 @@ function PerfectScore() {
     ctx.fillStyle = barColorList[barColor];
     ctx.textAlign = 'center';
     ctx.fillText(scoreText, canvasWidth * 0.4, 50);
-
-    drawlyrics(ctx, currentTime);
   };
 
   useAnimation(play, 0, [dataArrayRef, pitchDetectorRef, analyser, isStarted]);

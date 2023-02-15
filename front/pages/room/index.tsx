@@ -4,18 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
+import { setReserv } from '@/redux/store/reservSlice';
+import { getCookie } from '@/util/cookie';
+import { setSessionId } from '@/redux/store/sessionIdSlice';
 
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
 import Loading from '@/components/room/Loading';
+import SingerScreen from '@/components/room/SingerScreen';
 
 import styles from '@/styles/Room.module.scss';
-import { setReserv } from '@/redux/store/reservSlice';
-import { getCookie } from '@/util/cookie';
-import { setSessionId } from '@/redux/store/sessionIdSlice';
-import SingerScreen from '@/components/room/SingerScreen';
 
 function Index() {
   const dispatch = useDispatch();
