@@ -27,7 +27,7 @@ function Guess(props: { session: any; nextSong: any }) {
                 .signal({
                   data: 'ok', // Any string (optional)
                   to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-                  type: 'ok', // The type of message (optional)
+                  type: 'btn', // The type of message (optional)
                 })
                 .then(() => {
                   console.log(`ok button 정보 송신 성공`);
@@ -48,7 +48,7 @@ function Guess(props: { session: any; nextSong: any }) {
                 .signal({
                   data: 'no', // Any string (optional)
                   to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-                  type: 'no', // The type of message (optional)
+                  type: 'btn', // The type of message (optional)
                 })
                 .then(() => {
                   console.log(`no button 정보 송신 성공`);
@@ -58,7 +58,7 @@ function Guess(props: { session: any; nextSong: any }) {
                 });
             }}
           />
-          <canvas id="screen-creen">.</canvas>
+          {/* <canvas id="screen-creen" /> */}
         </div>
       </div>
     </div>

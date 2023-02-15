@@ -348,7 +348,10 @@ function Index() {
           {/* {singer.map(person => {
             return <MyScreen key={person.id} streamManager={person} />;
           })} */}
-          <SingerScreen streamManager={singer.length ? singer[0] : undefined} />
+          <SingerScreen
+            streamManager={singer.length ? singer[0] : undefined}
+            session={session}
+          />
           <div className={styles.singScreen}>
             <MainScreen
               singMode={roomInfo.mode}

@@ -35,7 +35,8 @@ function OrderSong(props: {
       randomCanvas.push({ y, x });
     }
   }
-  const currentIdx = Math.min(randomCanvas.length, nextSong.lyrics.length);
+  console.log(nextSong);
+  const currentIdx = Math.min(randomCanvas.length, nextSong.lyricsList.length);
   const isUsed = Array(randomCanvas.length).fill(false);
   const dataArray: {
     lyricsId: number;
@@ -53,7 +54,7 @@ function OrderSong(props: {
       continue;
     }
     isUsed[randomIdx] = true;
-    const data = { ...nextSong.lyrics[i], x: 0, y: 0, idx: randomIdx };
+    const data = { ...nextSong.lyricsList[i], x: 0, y: 0, idx: randomIdx };
     data.x = randomCanvas[randomIdx].x + 10 - Math.random() * 20;
     data.y = randomCanvas[randomIdx].y + 10 - Math.random() * 20;
     dataArray.push(data);
@@ -73,10 +74,10 @@ function OrderSong(props: {
     const time = (currentTime - timeRef.current) / 1000;
     if (dataArray.length > 1) {
       if (dataArray[1].time < time) {
-        if (currentIdx < nextSong.lyrics.length) {
+        if (currentIdx < nextSong.lyricsList.length) {
           const randomIdx = dataArray[0].idx;
           const data = {
-            ...nextSong.lyrics[currentIdx],
+            ...nextSong.lyricsList[currentIdx],
             x: 0,
             y: 0,
             idx: randomIdx,
