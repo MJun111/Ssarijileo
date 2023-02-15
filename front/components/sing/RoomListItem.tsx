@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
@@ -54,6 +54,18 @@ function RoomListItem({ info }: RoomProps) {
     });
   }
 
+  const [modeType, setModeType] = useState('');
+
+  useEffect(() => {
+    if (mode === 'N') {
+      setModeType('일반모드');
+    } else if (mode === 'P') {
+      setModeType('퍼펙트스코어');
+    } else if (mode === 'O') {
+      setModeType('가사맞추기');
+    }
+  }, []);
+
   // 비밀번호 관리
   const [roomPassword, setPassword] = useState('');
   const changePwd = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,6 +75,12 @@ function RoomListItem({ info }: RoomProps) {
   // 임시 비밀번호
   const pwd = password;
   const openWindow = async () => {
+    if (userCount === 6) {
+      window.alert(
+        '현재 이 방은 최대인원입니다.' + '\n' + '다른 방을 이용해주세요.',
+      );
+      return;
+    }
     dispatch(setSessionId(sessionId));
     // console.log('클릭');
     // const response = await axios({
@@ -90,6 +108,11 @@ function RoomListItem({ info }: RoomProps) {
       }
     }
   };
+
+  const pwdImg =
+    isPublic === 'N'
+      ? 'img/room/room_private_image.svg'
+      : 'img/room/room_public_image.svg';
 
   return (
     <>
@@ -160,7 +183,7 @@ function RoomListItem({ info }: RoomProps) {
           <div className={backClassName}>
             <div className={styles.top}>
               <div className={styles.title}>{title}</div>
-              <div className={typeClassName}>{mode}</div>
+              <div className={typeClassName}>{modeType}</div>
             </div>
             <Image
               src="img/common/common_play_image.svg"
@@ -174,12 +197,7 @@ function RoomListItem({ info }: RoomProps) {
                 <div className={styles.type}>
                   {isPublic === 'N' ? '비공개방' : '공개방'}
                 </div>
-                <Image
-                  src="img/room/room_private_image.svg"
-                  width={18}
-                  height={18}
-                  alt="lock"
-                />
+                <Image src={pwdImg} width={18} height={18} alt="lock" />
               </div>
               <div className={styles.member}>
                 <Image
@@ -188,7 +206,7 @@ function RoomListItem({ info }: RoomProps) {
                   height={36}
                   alt="member"
                 />
-                <div className={styles.count}>{userCount}/10</div>
+                <div className={styles.count}>{userCount}/6</div>
               </div>
             </div>
           </div>

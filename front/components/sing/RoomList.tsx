@@ -40,9 +40,9 @@ function RoomList() {
   // 방 종류
   const sortType = [
     { mode: 'Default' },
-    { mode: 'N' },
-    { mode: 'P' },
-    { mode: 'O' },
+    { mode: '일반모드' },
+    { mode: '퍼펙트스코어' },
+    { mode: '가사맞추기' },
   ];
 
   const [rooms, setRooms] = useState<RoomInfo[]>([]);

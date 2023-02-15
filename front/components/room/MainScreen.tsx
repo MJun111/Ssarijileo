@@ -253,9 +253,11 @@ export function MainScreen(props: {
         </video>
       )}
       {nowState === 5 && singMode === 'O' && (
-        <OrderSong screenShare={screenShare} />
+        <OrderSong screenShare={screenShare} nextSong={nextSong} />
       )}
-      {nowState === 6 && singMode === 'O' && <Guess />}
+      {nowState === 6 && singMode === 'O' && (
+        <Guess session={session} nextSong={nextSong} />
+      )}
     </div>
   );
 }

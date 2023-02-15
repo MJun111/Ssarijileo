@@ -7,76 +7,13 @@ import { setSsari } from '@/redux/store/ssariSlice';
 
 import styles from '@/styles/room/OrderSong.module.scss';
 
-function OrderSong(props: { screenShare: any }) {
-  const { screenShare } = props;
+function OrderSong(props: { screenShare: any; nextSong: any }) {
+  const { screenShare, nextSong } = props;
   const dispatch = useDispatch();
   const sourceRef = useRef<AudioBufferSourceNode>();
   const timeRef = useRef<number>(0);
   const [isReady, setIsReady] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
-
-  const DUMMY_DATA = [
-    {
-      lyricsId: 20,
-      verse: '생각이 많은 건 말이야',
-      startTime: 24,
-    },
-    {
-      lyricsId: 21,
-      verse: '당연히 해야 할 일이야',
-      startTime: 27,
-    },
-    {
-      lyricsId: 22,
-      verse: '나에겐 우리가 지금 일순위야',
-      startTime: 29,
-    },
-    {
-      lyricsId: 23,
-      verse: '안전한 유리병을 핑계로',
-      startTime: 33,
-    },
-    {
-      lyricsId: 24,
-      verse: '바람을 가둬 둔 것 같지만',
-      startTime: 39,
-    },
-    {
-      lyricsId: 25,
-      verse: '기억나? 그날의 우리가',
-      startTime: 44,
-    },
-    {
-      lyricsId: 26,
-      verse: '잡았던 그 손엔 말이야',
-      startTime: 46,
-    },
-    {
-      lyricsId: 27,
-      verse: '설레임보다 커다란 믿음이 담겨서',
-      startTime: 49,
-    },
-    {
-      lyricsId: 28,
-      verse: '난 함박웃음을 지었지만',
-      startTime: 53,
-    },
-    {
-      lyricsId: 29,
-      verse: '울음이 날 것도 같았어',
-      startTime: 56,
-    },
-    {
-      lyricsId: 30,
-      verse: '소중한 건 언제나 두려움이니까',
-      startTime: 58,
-    },
-    {
-      lyricsId: 31,
-      verse: '',
-      startTime: 62,
-    },
-  ];
 
   const start = () => {
     setIsStarted(true);
@@ -85,7 +22,7 @@ function OrderSong(props: { screenShare: any }) {
   };
   const pontSize = 20;
   const maxLen = 15;
-  const lyricLen = DUMMY_DATA.length - 1;
+  const lyricLen = nextSong.lyricsList.length - 1;
   const boxSize = 310 / (Math.floor(lyricLen / 3) + (lyricLen % 3 ? 1 : 0));
   const randomCanvas = [];
 
@@ -98,12 +35,12 @@ function OrderSong(props: { screenShare: any }) {
     }
   }
 
-  const trimData = DUMMY_DATA.slice(0, randomCanvas.length);
+  const trimData = nextSong.lyricsList.slice(0, randomCanvas.length);
   const isUsed = Array(randomCanvas.length).fill(false);
   const dataArray: {
     lyricsId: number;
     verse: string;
-    startTime: number;
+    time: number;
     x: number;
     y: number;
   }[] = [];
@@ -134,8 +71,8 @@ function OrderSong(props: { screenShare: any }) {
     const currentTime = Date.now();
     const time = (currentTime - timeRef.current) / 1000;
     if (dataArray.length > 1) {
-      if (dataArray[1].startTime < time) dataArray.shift();
-    } else if (dataArray[0].startTime < time) {
+      if (dataArray[1].time < time) dataArray.shift();
+    } else if (dataArray[0].time < time) {
       return;
     }
     dataArray.forEach(data => {
