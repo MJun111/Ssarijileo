@@ -123,7 +123,30 @@ function Home(props: {
     <TodayContest ranking={ranking} />
   ) : (
     <div className={styles.noContest}>
-      <p>오늘의 공모전이 없습니다.</p>
+      <img
+        src="img/main/light_main_contest_image.svg"
+        width={500}
+        height={500}
+        alt="contestImg"
+        className={styles.imgA}
+      />
+      <img
+        src="img/main/dark_main_contest_image.svg"
+        width={350}
+        height={350}
+        alt="contestImg"
+        className={styles.imgB}
+      />
+      <div className={styles.context}>
+        <b>
+          {' '}
+          싸리질러의 <br />
+          노래왕은 누구 ?😎
+          <br />{' '}
+        </b>
+        노래부르는 모습을 녹화해 <br />
+        노래자랑 게시판에 공유해보세요 ! 🎵
+      </div>
     </div>
   );
 

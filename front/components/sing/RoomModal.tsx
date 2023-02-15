@@ -36,10 +36,9 @@ function RoomModal({ setModalOpen }: any) {
   });
 
   // 라디오 값 관리
-  const [newMode, setnewMode] = useState('O');
-
+  const [newMode, setnewMode] = useState('P');
   const arrA = ['N', 'P', 'R', 'O'];
-  const arrB = ['일반노래방', '퍼펙트싱어', '이어부르기', '가사 맞추기'];
+  const arrB = ['일반노래방', '퍼펙트스코어', '이어부르기', '가사 맞추기'];
   const Mode = arrA.map((str: string, idx) => {
     let btnClass = '';
     if (idx === 0) {
@@ -184,9 +183,9 @@ function RoomModal({ setModalOpen }: any) {
               id="member"
             >
               <option value="인원수">인원수</option>;
-              <option value="1">1</option>;<option value="2">2</option>;
-              <option value="3">3</option>;<option value="4">4</option>;
-              <option value="5">5</option>;<option value="6">6</option>;
+              <option value="2">2</option>;<option value="3">3</option>;
+              <option value="4">4</option>;<option value="5">5</option>;
+              <option value="6">6</option>;
             </select>
           </div>
         </div>

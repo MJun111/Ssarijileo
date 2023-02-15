@@ -14,16 +14,19 @@ function SingTop() {
       id: 1,
       main: '원하는 노래를\n정확히 불러봐요',
       sub: '정확한 음정과 박자를 맞춰 노래를 부르면\n높은 점수를 얻을 수 있습니다.',
+      img: 'img/room/guess_image.svg',
     },
     {
       id: 2,
       main: '원하는 노래를\n이어서 불러봐요',
       sub: '친구들과 노래를 선정해서 이어불러봐요.\n힌트도 있으니 너무 걱정마세요.',
+      img: 'img/room/nomal_image.svg',
     },
     {
       id: 3,
       main: '흩어진 가사를\n맞춰보세요',
       sub: '여기저기 흩어진 가사를\n원곡에 맞게 순서대로 맞춰보세요.',
+      img: 'img/room/guess_singer_image.svg',
     },
   ];
 
@@ -32,7 +35,7 @@ function SingTop() {
       <SwiperSlide key={slide.id} className={styles.swiperSlide}>
         <Title main={slide.main} sub={slide.sub} />
         <Image
-          src="img/common/common_play_image.svg"
+          src={slide.img}
           width={600}
           height={358}
           alt="img"

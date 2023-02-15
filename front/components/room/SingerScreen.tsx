@@ -1,8 +1,10 @@
-import React, { useRef, useEffect } from 'react';
-
+import React, { useRef, useEffect, useState } from 'react';
+import classnames from 'classnames';
 import styles from '@/styles/room/Screen.module.scss';
 
-function SingerScreen({ streamManager }: any) {
+function SingerScreen(props: { streamManager: any; session: any }) {
+  const { streamManager, session } = props;
+  const [isBtn, setIsBtn] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
   const screen = streamManager;
 
@@ -12,8 +14,39 @@ function SingerScreen({ streamManager }: any) {
     }
   }, [screen]);
 
+  let screenClass = classnames({
+    [styles.singerScreen]: true,
+  });
+
+  useEffect(() => {
+    screenClass = classnames({
+      [styles.singerScreen]: true,
+      [styles.ok]: isBtn === 'ok',
+      [styles.no]: isBtn === 'no',
+    });
+  }, [isBtn]);
+
+  useEffect(() => {
+    session.on('signal:btn', (event: any) => {
+      const btnType = event.data;
+      console.log('예약리스트', btnType);
+      setIsBtn(btnType);
+      setTimeout(() => {
+        setIsBtn('');
+        console.log(isBtn);
+      }, 3000);
+    });
+  }, []);
+
+  // console.log(isBtn);
+  // const screenClass = classnames({
+  //   [styles.singerScreen]: true,
+  //   [styles.ok]: isBtn === 'ok',
+  //   [styles.no]: isBtn === 'no',
+  // });
+
   return (
-    <div className={styles.singerScreen}>
+    <div className={screenClass}>
       <video className={styles.video} autoPlay ref={videoRef}>
         <track kind="captions" />
       </video>
