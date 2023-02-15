@@ -14,6 +14,7 @@ import Loading from '@/components/room/Loading';
 import styles from '@/styles/Room.module.scss';
 import { setReserv } from '@/redux/store/reservSlice';
 import { getCookie } from '@/util/cookie';
+import { setSessionId } from '@/redux/store/sessionIdSlice';
 
 function Index() {
   const dispatch = useDispatch();
@@ -25,13 +26,13 @@ function Index() {
   }, [storeUser]);
 
   // sessionId (Redux 값받아오기)
-  const [sessionId, setSessionId] = useState<string>('');
+  const [sessionVal, setSessionVal] = useState<string>('');
   const [roomInfo, setRoomInfo] = useState();
   const [isHost, setIsHost] = useState(false);
   const storeSessionId = useSelector((state: RootState) => state.sessionId);
 
   useEffect(() => {
-    setSessionId(storeSessionId.sessionId);
+    setSessionVal(storeSessionId.sessionId);
   }, [storeSessionId]);
 
   // OV
@@ -73,7 +74,7 @@ function Index() {
 
     const token = await axios({
       method: 'POST',
-      url: `api/v1/room/connection/${sessionId}${host}`,
+      url: `api/v1/room/connection/${sessionVal}${host}`,
       headers: {
         Authorization: `${getCookie('Authorization')}`,
         refreshToken: `${getCookie('refreshToken')}`,
@@ -87,7 +88,7 @@ function Index() {
   // api screen
   async function getToken2() {
     const token = await axios.post(
-      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${sessionId}/connection`,
+      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${sessionVal}/connection`,
       {},
       {
         headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
@@ -149,7 +150,7 @@ function Index() {
   async function deleteSession() {
     axios({
       method: 'DELETE',
-      url: `api/v1/room/${sessionId}`,
+      url: `api/v1/room/${sessionVal}`,
       headers: {
         Authorization: `${getCookie('Authorization')}`,
         refreshToken: `${getCookie('refreshToken')}`,
@@ -278,7 +279,7 @@ function Index() {
         .then(res => {
           myRoomInfo.sessionId = res.data;
           setRoomInfo(myRoomInfo);
-          setSessionId(res.data);
+          dispatch(setSessionId(res.data));
         });
     }
   };
@@ -292,10 +293,10 @@ function Index() {
 
   // 세션 아이디 얻으면 연결 시작
   useEffect(() => {
-    if (sessionId !== '') {
+    if (sessionVal !== '') {
       joinSession();
     }
-  }, [sessionId]);
+  }, [sessionVal]);
 
   // 임의로 mode 선언
   const mode = 'N';
