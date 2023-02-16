@@ -84,7 +84,6 @@ function Index() {
         headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
       },
     );
-    console.log(response.data.token);
     return response.data.token;
   };
 
@@ -216,9 +215,7 @@ function Index() {
   const bodyElt = document.querySelector('body');
   bodyElt?.setAttribute('oncontextmenu', 'return false;');
 
-  window.addEventListener('beforeunload', e => {
-    e.preventDefault();
-    e.returnValue = '';
+  window.addEventListener('beforeunload', () => {
     leaveSession();
   });
 

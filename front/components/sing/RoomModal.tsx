@@ -17,7 +17,6 @@ function RoomModal({ setModalOpen }: any) {
   const closeModal = () => {
     setModalOpen(false);
   };
-  console.log('room모달 컴포넌트 실행');
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +126,6 @@ function RoomModal({ setModalOpen }: any) {
         },
       },
     );
-    console.log(roomToken);
 
     const reduxData = {
       sessionId: roomDetail.data,

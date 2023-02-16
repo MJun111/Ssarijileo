@@ -4,17 +4,12 @@ import axios from 'axios';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
+import { getCookie } from '@/util/cookie';
 import { RoomInfo } from './RoomList';
-// import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomListItem.module.scss';
-import { getCookie } from '@/util/cookie';
 
-type RoomProps = {
-  info: RoomInfo;
-};
-
-function RoomListItem({ info }: RoomProps) {
+function RoomListItem(props: { info: RoomInfo }) {
   const {
     sessionId,
     title,
@@ -23,7 +18,8 @@ function RoomListItem({ info }: RoomProps) {
     userMaxCount,
     userCount,
     password,
-  } = info;
+  } = props.info;
+  if (!userCount) return <></>;
   const [modalMode, setModalMode] = useState(false);
   const dispatch = useDispatch();
   let backClassName = classNames({
@@ -101,7 +97,6 @@ function RoomListItem({ info }: RoomProps) {
         },
       },
     );
-    console.log(roomToken);
     const reduxData = {
       sessionId,
       sessionToken: roomToken.data,
@@ -213,7 +208,9 @@ function RoomListItem({ info }: RoomProps) {
                   height={36}
                   alt="member"
                 />
-                <div className={styles.count}>{userCount}/6</div>
+                <div className={styles.count}>
+                  {userCount}/{userMaxCount}
+                </div>
               </div>
             </div>
           </div>
