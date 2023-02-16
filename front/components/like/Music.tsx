@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import hangul from 'hangul-js';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
 
 import ChartListItem from '@/components/chart/ChartListItem';
@@ -26,12 +24,6 @@ function Music() {
   const [likeList, setLikeList] = useState<SongInfo[]>([]);
   const [filteredLikeList, setFilteredLikeList] = useState<SongInfo[]>([]);
   // 노래 배열도 상태관리 (좋아요 여부 변경 해야 함!!!)
-  const [themeMode, setThemeMode] = useState('light');
-
-  const storeTheme = useSelector((state: RootState) => state.theme);
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [themeMode, storeTheme]);
 
   useEffect(() => {
     axios

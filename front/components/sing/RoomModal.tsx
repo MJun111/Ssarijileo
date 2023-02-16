@@ -3,8 +3,8 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { getCookie } from '@/util/cookie';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
+import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomModal.module.scss';
 
@@ -111,6 +111,7 @@ function RoomModal({ setModalOpen }: any) {
       sessionId: roomDetail.data,
       title,
       mode,
+      userCount: 1,
       userMaxCount: userLimit,
       isPublic: unlock ? 'Y' : 'N',
       password: unlock ? null : pwd,
@@ -126,6 +127,7 @@ function RoomModal({ setModalOpen }: any) {
         },
       },
     );
+    console.log(roomToken);
 
     const reduxData = {
       sessionId: roomDetail.data,

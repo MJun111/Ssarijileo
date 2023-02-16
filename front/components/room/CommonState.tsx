@@ -6,38 +6,19 @@ import { setSsari } from '@/redux/store/ssariSlice';
 
 import styles from '@/styles/room/CommonState.module.scss';
 
-interface Reserv {
-  nickname: string;
-  songId: number;
-  isPriority: string;
-  title: string;
-  singer: string;
-}
-
 function CommonState(props: { title: string; recordStart: () => void }) {
   const { title, recordStart } = props;
   const [time, setTime] = useState(0);
 
   // 저장되어있는 상태값 불러오기
-  const [nowState, setNowState] = useState(0);
-  const [reservList, setReservList] = useState<Reserv[]>([]);
-  const [userInfo, setUserInfo] = useState('');
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const storeUser = useSelector((state: RootState) => state.user);
   const stoerResesrv = useSelector((state: RootState) => state.reserv);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    setNowState(storeSsari.ssari);
-  }, [storeSsari]);
-
-  useEffect(() => {
-    setReservList(stoerResesrv.reserv);
-  }, [stoerResesrv]);
-
-  useEffect(() => {
-    setUserInfo(storeUser.nickname);
-  });
+  const nowState = storeSsari.ssari;
+  const reservList = stoerResesrv.reserv;
+  const userInfo = storeUser.nickname;
 
   const nextSong = [
     {
@@ -73,7 +54,9 @@ function CommonState(props: { title: string; recordStart: () => void }) {
               <button
                 type="button"
                 className={styles.back}
-                disabled={reservList[0].nickname !== userInfo}
+                disabled={
+                  reservList.length === 0 || reservList[0].nickname !== userInfo
+                }
                 onClick={recordStart}
               >
                 <Image
@@ -92,7 +75,9 @@ function CommonState(props: { title: string; recordStart: () => void }) {
               <button
                 type="button"
                 className={styles.back}
-                disabled={reservList[0].nickname !== userInfo}
+                disabled={
+                  reservList.length === 0 || reservList[0].nickname !== userInfo
+                }
                 onClick={() => {
                   dispatch(setSsari(5));
                 }}

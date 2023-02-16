@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -10,22 +10,10 @@ import { setReserv } from '@/redux/store/reservSlice';
 import { getCookie } from '@/util/cookie';
 import styles from '@/styles/room/ReservList.module.scss';
 
-interface Reserv {
-  nickname: string;
-  songId: number;
-  isPriority: string;
-  title: string;
-  singer: string;
-}
-
 function ReservList({ session }: any) {
-  const [themeMode, setThemeMode] = useState('light');
   // 다크모드 관리
   const storeTheme = useSelector((state: RootState) => state.theme);
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
-
+  const { theme } = storeTheme;
   const [modalOpen, setModalOpen] = useState(false);
   // 예약목록 모달 관리
   const showModal = () => {
@@ -38,16 +26,11 @@ function ReservList({ session }: any) {
   });
 
   // 다크모드에 따라 아이콘 경로 변경
-  const toggleIcon = `img/ssari/${themeMode}/${themeMode}_ssari_toggle_image.svg`;
+  const toggleIcon = `img/ssari/${theme}/${theme}_ssari_toggle_image.svg`;
 
-  const [reservationList, setReservationList] = useState<Reserv[]>([]);
-  const storeReservList = useSelector((state: RootState) => state.reserv);
+  const storeReserv = useSelector((state: RootState) => state.reserv);
   // const storeSsari = useSelector((state: RootState) => state.ssari);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setReservationList(storeReservList.reserv);
-  }, [storeReservList]);
 
   // 노래 정보 수신
   session.on('signal:reservationList', (event: any) => {
@@ -57,7 +40,8 @@ function ReservList({ session }: any) {
   });
 
   //   현재 곡 제외 예약 목록만 뽑아내기
-  const reserv = reservationList.length > 1 ? reservationList.slice(1) : [];
+  const reserv =
+    storeReserv.reserv.length > 1 ? storeReserv.reserv.slice(1) : [];
 
   const storeSessionState = useSelector(
     (state: RootState) => state.sessionState,
@@ -74,39 +58,28 @@ function ReservList({ session }: any) {
             <div className={styles.name}>{item.nickname}</div>
             <button
               type="button"
-              onClick={() => {
-                axios
-                  .delete('api/v1/reservation', {
-                    data: {
-                      songId:
-                        reservationList.length !== 0
-                          ? reservationList[0].songId
-                          : null,
-                      // 임시 세션 아이디
-                      sessionId: storeSessionState.sessionId,
-                    },
-                    headers: {
-                      Authorization: `${getCookie('Authorization')}`,
-                      refreshToken: `${getCookie('refreshToken')}`,
-                    },
-                  })
-                  .then(res => {
-                    console.log(res.data);
-                  });
-                const newReserv = [...reservationList];
+              onClick={async () => {
+                await axios.delete('api/v1/reservation', {
+                  data: {
+                    songId:
+                      storeReserv.reserv.length !== 0
+                        ? storeReserv.reserv[0].songId
+                        : null,
+                    // 임시 세션 아이디
+                    sessionId: storeSessionState.sessionId,
+                  },
+                  headers: {
+                    Authorization: `${getCookie('Authorization')}`,
+                    refreshToken: `${getCookie('refreshToken')}`,
+                  },
+                });
+                const newReserv = [...storeReserv.reserv];
                 newReserv.splice(idx, 1);
-                session
-                  .signal({
-                    data: JSON.stringify(newReserv), // Any string (optional)
-                    to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-                    type: 'reservationList', // The type of message (optional)
-                  })
-                  .then(() => {
-                    console.log(`노래 예약 정보 송신 성공`, newReserv);
-                  })
-                  .catch((error: any) => {
-                    console.error('노래 예약 정보 송신 실패', error);
-                  });
+                session.signal({
+                  data: JSON.stringify(newReserv), // Any string (optional)
+                  to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+                  type: 'reservationList', // The type of message (optional)
+                });
               }}
               className={styles.btn}
             >
@@ -120,9 +93,14 @@ function ReservList({ session }: any) {
           <div className={styles.nowPlay}>
             <div className={styles.out}>
               <span className={styles.title}>
-                {reservationList.length !== 0 ? reservationList[0].title : ''}
+                {storeReserv.reserv.length !== 0
+                  ? storeReserv.reserv[0].title
+                  : ''}
               </span>
-              -{reservationList.length !== 0 ? reservationList[0].singer : ''}
+              -
+              {storeReserv.reserv.length !== 0
+                ? storeReserv.reserv[0].singer
+                : ''}
             </div>
           </div>
           <div className={styles.listOut}>

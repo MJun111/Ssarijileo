@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import * as hangul from 'hangul-js';
 
@@ -20,14 +20,10 @@ function ContestSearch(props: {
   const { optionItem, videos, setFilteredVideo, selectType, setSelectType } =
     props;
   // 다크모드 상태 관리
-  const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
+  const { theme } = storeTheme;
 
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
-
-  const toggle = `img/common/${themeMode}/${themeMode}_toggle_open_image.svg`;
+  const toggle = `img/common/${theme}/${theme}_toggle_open_image.svg`;
 
   const [searchText, setSearchText] = useState('');
 
