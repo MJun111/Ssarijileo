@@ -140,21 +140,29 @@ function Index() {
     dispatch(
       setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
     );
-    await axios({
-      method: 'DELETE',
-      url: `api/v1/room/${storeSessionState.sessionId}`,
-      headers: {
-        Authorization: `${getCookie('Authorization')}`,
-        refreshToken: `${getCookie('refreshToken')}`,
-      },
-    });
-    if (userCount <= 1 && session) {
-      await axios.delete(
-        `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
-        {
-          headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+    try {
+      await axios({
+        method: 'DELETE',
+        url: `api/v1/room/${storeSessionState.sessionId}`,
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
         },
-      );
+      });
+    } catch (error) {
+      // pass
+    }
+    if (userCount <= 1 && session) {
+      try {
+        await axios.delete(
+          `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
+          {
+            headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+          },
+        );
+      } catch (error) {
+        // pass
+      }
     }
   };
 
@@ -166,11 +174,15 @@ function Index() {
     }
     dispatch(setSsari(1));
 
-    await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
-      headers: {
-        Authorization: `${getCookie('Authorization')}`,
-      },
-    });
+    try {
+      await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+        },
+      });
+    } catch (error) {
+      // pass
+    }
     setUserCount(userCount - 1);
 
     if (storeSessionState.isHost) {
