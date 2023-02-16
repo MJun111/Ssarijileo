@@ -61,7 +61,6 @@ export function MainScreen(props: {
   const [screen, setScreen] = useState<any>(undefined);
   const [nextSong, setNextSong] = useState<NextSong>();
   const [screenPublisher, setScreenPublisher] = useState<any>();
-  const [cycle, setCycle] = useState(1);
   const dispatch = useDispatch();
 
   // 내 닉네임 정보 받아오기 (redux)
@@ -76,10 +75,6 @@ export function MainScreen(props: {
   const storeReserv = useSelector((state: RootState) => state.reserv);
   useEffect(() => {
     setReservList([...storeReserv.reserv]);
-    if (cycle === 1) {
-      setCycle(2);
-      dispatch(setSsari(0));
-    }
   }, [storeReserv]);
 
   // 저장되어있는 상태값 불러오기 (redux)
@@ -96,6 +91,7 @@ export function MainScreen(props: {
       const getReserveData = JSON.parse(event.data);
       console.log('부른노래가 제거된 예약목록', getReserveData);
       dispatch(setReserv([...getReserveData]));
+      dispatch(setSsari(0));
     });
   }, []);
 
@@ -125,7 +121,6 @@ export function MainScreen(props: {
       if (reservList.length > 0) dispatch(setSsari(2));
     }
     if (nowState === 2) {
-      setCycle(1);
       axios({
         method: 'GET',
         url: `api/v1/song/detail/${reservList[0].songId}`,
