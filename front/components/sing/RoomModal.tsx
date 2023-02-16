@@ -133,7 +133,7 @@ function RoomModal({ setModalOpen }: any) {
       isHost: true,
     };
     await dispatch(setSessionState(reduxData));
-    openRoom();
+    // openRoom();
   };
 
   return (
@@ -168,7 +168,6 @@ function RoomModal({ setModalOpen }: any) {
                   checked={!unlock}
                   onChange={e => {
                     setLock(false);
-                    setPwd(e.target.value);
                   }}
                   className={styles.check}
                 />
@@ -184,6 +183,10 @@ function RoomModal({ setModalOpen }: any) {
                 type="password"
                 placeholder="비밀번호"
                 className={checkClass}
+                value={pwd}
+                onChange={e => {
+                  setPwd(e.target.value);
+                }}
               />
             </div>
             <div className={styles.unlock}>

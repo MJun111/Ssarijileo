@@ -107,12 +107,10 @@ function RoomListItem({ info }: RoomProps) {
       sessionToken: roomToken.data,
       isHost: false,
     };
-    console.log(reduxData);
     dispatch(setSessionState(reduxData));
   };
 
   const openWindow = async () => {
-    console.log(userCount, userMaxCount);
     if (userCount >= userMaxCount) {
       window.alert('현재 이 방은 최대인원입니다. 다른 방을 이용해주세요.');
       return;
