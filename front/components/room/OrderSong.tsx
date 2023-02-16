@@ -104,6 +104,7 @@ function OrderSong(props: {
 
   useEffect(() => {
     const fetchMusic = async () => {
+      if (storeSsari.ssari === 6) return;
       const musicAudioCtx = new AudioContext();
       const response = await fetch(nextSong.file);
       const arrayBuffer = await response.arrayBuffer();
