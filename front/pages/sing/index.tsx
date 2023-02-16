@@ -7,14 +7,14 @@ import SingTop from '@/components/sing/SingTop';
 import RoomList from '@/components/sing/RoomList';
 import SoundBar from '@/components/common/SoundBar';
 
-import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
 import { getCookie } from '@/util/cookie';
 import styles from '@/styles/sing/Sing.module.scss';
 
 function Index() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setSessionId(''));
+    dispatch(setSessionState(''));
     const token = getCookie('Authorization');
     if (!token) {
       window.location.href = '/';

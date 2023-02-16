@@ -43,11 +43,12 @@ function RoomReservItem(props: {
   const [userNickname, setUserNickname] = useState('');
   const [ssariState, setSsariState] = useState(0);
   const [reservationList, setReservationList] = useState<Reserv[]>([]);
-  const [sessionIdVal, setSessionVal] = useState('');
   const storeUser = useSelector((state: RootState) => state.user);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const storeReserv = useSelector((state: RootState) => state.reserv);
-  const storeSessionId = useSelector((state: RootState) => state.sessionId);
+  const storeSessionState = useSelector(
+    (state: RootState) => state.sessionState,
+  );
 
   useEffect(() => {
     setUserNickname(storeUser.nickname);
@@ -61,17 +62,13 @@ function RoomReservItem(props: {
     setReservationList(storeReserv.reserv);
   }, [storeReserv]);
 
-  useEffect(() => {
-    setSessionVal(storeSessionId.sessionId);
-  }, [storeSessionId]);
-
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
     axios
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionIdVal,
+          sessionId: storeSessionState.sessionId,
           songId: item.songId,
           isPriority: 'Y',
         },
@@ -111,7 +108,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionIdVal,
+          sessionId: storeSessionState.sessionId,
           songId: item.songId,
           isPriority: 'Y',
         },
@@ -153,7 +150,7 @@ function RoomReservItem(props: {
       .post(
         'api/v1/reservation',
         {
-          sessionId: sessionIdVal,
+          sessionId: storeSessionState.sessionId,
           songId: item.songId,
           isPriority: 'N',
         },

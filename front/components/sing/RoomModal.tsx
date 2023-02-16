@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
+import axios from 'axios';
+import { getCookie } from '@/util/cookie';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
+import { useDispatch } from 'react-redux';
 
 import styles from '@/styles/sing/RoomModal.module.scss';
 
-let modaltitle = '1';
-let modalmode = 'N';
-
 function RoomModal({ setModalOpen }: any) {
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState('');
+  const [mode, setMode] = useState('N');
+  const [userLimit, setUserLimit] = useState(2);
   // 모달창 open 여부
   const closeModal = () => {
     setModalOpen(false);
@@ -15,7 +20,6 @@ function RoomModal({ setModalOpen }: any) {
   console.log('room모달 컴포넌트 실행');
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
-  const [newtitle, setTitle] = useState('방');
   const changeTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 20) {
       setTitleWarning(true);
@@ -23,7 +27,6 @@ function RoomModal({ setModalOpen }: any) {
     }
     setTitleWarning(false);
     setTitle(event.target.value);
-    modaltitle = event.target.value;
   };
 
   const titleClass = classNames({
@@ -33,6 +36,7 @@ function RoomModal({ setModalOpen }: any) {
 
   // 비공개방 체크값 관리
   const [unlock, setLock] = useState(true);
+  const [pwd, setPwd] = useState<string>('');
 
   const checkClass = classNames({
     [styles.pwd]: true,
@@ -40,7 +44,6 @@ function RoomModal({ setModalOpen }: any) {
   });
 
   // 라디오 값 관리
-  const [newMode, setnewMode] = useState('N');
   const arrA = ['N', 'P', 'R', 'O'];
   const arrB = ['일반노래방', '퍼펙트스코어', '이어부르기', '가사 맞추기'];
   const Mode = arrA.map((str: string, idx) => {
@@ -48,22 +51,22 @@ function RoomModal({ setModalOpen }: any) {
     if (idx === 0) {
       btnClass = classNames({
         [styles.nomal]: str === 'N',
-        [styles.nowNomal]: newMode === 'N',
+        [styles.nowNomal]: mode === 'N',
       });
     } else if (idx === 1) {
       btnClass = classNames({
         [styles.perfect]: str === 'P',
-        [styles.nowPerfect]: newMode === 'P',
+        [styles.nowPerfect]: mode === 'P',
       });
     } else if (idx === 2) {
       btnClass = classNames({
         [styles.relay]: str === 'R',
-        [styles.nowRelay]: newMode === 'R',
+        [styles.nowRelay]: mode === 'R',
       });
     } else {
       btnClass = classNames({
         [styles.guess]: str === 'O',
-        [styles.nowGuess]: newMode === 'O',
+        [styles.nowGuess]: mode === 'O',
       });
     }
 
@@ -73,8 +76,7 @@ function RoomModal({ setModalOpen }: any) {
         className={btnClass}
         type="button"
         onClick={() => {
-          setnewMode(str);
-          modalmode = str;
+          setMode(str);
         }}
       >
         {arrB[idx]}
@@ -82,39 +84,57 @@ function RoomModal({ setModalOpen }: any) {
     );
   });
 
-  const makeRoom = (e: any) => {
-    console.log('팝업창에 전달해줄 newtitle 값 : ', newtitle);
-    e.source.postMessage(
-      {
-        sessionId: undefined,
-        title: modaltitle,
-        mode: modalmode,
-        userMaxCount: 6,
-        isPublic: 'Y',
-        password: null,
-      },
-      '*',
-    );
-  };
-
-  // 팝업창에 정보 전달
-  const createRoom = () => {
+  const openRoom = () => {
     const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
     if (!roomWindow) return;
     roomWindow.resizeTo(1920, 1080);
     roomWindow.onresize = () => {
       roomWindow.resizeTo(1920, 1080);
     };
-    window.removeEventListener('message', makeRoom);
     closeModal();
   };
 
-  useEffect(() => {
-    window.addEventListener('message', makeRoom, true);
-    return () => {
-      window.removeEventListener('message', makeRoom);
+  // 팝업창에 정보 전달
+  const createRoom = async () => {
+    const roomDetail = await axios.post(
+      'api/v1/room/session',
+      {},
+      {
+        headers: {
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
+        },
+      },
+    );
+
+    const data = {
+      sessionId: roomDetail.data,
+      title,
+      mode,
+      userMaxCount: userLimit,
+      isPublic: unlock ? 'Y' : 'N',
+      password: unlock ? null : pwd,
     };
-  }, []);
+
+    const roomToken = await axios.post(
+      `api/v1/room/connection/${roomDetail.data}/host`,
+      data,
+      {
+        headers: {
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
+        },
+      },
+    );
+
+    const reduxData = {
+      sessionId: roomDetail.data,
+      sessionToken: roomToken.data,
+      isHost: true,
+    };
+    await dispatch(setSessionState(reduxData));
+    openRoom();
+  };
 
   return (
     <div className={styles.back}>
@@ -136,7 +156,7 @@ function RoomModal({ setModalOpen }: any) {
             type="text"
             placeholder="방 제목을 입력하세요..."
             className={titleClass}
-            value={newtitle}
+            value={title}
             onChange={changeTitle}
           />
           <div className={styles.mode}>{Mode}</div>
@@ -146,8 +166,9 @@ function RoomModal({ setModalOpen }: any) {
                 <input
                   type="checkbox"
                   checked={!unlock}
-                  onChange={() => {
+                  onChange={e => {
                     setLock(false);
+                    setPwd(e.target.value);
                   }}
                   className={styles.check}
                 />
@@ -187,11 +208,13 @@ function RoomModal({ setModalOpen }: any) {
             <div className={styles.context}>최대인원 설정</div>
             <select
               className={styles.select}
-              defaultValue="인원수"
+              defaultValue="2"
               name="인원수"
               id="member"
+              onChange={e => {
+                setUserLimit(Number(e.target.value));
+              }}
             >
-              <option value="인원수">인원수</option>;
               <option value="2">2</option>;<option value="3">3</option>;
               <option value="4">4</option>;<option value="5">5</option>;
               <option value="6">6</option>;

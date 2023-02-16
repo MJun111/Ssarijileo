@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
-import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
 import { RoomInfo } from './RoomList';
 // import axios from 'axios';
 // import { getCookie } from '@/util/cookie';
@@ -92,7 +92,7 @@ function RoomListItem({ info }: RoomProps) {
     // dispatch(setSessionId(''));
 
     // lock일 경우 비밀번호 창 띄우기
-    dispatch(setSessionId(sessionId));
+    dispatch(setSessionState(sessionId));
     if (isPublic === 'N') {
       setModalMode(true);
     } else {
@@ -140,7 +140,7 @@ function RoomListItem({ info }: RoomProps) {
                 onClick={() => {
                   if (roomPassword === pwd) {
                     setModalMode(false);
-                    dispatch(setSessionId(sessionId));
+                    dispatch(setSessionState(sessionId));
                     const popupWindow = window.open(
                       'room/',
                       'windowName',

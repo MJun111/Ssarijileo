@@ -16,7 +16,7 @@ import Dropdown from '@/components/common/Dropdown';
 import styles from '@/styles/common/Header.module.scss';
 import { setCookie } from '@/util/cookie';
 import { setProfile } from '@/redux/store/profileSlice';
-import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
@@ -190,7 +190,7 @@ function Header() {
                 progress: undefined,
               });
             notify();
-            dispatch(setSessionId(msg.sessionId));
+            dispatch(setSessionState(msg.sessionId));
             // setSession(msg.sessionId);
             setIsInvite(true);
           }
