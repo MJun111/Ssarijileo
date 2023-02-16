@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
+import axios from 'axios';
 
+import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
 import { RootState } from '@/redux/store';
+
 import 'react-toastify/dist/ReactToastify.css';
-
 import LoginModal from '@/components/login/LoginModal';
-import Dropdown from '@/components/common/Dropdown';
 
-import styles from '@/styles/common/Header.module.scss';
+import Dropdown from '@/components/common/Dropdown';
 import { getCookie, setCookie } from '@/util/cookie';
 import { setProfile } from '@/redux/store/profileSlice';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
-import axios from 'axios';
+
+import styles from '@/styles/common/Header.module.scss';
 
 function Header() {
   if (window.location.pathname === '/room') return null;

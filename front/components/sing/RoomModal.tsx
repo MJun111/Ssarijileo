@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 import axios from 'axios';
-import { getCookie } from '@/util/cookie';
-import { setSessionState } from '@/redux/store/sessionStateSlice';
 import { useDispatch } from 'react-redux';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
+import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomModal.module.scss';
 
@@ -168,7 +168,7 @@ function RoomModal({ setModalOpen }: any) {
                 <input
                   type="checkbox"
                   checked={!unlock}
-                  onChange={e => {
+                  onChange={() => {
                     setLock(false);
                   }}
                   className={styles.check}
