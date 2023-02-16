@@ -79,7 +79,6 @@ function RoomListItem({ info }: RoomProps) {
       window.alert('현재 이 방은 최대인원입니다. 다른 방을 이용해주세요.');
       return;
     }
-    dispatch(setSessionId(sessionId));
     // console.log('클릭');
     // const response = await axios({
     //   method: 'DELETE',
@@ -90,9 +89,10 @@ function RoomListItem({ info }: RoomProps) {
     //   },
     // });
     // console.log(response);
+    // dispatch(setSessionId(''));
 
-    dispatch(setSessionId(sessionId));
     // lock일 경우 비밀번호 창 띄우기
+    dispatch(setSessionId(sessionId));
     if (isPublic === 'N') {
       setModalMode(true);
     } else {
