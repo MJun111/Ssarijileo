@@ -21,24 +21,19 @@ function Nomal(props: {
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => void;
   screen: any;
-  propState: any;
   recordStop: () => void;
 }) {
-  const { nextSong, screenShare, screen, propState, recordStop } = props;
+  const { nextSong, screenShare, screen, recordStop } = props;
   const [nowtime, setTime] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const dispatch = useDispatch();
 
   // 저장되어있는 상태값 불러오기
-  const [nowState, setNowState] = useState(propState);
   const storeSsari = useSelector((state: RootState) => state.ssari);
-  useEffect(() => {
-    setNowState(storeSsari.ssari);
-  }, [storeSsari]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const sourceRef = useRef<AudioBufferSourceNode>();
-  const startTime = useRef<number>(Date.now());
+  const musicRef = useRef<AudioBufferSourceNode>();
+  const startTimeRef = useRef<number>(Date.now());
   const lyrics = nextSong.lyricsList;
 
   const canvasWidth = 910;
@@ -54,13 +49,13 @@ function Nomal(props: {
     ctx.roundRect(0, 0, canvasWidth, canvasHeight, 10);
     ctx.fill();
     // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    const deltaTime = (Date.now() - startTime.current) / 1000;
+    const deltaTime = (Date.now() - startTimeRef.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
       dispatch(setSsari(7));
       recordStop();
       // 예약목록 0번 인덱스 삭제...
-      sourceRef.current?.stop(0);
+      musicRef.current?.stop(0);
       return;
     }
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
@@ -109,48 +104,54 @@ function Nomal(props: {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    if (nowState === 5) {
-      console.log('노말');
-      fetch(nextSong.file)
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => {
-          const audioContext = new AudioContext();
-          audioContext.decodeAudioData(arrayBuffer, audioBuffer => {
-            const source = audioContext.createBufferSource();
-            source.buffer = audioBuffer;
-            const mp3AudioDestination =
-              audioContext.createMediaStreamDestination();
-            source.connect(mp3AudioDestination);
-            source.connect(audioContext.destination);
-            source.start();
-            console.log('현재 곡 정보', nextSong);
-            axios
-              .post(
-                'api/v1/reservation/sing',
-                {
-                  songId: nextSong.songId,
-                },
-                {
-                  headers: {
-                    Authorization: `${getCookie('Authorization')}`,
-                    refreshToken: `${getCookie('refreshToken')}`,
-                  },
-                },
-              )
-              .then(res => {
-                console.log('노래 시작 요청 응답 : ', res);
-              });
-            sourceRef.current = source;
-            startTime.current = Date.now();
-            setIsPlay(true);
-            screenShare(audioContext, mp3AudioDestination);
+    if (storeSsari.ssari === 5) {
+      const fetchMusic = async () => {
+        const musicAudioCtx = new AudioContext();
+        const response = await fetch(nextSong.file);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
+        const musicSource = musicAudioCtx.createBufferSource();
+        const mp3AudioDestination =
+          musicAudioCtx.createMediaStreamDestination();
+        musicSource.buffer = audioBuffer;
+        musicSource.connect(musicAudioCtx.destination);
+        musicRef.current = musicSource;
+        musicSource.onended = async () => {
+          await axios.delete('api/v1/reservation/sing', {
+            headers: {
+              Authorization: getCookie('Authorization'),
+              refreshToken: getCookie('refreshToken'),
+            },
+            data: {
+              songId: nextSong.songId,
+              time: Date.now() - startTimeRef.current,
+            },
           });
-        });
+          dispatch(setSsari(7));
+        };
+        musicRef.current.start();
+        startTimeRef.current = Date.now();
+        await axios.post(
+          'api/v1/reservation/sing',
+          {
+            songId: nextSong.songId,
+          },
+          {
+            headers: {
+              Authorization: `${getCookie('Authorization')}`,
+              refreshToken: `${getCookie('refreshToken')}`,
+            },
+          },
+        );
+        setIsPlay(true);
+        screenShare(musicAudioCtx, mp3AudioDestination);
+      };
+      fetchMusic();
     }
-  }, [nowState]);
+  }, [storeSsari.ssari]);
 
   useEffect(() => {
-    console.log('nowState!!', nowState);
+    console.log('nowState!!', storeSsari.ssari);
     console.log('!!!!!!!!!', videoRef.current);
     if (screen !== undefined && !!videoRef.current) {
       screen.addVideoElement(videoRef.current);
@@ -161,7 +162,7 @@ function Nomal(props: {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        {nowState === 5 && (
+        {storeSsari.ssari === 5 && (
           <canvas
             id="screen-screen"
             width={canvasWidth}
@@ -170,7 +171,7 @@ function Nomal(props: {
             className={styles.canvas}
           />
         )}
-        {nowState === 6 && (
+        {storeSsari.ssari === 6 && (
           <video className={styles.video} autoPlay ref={videoRef}>
             <track kind="captions" />
           </video>
@@ -278,10 +279,9 @@ function Nomal(props: {
               .then(res => {
                 console.log('노래 취소 요청 응답 : ', res.data);
               });
-            sourceRef.current?.stop(0);
+            musicRef.current?.stop(0);
             recordStop();
             // screenSession.forceunpublish(screen);
-            console.log(sourceRef.current);
             dispatch(setSsari(7));
           }}
           className={styles.nextBtn}

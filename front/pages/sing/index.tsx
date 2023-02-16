@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch } from 'react-redux';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
-import { setRoomOut } from '@/redux/store/roomOutSlice';
 import { getCookie } from '@/util/cookie';
 
 import TopImg from '@/components/common/TopImg';
@@ -15,7 +13,6 @@ import styles from '@/styles/sing/Sing.module.scss';
 
 function Index() {
   const dispatch = useDispatch();
-  const storeRoomOut = useSelector((state: RootState) => state.roomOut);
 
   useEffect(() => {
     dispatch(
@@ -30,13 +27,6 @@ function Index() {
       window.location.href = '/';
     }
   }, []);
-
-  useEffect(() => {
-    if (storeRoomOut.isOut) {
-      dispatch(setRoomOut(false));
-      window.location.href = '/sing';
-    }
-  }, [storeRoomOut.isOut]);
 
   return (
     <div className={styles.container}>

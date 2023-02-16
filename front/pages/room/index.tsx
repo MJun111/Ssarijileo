@@ -6,25 +6,35 @@ import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
-import { setRoomOut } from '@/redux/store/roomOutSlice';
-import { getCookie } from '@/util/cookie';
+import { setSsari } from '@/redux/store/ssariSlice';
 
+import { getCookie } from '@/util/cookie';
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
-import Loading from '@/components/room/Loading';
 import SingerScreen from '@/components/room/SingerScreen';
+import Loading from '@/components/room/Loading';
 
 import styles from '@/styles/Room.module.scss';
+
+export interface RoomDetail {
+  isPublic: string;
+  mode: string;
+  password: string | null;
+  sessionId: string;
+  title: string;
+  userId: string;
+  userList: string[];
+  userMaxCount: number;
+}
 
 function Index() {
   const dispatch = useDispatch();
   // username
   const storeUser = useSelector((state: RootState) => state.user);
 
-  // sessionId (Redux 값받아오기)
-  const [roomInfo, setRoomInfo] = useState<any>();
+  const [roomInfo, setRoomInfo] = useState<RoomDetail>({} as RoomDetail);
 
   const storeSessionState = useSelector(
     (state: RootState) => state.sessionState,
@@ -38,11 +48,11 @@ function Index() {
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
-  const [screenPublisher, setScreenPublisher] = useState<any>();
   const [singer, setSinger] = useState<any[]>([]);
 
   // 초기 상태값
   const [loading, setLoading] = useState(true);
+  const [userCount, setUserCount] = useState(0);
 
   // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -61,7 +71,8 @@ function Index() {
       },
     });
     setRoomInfo(roomDetail.data);
-    console.log('방 정보', roomDetail);
+    setUserCount(roomDetail.data.userList.length);
+    console.log('방 정보', roomDetail.data);
   };
 
   // api screen
@@ -112,12 +123,6 @@ function Index() {
     }
   };
 
-  // 화면 공유 끄기
-  const leaveScreen = () => {
-    console.log(screenSession);
-    screenSession.unpublish(screenPublisher);
-  };
-
   // 다른 참가자가 떠날때
   const deleteSubscriber = (streamManager: any) => {
     const newsubscribers = subscribers;
@@ -134,20 +139,30 @@ function Index() {
     dispatch(
       setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
     );
-    await axios({
-      method: 'DELETE',
-      url: `api/v1/room/${storeSessionState.sessionId}`,
-      headers: {
-        Authorization: `${getCookie('Authorization')}`,
-        refreshToken: `${getCookie('refreshToken')}`,
-      },
-    });
-    await axios.delete(
-      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
-      {
-        headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
-      },
-    );
+    try {
+      await axios({
+        method: 'DELETE',
+        url: `api/v1/room/${storeSessionState.sessionId}`,
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
+        },
+      });
+    } catch (error) {
+      // pass
+    }
+    if (userCount <= 1 && session) {
+      try {
+        await axios.delete(
+          `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
+          {
+            headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+          },
+        );
+      } catch (error) {
+        // pass
+      }
+    }
   };
 
   // 사용자가 떠날때
@@ -156,15 +171,34 @@ function Index() {
     if (mySession) {
       mySession.disconnect();
     }
+    dispatch(setSsari(1));
+
+    try {
+      await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+        },
+      });
+    } catch (error) {
+      // pass
+    }
+    setUserCount(userCount - 1);
 
     if (storeSessionState.isHost) {
       await deleteSession();
     } else {
-      leaveScreen();
       dispatch(setReserv([]));
       dispatch(
         setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
       );
+      if (userCount <= 1 && mySession) {
+        await axios.delete(
+          `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
+          {
+            headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+          },
+        );
+      }
     }
     window.close();
   };
@@ -182,8 +216,9 @@ function Index() {
   const bodyElt = document.querySelector('body');
   bodyElt?.setAttribute('oncontextmenu', 'return false;');
 
-  window.addEventListener('beforeunload', () => {
-    dispatch(setRoomOut(true));
+  window.addEventListener('beforeunload', e => {
+    e.preventDefault();
+    e.returnValue = '';
     leaveSession();
   });
 

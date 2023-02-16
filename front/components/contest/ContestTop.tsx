@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NextImage from 'next/image';
-import { useSelector } from 'react-redux';
 import { useComponentSize } from 'react-use-size';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
@@ -11,13 +10,6 @@ import TopImg from '@/components/common/TopImg';
 import styles from '@/styles/contest/ContestTop.module.scss';
 
 function ContestTop() {
-  const [themeMode, setThemeMode] = useState('light');
-
-  const storeTheme = useSelector<any>(state => state.theme);
-  useEffect(() => {
-    setThemeMode(localStorage.getItem('theme') || 'light');
-  }, [themeMode, storeTheme]);
-
   const { height, width, ref } = useComponentSize();
   const canvasWidth = width;
   const canvasHeight = height;

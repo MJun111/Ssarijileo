@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCookie } from '@/util/cookie';
+import { RootState } from '@/redux/store';
+import { setSsari } from '@/redux/store/ssariSlice';
 
-import { useDispatch } from 'react-redux';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
-import { setSsari } from '@/redux/store/ssariSlice';
 
 import styles from '@/styles/room/OrderSong.module.scss';
 
@@ -16,9 +19,10 @@ function OrderSong(props: {
 }) {
   const { screenShare, nextSong } = props;
   const dispatch = useDispatch();
-  const sourceRef = useRef<AudioBufferSourceNode>();
-  const timeRef = useRef<number>(0);
+  const musicRef = useRef<AudioBufferSourceNode>();
+  const startTimeRef = useRef<number>(0);
   const [isStarted, setIsStarted] = useState(false);
+  const storeSsari = useSelector((state: RootState) => state.ssari);
 
   const pontSize = 20;
   const maxLen = 15;
@@ -35,8 +39,7 @@ function OrderSong(props: {
       randomCanvas.push({ y, x });
     }
   }
-  console.log(nextSong);
-  const currentIdx = Math.min(randomCanvas.length, nextSong.lyricsList.length);
+  let currentIdx = Math.min(randomCanvas.length, nextSong.lyricsList.length);
   const isUsed = Array(randomCanvas.length).fill(false);
   const dataArray: {
     lyricsId: number;
@@ -71,7 +74,7 @@ function OrderSong(props: {
     ctx.fillStyle = '#1f5c7d';
     ctx.font = '20px Jalnan';
     const currentTime = Date.now();
-    const time = (currentTime - timeRef.current) / 1000;
+    const time = (currentTime - startTimeRef.current) / 1000;
     if (dataArray.length > 1) {
       if (dataArray[1].time < time) {
         if (currentIdx < nextSong.lyricsList.length) {
@@ -87,6 +90,7 @@ function OrderSong(props: {
           dataArray.push(data);
         }
         dataArray.shift();
+        currentIdx += 1;
       }
     } else if (dataArray[0].time < time) {
       return;
@@ -99,25 +103,50 @@ function OrderSong(props: {
   useAnimation(draw, 0);
 
   useEffect(() => {
-    const audioCtx = new AudioContext();
-    fetch('sounds/사건의지평선_mr.mp3')
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
-      .then(audioBuffer => {
-        const source = audioCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        const mp3AudioDestination = audioCtx.createMediaStreamDestination();
-        source.connect(mp3AudioDestination);
-        source.connect(audioCtx.destination);
-        timeRef.current = Date.now();
-        sourceRef.current = source;
-        sourceRef.current.start();
-        setIsStarted(true);
-        screenShare(audioCtx, mp3AudioDestination);
-        source.onended = () => {
+    if (storeSsari.ssari === 5) {
+      const fetchMusic = async () => {
+        const musicAudioCtx = new AudioContext();
+        const response = await fetch(nextSong.file);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
+        const musicSource = musicAudioCtx.createBufferSource();
+        const mp3AudioDestination =
+          musicAudioCtx.createMediaStreamDestination();
+        musicSource.buffer = audioBuffer;
+        musicSource.connect(musicAudioCtx.destination);
+        musicRef.current = musicSource;
+        musicSource.onended = async () => {
+          await axios.delete('api/v1/reservation/sing', {
+            headers: {
+              Authorization: getCookie('Authorization'),
+              refreshToken: getCookie('refreshToken'),
+            },
+            data: {
+              songId: nextSong.songId,
+              time: Date.now() - startTimeRef.current,
+            },
+          });
           dispatch(setSsari(7));
         };
-      });
+        musicRef.current.start();
+        startTimeRef.current = Date.now();
+        await axios.post(
+          'api/v1/reservation/sing',
+          {
+            songId: nextSong.songId,
+          },
+          {
+            headers: {
+              Authorization: `${getCookie('Authorization')}`,
+              refreshToken: `${getCookie('refreshToken')}`,
+            },
+          },
+        );
+        setIsStarted(true);
+        screenShare(musicAudioCtx, mp3AudioDestination);
+      };
+      fetchMusic();
+    }
   }, []);
 
   return (

@@ -3,36 +3,21 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
+import { setSsari } from '@/redux/store/ssariSlice';
+import { setReserv } from '@/redux/store/reservSlice';
 
 import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
-import styles from '@/styles/room/Screen.module.scss';
-import { setSsari } from '@/redux/store/ssariSlice';
-import { setReserv } from '@/redux/store/reservSlice';
 import PerfectScore from './PerfectScore';
 import OrderSong from './OrderSong';
 import Guess from './Guess';
 
-interface Reserv {
-  nickname: string;
-  songId: number;
-  isPriority: string;
-  title: string;
-  singer: string;
-}
+import styles from '@/styles/room/Screen.module.scss';
 
 export interface Lyrics {
   lyricsId: number;
   verse: string;
   time: number;
-}
-
-export interface NormalSong {
-  title: string;
-  singer: string;
-  src: string;
-  time: number;
-  lyricsList: Lyrics[];
 }
 
 export interface NextSong {
@@ -56,7 +41,6 @@ export function MainScreen(props: {
   publisher: any;
   session: any;
 }) {
-  // const { singMode, subscribers, screenOV, screenSession, publisher, session } = props;
   const { singMode, screenOV, screenSession, publisher, session } = props;
   const [screen, setScreen] = useState<any>(undefined);
   const [nextSong, setNextSong] = useState<NextSong>();
@@ -64,26 +48,16 @@ export function MainScreen(props: {
   const dispatch = useDispatch();
 
   // 내 닉네임 정보 받아오기 (redux)
-  const [myName, setMyname] = useState('');
   const storeUser = useSelector((state: RootState) => state.user);
-  useEffect(() => {
-    setMyname(storeUser.nickname);
-  }, [storeUser]);
+  const myName = storeUser.nickname;
 
   // 노래 예약 목록 받아오기 (redux)
-  const [reservList, setReservList] = useState<Reserv[]>([]);
   const storeReserv = useSelector((state: RootState) => state.reserv);
-  useEffect(() => {
-    setReservList([...storeReserv.reserv]);
-  }, [storeReserv]);
+  const reservList = storeReserv.reserv;
 
   // 저장되어있는 상태값 불러오기 (redux)
-  const [nowState, setNowState] = useState(0);
   const storeSsari = useSelector((state: RootState) => state.ssari);
-  useEffect(() => {
-    console.log('메인스크린 에서 상태변화 감지', storeSsari.ssari);
-    setNowState(storeSsari.ssari);
-  }, [storeSsari]);
+  const nowState = storeSsari.ssari;
 
   // 노래 끝나고 다음 상태 사이클 진행
   useEffect(() => {
@@ -97,22 +71,17 @@ export function MainScreen(props: {
 
   const nextCycle = () => {
     const nextReserList = reservList.splice(1);
-    session
-      .signal({
-        data: JSON.stringify(nextReserList), // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'nextCycleReserv', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`다음 사이클 노래 예약 정보 송신 성공`, nextReserList);
-      })
-      .catch((error: any) => {
-        console.error('다음 사이클 노래 예약 정보 송신 실패', error);
-      });
+    session.signal({
+      data: JSON.stringify(nextReserList), // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'nextCycleReserv', // The type of message (optional)
+    });
+    dispatch(setSsari(0));
   };
 
   // 노래방 상태관리
   useEffect(() => {
+    console.log('현재 상태값', nowState);
     if (nowState === 0) {
       // if (subscribers.length !== 0) dispatch(setSsari(1));
       dispatch(setSsari(1));
@@ -133,7 +102,6 @@ export function MainScreen(props: {
         const runtime = res.data.time.split(':');
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
         setNextSong(response);
-        console.log(response);
         if (reservList[0].nickname === myName) {
           dispatch(setSsari(3));
         } else dispatch(setSsari(4));
@@ -186,7 +154,9 @@ export function MainScreen(props: {
     audioContext: AudioContext,
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => {
-    publisher[0].publishAudio(false);
+    if (publisher.length > 0) {
+      publisher[0].publishAudio(false);
+    }
     screenOV
       .getUserMedia({
         audioSource: undefined,
@@ -230,7 +200,7 @@ export function MainScreen(props: {
     const file = new File([videoBlob], fileName, {
       type: 'video/mp4',
     });
-    console.log(file);
+    console.log('file', file);
     formData.append('file', file);
     axios
       .post(
@@ -326,7 +296,6 @@ export function MainScreen(props: {
           nextSong={nextSong}
           screenShare={screenShare}
           screen={screen}
-          propState={nowState}
           recordStop={recordStop}
         />
       )}

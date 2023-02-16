@@ -1,19 +1,15 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import styles from '@/styles/room/Loading.module.scss';
 import { RootState } from '@/redux/store';
 
-function Loading() {
-  const [themeMode, setThemeMode] = useState('light');
-  const storeTheme = useSelector((state: RootState) => state.theme);
+import styles from '@/styles/room/Loading.module.scss';
 
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
+function Loading() {
+  const storeTheme = useSelector((state: RootState) => state.theme);
+  const { theme } = storeTheme;
 
   const img = {
-    loading: `img/ssari/${themeMode}/${themeMode}_ssari_loading_image.svg`,
+    loading: `img/ssari/${theme}/${theme}_ssari_loading_image.svg`,
   };
   return (
     <div className={styles.container}>

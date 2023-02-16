@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Image from 'next/image';
 import classNames from 'classnames';
@@ -14,16 +14,11 @@ function ChartListItem(props: { item: ChartItem }) {
   const { item } = props;
 
   // 다크모드 상태관리
-  const [themeMode, setThemeMode] = useState('light');
   const [likeMode, setLikeMode] = useState(item.favoriteSong);
   const [modalMode, setModalMode] = useState(false);
 
   const storeTheme = useSelector((state: RootState) => state.theme);
-
-  useEffect(() => {
-    const theme = storeTheme.theme || 'light';
-    setThemeMode(theme);
-  }, [storeTheme]);
+  const { theme } = storeTheme;
 
   const changeLike = () => {
     setModalMode(true);
@@ -34,8 +29,8 @@ function ChartListItem(props: { item: ChartItem }) {
     : `${item.title}을(를) 찜목록에 추가하시겠습니까 ?`;
 
   const heartIcon = likeMode
-    ? `img/chart/${themeMode}/${themeMode}_like_image.svg`
-    : `img/chart/${themeMode}/${themeMode}_chart_unlike_image.svg`;
+    ? `img/chart/${theme}/${theme}_like_image.svg`
+    : `img/chart/${theme}/${theme}_chart_unlike_image.svg`;
   // 요청 받아서
 
   const titleClassName = classNames({

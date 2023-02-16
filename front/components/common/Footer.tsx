@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -6,36 +5,32 @@ import { RootState } from '@/redux/store';
 import styles from '@/styles/common/Footer.module.scss';
 
 function Footer() {
-  const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
-
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
+  const { theme } = storeTheme;
 
   const socials = [
     {
       name: 'Facebook',
-      icon: `icon/footer/${themeMode}/${themeMode}_facebook_icon.svg`,
+      icon: `icon/footer/${theme}/${theme}_facebook_icon.svg`,
     },
     {
       name: 'YouTube',
-      icon: `icon/footer/${themeMode}/${themeMode}_youtube_icon.svg`,
+      icon: `icon/footer/${theme}/${theme}_youtube_icon.svg`,
     },
     {
       name: 'Instagram',
-      icon: `icon/footer/${themeMode}/${themeMode}_instagram_icon.svg`,
+      icon: `icon/footer/${theme}/${theme}_instagram_icon.svg`,
     },
     {
       name: 'Google',
-      icon: `icon/footer/${themeMode}/${themeMode}_google_icon.svg`,
+      icon: `icon/footer/${theme}/${theme}_google_icon.svg`,
     },
   ];
 
   const icons = {
-    logo: `icon/header/${themeMode}/${themeMode}_logo.svg`,
-    phone: `icon/footer/${themeMode}/${themeMode}_phone_icon.svg`,
-    place: `icon/footer/${themeMode}/${themeMode}_place_icon.svg`,
+    logo: `icon/header/${theme}/${theme}_logo.svg`,
+    phone: `icon/footer/${theme}/${theme}_phone_icon.svg`,
+    place: `icon/footer/${theme}/${theme}_place_icon.svg`,
   };
 
   const socialsIcons = socials.map(social => (

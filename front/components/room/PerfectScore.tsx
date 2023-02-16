@@ -1,12 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
+import axios from 'axios';
 import { PitchDetector } from 'pitchy';
 import { useDispatch } from 'react-redux';
-import { setSsari } from '@/redux/store/ssariSlice';
 
+import { setSsari } from '@/redux/store/ssariSlice';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
-
+import { getCookie } from '@/util/cookie';
 import * as data from '@/constants/PerfectScoreData';
+
 import { NextSong } from '@/components/room/MainScreen';
 import styles from '@/styles/room/PerfectScore.module.scss';
 
@@ -50,14 +52,13 @@ function PerfectScore(props: {
     life: number;
   }[] = [];
   const [isStarted, setIsStarted] = useState(false);
-  const [isPossibleStop, setIsPossibleStop] = useState(false);
   const lyrics = nextSong.lyricsList;
 
-  const stop = () => {
-    musicRef.current?.stop(0);
-    setIsStarted(false);
-    dispatch(setSsari(2));
-  };
+  // const stop = () => {
+  //   musicRef.current?.stop(0);
+  //   setIsStarted(false);
+  //   dispatch(setSsari(2));
+  // };
 
   const isSilentBuffer = (buffer: Float32Array) => {
     let ret = 0;
@@ -398,45 +399,54 @@ function PerfectScore(props: {
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
+      const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
       musicRef.current = musicSource;
-      const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
       musicSource.connect(mp3AudioDestination);
-      musicSource.onended = () => {
+      musicSource.onended = async () => {
+        await axios.delete('api/v1/reservation/sing', {
+          headers: {
+            Authorization: getCookie('Authorization'),
+            refreshToken: getCookie('refreshToken'),
+          },
+          data: {
+            songId: nextSong.songId,
+            time: Date.now() - startTimeRef.current,
+          },
+        });
         dispatch(setSsari(7));
       };
-      await setIsStarted(true);
+      setIsStarted(true);
       startTimeRef.current = Date.now();
       setTimeout(() => {
         musicRef.current?.start();
       }, 2700);
       screenShare(musicAudioCtx, mp3AudioDestination);
-      setIsPossibleStop(true);
+      await axios.post(
+        'api/v1/reservation/sing',
+        {
+          songId: nextSong.songId,
+        },
+        {
+          headers: {
+            Authorization: `${getCookie('Authorization')}`,
+            refreshToken: `${getCookie('refreshToken')}`,
+          },
+        },
+      );
     };
     fetchMusic();
   }, []);
 
   return (
-    <>
-      <canvas
-        id="screen-screen"
-        className={styles.canvas}
-        width={canvasWidth}
-        height={canvasHeight}
-        ref={canvasRef}
-      />
-      <div id="controls">
-        <input
-          type="button"
-          id="stop_button"
-          className={styles.button}
-          value="Stop"
-          onClick={stop}
-          disabled={!isPossibleStop}
-        />
-      </div>
-    </>
+    <canvas
+      id="screen-screen"
+      className={styles.canvas}
+      width={canvasWidth}
+      height={canvasHeight}
+      ref={canvasRef}
+    />
   );
 }
 
