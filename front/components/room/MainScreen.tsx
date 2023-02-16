@@ -171,7 +171,7 @@ export function MainScreen(props: {
         });
         const userContext = audioContext.createMediaStreamSource(userMicStream);
         userContext.connect(mp3AudioDestination);
-        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks();
+        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
 
         if (isRecord) {
           const videoRecorder = new MediaRecorder(mp3AudioDestination.stream, {
@@ -215,7 +215,7 @@ export function MainScreen(props: {
           'screen-screen',
         ) as HTMLCanvasElement | null;
 
-        const testVideoTrack = canvas?.captureStream(30).getVideoTracks();
+        const testVideoTrack = canvas?.captureStream(30).getVideoTracks()[0];
         const newScreenPublisher = screenOV.initPublisher(undefined, {
           audioSource: testAudioTrack,
           videoSource: testVideoTrack,
