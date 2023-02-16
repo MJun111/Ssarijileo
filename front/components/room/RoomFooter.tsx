@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-
 import RoomController from './RoomController';
 import RoomFriend from './RoomFriend';
 import RoomChat from './RoomChat';
@@ -18,9 +15,6 @@ function RoomFooter({ session, publisher }: any) {
   const [chatList, setChatList] = useState<any>([]);
   const [cam, setCam] = useState(true);
   const [mic, setMic] = useState(true);
-
-  const storeUser = useSelector((store: RootState) => store.user);
-  const myName = storeUser.nickname;
 
   // cam, mic on off
   const camControl = () => {

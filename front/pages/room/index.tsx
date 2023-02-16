@@ -33,7 +33,6 @@ function Index() {
   const dispatch = useDispatch();
   // username
   const storeUser = useSelector((state: RootState) => state.user);
-  const myName = storeUser.nickname;
 
   const [roomInfo, setRoomInfo] = useState<RoomDetail>({} as RoomDetail);
 

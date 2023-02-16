@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
@@ -29,8 +29,6 @@ function ReservList({ session }: any) {
   const toggleIcon = `img/ssari/${theme}/${theme}_ssari_toggle_image.svg`;
 
   const storeReserv = useSelector((state: RootState) => state.reserv);
-  const storeUser = useSelector((state: RootState) => state.user);
-  const myName = storeUser.nickname;
   const dispatch = useDispatch();
 
   // 노래 정보 수신

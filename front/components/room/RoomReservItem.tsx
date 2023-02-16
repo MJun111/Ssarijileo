@@ -2,11 +2,9 @@ import React from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import classNames from 'classnames';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
-import { setReserv } from '@/redux/store/reservSlice';
-import { useDispatch } from 'react-redux';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
 
@@ -40,8 +38,6 @@ function RoomReservItem(props: {
   const storeSessionState = useSelector(
     (state: RootState) => state.sessionState,
   );
-
-  const dispatch = useDispatch();
 
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
