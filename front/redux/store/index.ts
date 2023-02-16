@@ -8,13 +8,15 @@ import likeSlice from './likeSlice';
 import echoSlice from './echoSlice';
 import beatSlice from './beatSlice';
 import volumeSlice from './volumeSlice';
-import storage from 'redux-persist/lib/storage';
 import reservSlice from './reservSlice';
 import userSlice from './userSlice';
 import ssariSlice from './ssariSlice';
-import sessionIdSlice from './sessionIdSlice';
+import sessionStateSlice from './sessionStateSlice';
 import profileSlice from './profileSlice';
+import roomOutSlice from '@/redux/store/roomOutSlice';
 import btnSlice from './btnSlice';
+
+import storage from 'redux-persist/lib/storage';
 
 const rootReducer = combineReducers({
   theme: themeSlice.reducer,
@@ -26,8 +28,9 @@ const rootReducer = combineReducers({
   reserv: reservSlice.reducer,
   user: userSlice.reducer,
   ssari: ssariSlice.reducer,
-  sessionId: sessionIdSlice.reducer,
+  sessionState: sessionStateSlice.reducer,
   profile: profileSlice.reducer,
+  roomOut: roomOutSlice.reducer,
   btn: btnSlice.reducer,
 });
 
@@ -44,7 +47,8 @@ const persistConfig = {
     'reserv',
     'user',
     'ssari',
-    'sessionId',
+    'sessionState',
+    'roomOut',
     'btn',
   ],
 };

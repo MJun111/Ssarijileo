@@ -16,7 +16,9 @@ function RoomFriend({ setModalOpen }: any) {
   const [allFriendList, setAllFriendList] = useState<friendInfo[]>([]);
   const [friendList, setFriendList] = useState<friendInfo[]>([]);
   const storeUser = useSelector((state: RootState) => state.user);
-  const storeSessionId = useSelector((state: RootState) => state.sessionId);
+  const storeSessionState = useSelector(
+    (state: RootState) => state.sessionState,
+  );
 
   useEffect(() => {
     axios
@@ -64,7 +66,7 @@ function RoomFriend({ setModalOpen }: any) {
             axios.post('api/v1/friend/invite', {
               fromUserNickname: storeUser.nickname,
               toUserNickname: item.nickname,
-              sessionId: storeSessionId.sessionId,
+              sessionId: storeSessionState.sessionId,
             });
           }}
         >

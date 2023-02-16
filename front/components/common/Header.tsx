@@ -14,9 +14,10 @@ import LoginModal from '@/components/login/LoginModal';
 import Dropdown from '@/components/common/Dropdown';
 
 import styles from '@/styles/common/Header.module.scss';
-import { setCookie } from '@/util/cookie';
+import { getCookie, setCookie } from '@/util/cookie';
 import { setProfile } from '@/redux/store/profileSlice';
-import { setSessionId } from '@/redux/store/sessionIdSlice';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
+import axios from 'axios';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
@@ -139,17 +140,52 @@ function Header() {
 
   const EventSource = EventSourcePolyfill || NativeEventSource;
 
+  const [sessionId, setSessionId] = useState('');
   const [isInvite, setIsInvite] = useState(false);
-  const clickToast = () => {
+
+  const openRoom = () => {
+    const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
+    if (!roomWindow) return;
+    roomWindow.resizeTo(1920, 1080);
+    roomWindow.onresize = () => {
+      roomWindow.resizeTo(1920, 1080);
+    };
+  };
+
+  const getToRoom = async () => {
+    const roomDetail = await axios.post(
+      'api/v1/room/session',
+      {},
+      {
+        headers: {
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
+        },
+      },
+    );
+
+    const roomToken = await axios.post(
+      `api/v1/room/connection/${sessionId}`,
+      { password: roomDetail.data.password },
+      {
+        headers: {
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
+        },
+      },
+    );
+    const reduxData = {
+      sessionId,
+      roomToken: roomToken.data,
+      isHost: false,
+    };
+    dispatch(setSessionState(reduxData));
+  };
+
+  const clickToast = async () => {
     if (isInvite) {
-      // console.log();
-      const popupWindow = window.open('room/', 'windowName', 'resizeable');
-      if (!popupWindow) return;
-      popupWindow.resizeTo(1920, 1080);
-      popupWindow.onresize = () => {
-        popupWindow.resizeTo(1920, 1080);
-      };
-      popupWindow.focus();
+      await getToRoom();
+      openRoom();
     } else {
       dispatch(setProfile('친구 목록'));
       window.location.replace('profile/');
@@ -165,37 +201,34 @@ function Header() {
       });
 
       eventSource.onmessage = e => {
-        try {
-          const msg = JSON.parse(e.data);
-          if (msg.args.type === 'request') {
-            const notify = () =>
-              toast(`${msg.fromUserNickname}으로 부터의 친구요청`, {
-                position: 'top-right',
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                draggable: true,
-              });
-            notify();
-            setIsInvite(false);
-          } else if (msg.args.type === 'invite') {
-            const notify = () =>
-              toast(`${msg.fromUserNickname}으로 부터의 초대`, {
-                position: 'top-right',
-                autoClose: 15000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-              });
-            notify();
-            dispatch(setSessionId(msg.sessionId));
-            // setSession(msg.sessionId);
-            setIsInvite(true);
-          }
-        } catch (err) {
-          console.log(err);
+        const msg = JSON.parse(e.data);
+        if (msg.args.type === 'request') {
+          const notify = () =>
+            toast(`${msg.fromUserNickname}으로 부터의 친구요청`, {
+              position: 'top-right',
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              draggable: true,
+            });
+          notify();
+          setIsInvite(false);
+        } else if (msg.args.type === 'invite') {
+          setSessionId(msg.sessionId);
+          const notify = () =>
+            toast(`${msg.fromUserNickname}으로 부터의 초대`, {
+              position: 'top-right',
+              autoClose: 15000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          notify();
+          dispatch(setSessionState(msg.sessionId));
+          // setSession(msg.sessionId);
+          setIsInvite(true);
         }
       };
       eventSource.onerror = (e: any) => {

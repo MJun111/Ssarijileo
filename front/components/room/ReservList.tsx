@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import classNames from 'classnames';
 import axios from 'axios';
 
-import styles from '@/styles/room/ReservList.module.scss';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 // import { setSsari } from '@/redux/store/ssariSlice';
 import { getCookie } from '@/util/cookie';
+import styles from '@/styles/room/ReservList.module.scss';
 
 interface Reserv {
   nickname: string;
@@ -54,18 +54,14 @@ function ReservList({ session }: any) {
     const getReserveData = JSON.parse(event.data);
     console.log('예약리스트', getReserveData);
     dispatch(setReserv(getReserveData));
-    // }
   });
 
   //   현재 곡 제외 예약 목록만 뽑아내기
   const reserv = reservationList.length > 1 ? reservationList.slice(1) : [];
 
-  const [sessionIdValue, setSessionId] = useState('');
-  const storeSessionId = useSelector((state: RootState) => state.sessionId);
-
-  useEffect(() => {
-    setSessionId(storeSessionId.sessionId);
-  }, [storeSessionId]);
+  const storeSessionState = useSelector(
+    (state: RootState) => state.sessionState,
+  );
 
   return (
     <div className={styles.container}>
@@ -87,7 +83,7 @@ function ReservList({ session }: any) {
                           ? reservationList[0].songId
                           : null,
                       // 임시 세션 아이디
-                      sessionId: sessionIdValue,
+                      sessionId: storeSessionState.sessionId,
                     },
                     headers: {
                       Authorization: `${getCookie('Authorization')}`,

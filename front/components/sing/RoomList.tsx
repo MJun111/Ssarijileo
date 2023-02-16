@@ -7,9 +7,9 @@ import RoomModal from './RoomModal';
 import RoomSearch from '@/components/sing/RoomSearch';
 import RoomListItem from '@/components/sing/RoomListItem';
 import Pagination from '@/components/common/Pagination';
+import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomList.module.scss';
-import { getCookie } from '@/util/cookie';
 
 export interface RoomInfo {
   sessionId: string;
@@ -96,7 +96,7 @@ function RoomList() {
       </div>
       <div className={styles.room}>
         {postData.map(info => (
-          <RoomListItem info={info} />
+          <RoomListItem info={info} key={info.sessionId} />
         ))}
       </div>
       <Pagination

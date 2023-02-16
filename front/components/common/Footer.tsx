@@ -85,7 +85,7 @@ function Footer() {
           <span>DISCLAIMER</span>
         </div>
         <div className={styles.right}>
-          <span>Copyright© 2021. All rights reserved.</span>
+          <span>Copyright© 2023. All rights reserved.</span>
         </div>
       </div>
     </footer>
