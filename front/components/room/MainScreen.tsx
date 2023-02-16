@@ -3,11 +3,11 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
+import { setSsari } from '@/redux/store/ssariSlice';
+import { setReserv } from '@/redux/store/reservSlice';
 
 import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
-import { setSsari } from '@/redux/store/ssariSlice';
-import { setReserv } from '@/redux/store/reservSlice';
 import PerfectScore from './PerfectScore';
 import OrderSong from './OrderSong';
 import Guess from './Guess';
@@ -26,14 +26,6 @@ export interface Lyrics {
   lyricsId: number;
   verse: string;
   time: number;
-}
-
-export interface NormalSong {
-  title: string;
-  singer: string;
-  src: string;
-  time: number;
-  lyricsList: Lyrics[];
 }
 
 export interface NextSong {
@@ -80,12 +72,7 @@ export function MainScreen(props: {
   }, [storeReserv]);
 
   // 저장되어있는 상태값 불러오기 (redux)
-  const [nowState, setNowState] = useState(0);
   const storeSsari = useSelector((state: RootState) => state.ssari);
-  useEffect(() => {
-    console.log('메인스크린 에서 상태변화 감지', storeSsari.ssari);
-    setNowState(storeSsari.ssari);
-  }, [storeSsari]);
 
   // 노래 끝나고 다음 상태 사이클 진행
   useEffect(() => {
@@ -104,24 +91,18 @@ export function MainScreen(props: {
         to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
         type: 'nextCycleReserv', // The type of message (optional)
       })
-      .then(() => {
-        console.log(`다음 사이클 노래 예약 정보 송신 성공`, nextReserList);
-      })
-      .catch((error: any) => {
-        console.error('다음 사이클 노래 예약 정보 송신 실패', error);
-      });
   };
 
   // 노래방 상태관리
   useEffect(() => {
-    if (nowState === 0) {
+    if (storeSsari.ssari === 0) {
       // if (subscribers.length !== 0) dispatch(setSsari(1));
       dispatch(setSsari(1));
     }
-    if (nowState === 1) {
+    if (storeSsari.ssari === 1) {
       if (reservList.length > 0) dispatch(setSsari(2));
     }
-    if (nowState === 2) {
+    if (storeSsari.ssari === 2) {
       setCycle(1);
       axios({
         method: 'GET',
@@ -140,14 +121,14 @@ export function MainScreen(props: {
         } else dispatch(setSsari(4));
       });
     }
-    if (nowState === 7) {
+    if (storeSsari.ssari === 7) {
       screenSession.unpublish(screenPublisher);
       nextCycle();
     }
-  }, [nowState]);
+  }, [storeSsari.ssari]);
 
   useEffect(() => {
-    if (reservList.length === 1 && nowState === 1) {
+    if (reservList.length === 1 && storeSsari.ssari === 1) {
       dispatch(setSsari(2));
     }
   }, [reservList]);
@@ -304,45 +285,44 @@ export function MainScreen(props: {
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
-      {nowState === 0 && (
+      {storeSsari.ssari === 0 && (
         <CommonState title={title[0]} recordStart={recordStart} />
       )}
-      {nowState === 1 && (
+      {storeSsari.ssari === 1 && (
         <CommonState title={title[1]} recordStart={recordStart} />
       )}
-      {nowState === 2 && (
+      {storeSsari.ssari === 2 && (
         <CommonState title={title[2]} recordStart={recordStart} />
       )}
       {/* 대기 상태 */}
-      {nowState === 3 && (
+      {storeSsari.ssari === 3 && (
         <CommonState title={title[0]} recordStart={recordStart} />
       )}
-      {nowState === 4 && (
+      {storeSsari.ssari === 4 && (
         <CommonState title={title[3]} recordStart={recordStart} />
       )}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {[5, 6].includes(nowState) && singMode === 'N' && nextSong && (
+      {[5, 6].includes(storeSsari.ssari) && singMode === 'N' && nextSong && (
         <Nomal
           nextSong={nextSong}
           screenShare={screenShare}
           screen={screen}
-          propState={nowState}
           recordStop={recordStop}
         />
       )}
-      {nowState === 5 && singMode === 'P' && nextSong && (
+      {storeSsari.ssari === 5 && singMode === 'P' && nextSong && (
         <PerfectScore screenShare={screenShare} nextSong={nextSong} />
       )}
-      {nowState === 6 && singMode === 'P' && (
+      {storeSsari.ssari === 6 && singMode === 'P' && (
         <video className={styles.video} autoPlay ref={videoRef}>
           <track kind="captions" />
         </video>
       )}
-      {nowState === 5 && singMode === 'O' && (
+      {storeSsari.ssari === 5 && singMode === 'O' && (
         <OrderSong screenShare={screenShare} nextSong={nextSong} />
       )}
-      {nowState === 6 && singMode === 'O' && (
+      {storeSsari.ssari === 6 && singMode === 'O' && (
         <Guess session={session} nextSong={nextSong} />
       )}
     </div>

@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-
-import axios from 'axios';
-import styles from '@/styles/room/RoomReservItem.module.scss';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
 
-interface Reserv {
-  nickname: string;
-  songId: number;
-  isPriority: string;
-  title: string;
-  singer: string;
-}
+import styles from '@/styles/room/RoomReservItem.module.scss';
 
 function RoomReservItem(props: {
   item: {
@@ -39,28 +31,13 @@ function RoomReservItem(props: {
     [styles.album]: true,
     [styles.isLong]: item.album.length > 8,
   });
-
-  const [userNickname, setUserNickname] = useState('');
-  const [ssariState, setSsariState] = useState(0);
-  const [reservationList, setReservationList] = useState<Reserv[]>([]);
   const storeUser = useSelector((state: RootState) => state.user);
   const storeSsari = useSelector((state: RootState) => state.ssari);
   const storeReserv = useSelector((state: RootState) => state.reserv);
+
   const storeSessionState = useSelector(
     (state: RootState) => state.sessionState,
   );
-
-  useEffect(() => {
-    setUserNickname(storeUser.nickname);
-  }, [storeUser]);
-
-  useEffect(() => {
-    setSsariState(storeSsari.ssari);
-  }, [storeSsari]);
-
-  useEffect(() => {
-    setReservationList(storeReserv.reserv);
-  }, [storeReserv]);
 
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
@@ -78,9 +55,9 @@ function RoomReservItem(props: {
         },
       },
     );
-    const newReserv = [...reservationList];
+    const newReserv = [...storeReserv.reserv];
     newReserv.unshift({
-      nickname: userNickname,
+      nickname: storeUser.nickname,
       songId: item.songId,
       isPriority: 'Y',
       title: item.title,
@@ -107,9 +84,9 @@ function RoomReservItem(props: {
         },
       },
     );
-    const newReserv = [...reservationList];
+    const newReserv = [...storeReserv.reserv];
     newReserv.splice(1, 0, {
-      nickname: userNickname,
+      nickname: storeUser.nickname,
       songId: item.songId,
       isPriority: 'Y',
       title: item.title,
@@ -138,9 +115,9 @@ function RoomReservItem(props: {
         },
       },
     );
-    const newReserv = [...reservationList];
+    const newReserv = [...storeReserv.reserv];
     newReserv.push({
-      nickname: userNickname,
+      nickname: storeUser.nickname,
       songId: item.songId,
       isPriority: 'Y',
       title: item.title,
@@ -177,7 +154,7 @@ function RoomReservItem(props: {
         <button
           type="button"
           className={styles.firstReserv}
-          onClick={ssariState < 3 ? firstReserv : secondReserv}
+          onClick={storeSsari.ssari < 3 ? firstReserv : secondReserv}
         >
           우선예약
         </button>
