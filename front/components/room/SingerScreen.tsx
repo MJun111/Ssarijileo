@@ -12,7 +12,6 @@ function SingerScreen(props: { streamManager: any; session: any }) {
   const screen = streamManager;
   const storeBtn = useSelector((state: RootState) => state.btn);
   const dispatch = useDispatch();
-  const storeUser = useSelector((state: RootState) => state.user);
 
   let screenClass = classnames({
     [styles.singerScreen]: true,

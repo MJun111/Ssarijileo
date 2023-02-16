@@ -40,8 +40,6 @@ function RoomFooter({ session, publisher }: any) {
   // 채팅 듣기 on
   const chatOn = () => {
     session.on('signal:chat', (event: any) => {
-      const fromUser = JSON.parse(event.from.data).clientData;
-      if (fromUser === myName) return;
       const newChat = JSON.parse(event.data);
       chatList.push(newChat);
       setChatList([...chatList]);
@@ -50,9 +48,6 @@ function RoomFooter({ session, publisher }: any) {
 
   // 채팅 보내기
   const sendChat = (sendMassage: string) => {
-    const chatContent = JSON.parse(sendMassage);
-    chatList.push(chatContent);
-    setChatList([...chatList]);
     session.signal({
       data: sendMassage,
       to: [],

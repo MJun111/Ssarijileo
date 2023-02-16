@@ -67,7 +67,6 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
-    dispatch(setReserv(newReserv));
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
@@ -97,7 +96,6 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
-    dispatch(setReserv(newReserv));
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
@@ -129,7 +127,6 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
-    dispatch(setReserv(newReserv));
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)

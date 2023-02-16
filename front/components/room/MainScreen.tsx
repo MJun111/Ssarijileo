@@ -148,18 +148,11 @@ export function MainScreen(props: {
 
   // 화면 위치 바꾸기
   const nextSinger = () => {
-    session
-      .signal({
-        data: '', // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'nextSinger', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`다음은 내차례`, myName);
-      })
-      .catch((error: any) => {
-        console.error('nextSinger 에러', error);
-      });
+    session.signal({
+      data: '', // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'nextSinger', // The type of message (optional)
+    });
   };
 
   const videoRecorderRef = useRef<MediaRecorder>();

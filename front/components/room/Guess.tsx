@@ -23,18 +23,11 @@ function Guess(props: { session: any; nextSong: any }) {
             height={50}
             alt="o"
             onClick={() => {
-              session
-                .signal({
-                  data: 'ok', // Any string (optional)
-                  to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-                  type: 'btn', // The type of message (optional)
-                })
-                .then(() => {
-                  console.log(`ok button 정보 송신 성공`);
-                })
-                .catch((error: any) => {
-                  console.error('ok button 정보 송신 실패', error);
-                });
+              session.signal({
+                data: 'ok', // Any string (optional)
+                to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+                type: 'btn', // The type of message (optional)
+              });
             }}
           />
           <Image
@@ -44,18 +37,11 @@ function Guess(props: { session: any; nextSong: any }) {
             height={50}
             alt="x"
             onClick={() => {
-              session
-                .signal({
-                  data: 'no', // Any string (optional)
-                  to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-                  type: 'btn', // The type of message (optional)
-                })
-                .then(() => {
-                  console.log(`no button 정보 송신 성공`);
-                })
-                .catch((error: any) => {
-                  console.error('no button 정보 송신 실패', error);
-                });
+              session.signal({
+                data: 'no', // Any string (optional)
+                to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+                type: 'btn', // The type of message (optional)
+              });
             }}
           />
           {/* <canvas id="screen-creen" /> */}

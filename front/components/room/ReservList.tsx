@@ -35,8 +35,8 @@ function ReservList({ session }: any) {
 
   // 노래 정보 수신
   session.on('signal:reservationList', (event: any) => {
-    const fromUser = JSON.parse(event.from.data).clientData;
-    if (fromUser === myName) return;
+    // const fromUser = JSON.parse(event.from.data).clientData;
+    // if (fromUser === myName) return;
     const getReserveData = JSON.parse(event.data);
     console.log('예약리스트', getReserveData);
     dispatch(setReserv(getReserveData));
