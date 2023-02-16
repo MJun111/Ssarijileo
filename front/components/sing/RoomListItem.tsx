@@ -101,11 +101,13 @@ function RoomListItem({ info }: RoomProps) {
         },
       },
     );
+    console.log(roomToken);
     const reduxData = {
       sessionId,
-      roomToken: roomToken.data,
+      sessionToken: roomToken.data,
       isHost: false,
     };
+    console.log(reduxData);
     dispatch(setSessionState(reduxData));
   };
 
