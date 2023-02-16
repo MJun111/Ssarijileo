@@ -17,28 +17,6 @@ export interface OptionItem {
 
 function ContestList(props: { videoList: VideoInfo[] }) {
   const { videoList } = props;
-  // const nameList = [
-  //   'zㅣ존예지',
-  //   '이수민',
-  //   '길상욱',
-  //   '김태학',
-  //   '김명준',
-  //   '김소윤',
-  // ];
-  // const videoList: VideoInfo[] = [];
-  // for (let i = 0; i < 100; i++) {
-  //   const num = Math.floor(Math.random() * 5);
-  //   const num2 = Math.floor(Math.random() * 5000);
-  //   const video = {
-  //     id: i,
-  //     url: 'video/test.mp4',
-  //     name: nameList[num],
-  //     title: 'OMG',
-  //     singer: 'NewJeans',
-  //     like: num2,
-  //   };
-  //   videoList.push(video);
-  // }
   const [video] = useState(videoList);
   const [filteredVideo, setFilteredVideo] = useState(video);
   const [selectType, setSelectType] = useState('Default');

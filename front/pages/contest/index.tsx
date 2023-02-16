@@ -34,9 +34,15 @@ export const getServerSideProps: GetServerSideProps = async context => {
       },
     );
     const videoList: VideoInfo[] = videoRes.data || [];
+
+    const sortedRanking = videoList.sort((a: VideoInfo, b: VideoInfo) => {
+      return b.likeCount - a.likeCount;
+    });
+    const ranking: VideoInfo[] = sortedRanking.slice(0, 3);
     return {
       props: {
         videoList,
+        ranking,
       },
     };
   } catch (err) {
@@ -49,11 +55,11 @@ export const getServerSideProps: GetServerSideProps = async context => {
   }
 };
 
-function Contest(props: { videoList: VideoInfo[] }) {
-  const { videoList } = props;
+function Contest(props: { videoList: VideoInfo[]; ranking: VideoInfo[] }) {
+  const { videoList, ranking } = props;
   return (
     <>
-      <ContestTop />
+      <ContestTop ranking={ranking} />
       <SoundBar />
       <div>
         <ContestList videoList={videoList} />

@@ -9,13 +9,14 @@ import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 
 import styles from '@/styles/room/OrderSong.module.scss';
+import { NextSong } from './MainScreen';
 
 function OrderSong(props: {
   screenShare: (
     audioContext: AudioContext,
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => void;
-  nextSong: any;
+  nextSong: NextSong;
 }) {
   const { screenShare, nextSong } = props;
   const dispatch = useDispatch();
