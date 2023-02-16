@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 import RoomController from './RoomController';
 import RoomFriend from './RoomFriend';
@@ -17,14 +19,22 @@ function RoomFooter({ session, publisher }: any) {
   const [cam, setCam] = useState(true);
   const [mic, setMic] = useState(true);
 
+  const storeUser = useSelector((store: RootState) => store.user);
+  const myName = storeUser.nickname;
+
   // cam, mic on off
   const camControl = () => {
     publisher[0].publishVideo(!cam);
     setCam(!cam);
   };
+
   const micControl = () => {
-    publisher[0].publishAudio(!mic);
-    setMic(!mic);
+    if (publisher[0]) {
+      publisher[0].publishAudio(!mic);
+      setMic(!mic);
+    } else {
+      alert('마이크를 끌 수 없습니다.');
+    }
   };
 
   // 채팅 듣기 on

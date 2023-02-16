@@ -45,6 +45,7 @@ export function MainScreen(props: {
   const [screen, setScreen] = useState<any>(undefined);
   const [nextSong, setNextSong] = useState<NextSong>();
   const [screenPublisher, setScreenPublisher] = useState<any>();
+  const [isRecord, setIsRecord] = useState(false);
   const dispatch = useDispatch();
 
   // 내 닉네임 정보 받아오기 (redux)
@@ -62,8 +63,11 @@ export function MainScreen(props: {
   // 노래 끝나고 다음 상태 사이클 진행
   useEffect(() => {
     session.on('signal:nextCycleReserv', (event: any) => {
+      const fromUser = JSON.parse(event.from.data).clientData;
+      if (fromUser === myName) return;
       const getReserveData = JSON.parse(event.data);
       console.log('부른노래가 제거된 예약목록', getReserveData);
+      console.log('다음 사이클 진행, 0, 메인스크린');
       dispatch(setReserv([...getReserveData]));
       dispatch(setSsari(0));
     });
@@ -78,7 +82,7 @@ export function MainScreen(props: {
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
       type: 'nextCycleReserv', // The type of message (optional)
     });
-    dispatch(setSsari(0));
+    console.log('다음 사이클 진행, 0, 메인스크린');
   };
 
   // 노래방 상태관리
@@ -86,10 +90,14 @@ export function MainScreen(props: {
     console.log('현재 상태값', nowState);
     if (nowState === 0) {
       // if (subscribers.length !== 0) dispatch(setSsari(1));
+      console.log('이거 터지면 버그, 1, 메인스크린');
       dispatch(setSsari(1));
     }
     if (nowState === 1) {
-      if (reservList.length > 0) dispatch(setSsari(2));
+      if (reservList.length > 0) {
+        console.log('예약목록 있음, 2, 메인스크린');
+        dispatch(setSsari(2));
+      }
     }
     if (nowState === 2) {
       axios({
@@ -105,6 +113,7 @@ export function MainScreen(props: {
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
         setNextSong(response);
         if (reservList[0].nickname === myName) {
+          console.log('내차례, 3, 메인스크린');
           dispatch(setSsari(3));
         } else dispatch(setSsari(4));
       });
@@ -117,6 +126,7 @@ export function MainScreen(props: {
 
   useEffect(() => {
     if (reservList.length === 1 && nowState === 1) {
+      console.log('예약목록 1개 있음, 2, 메인스크린');
       dispatch(setSsari(2));
     }
   }, [reservList]);
@@ -127,6 +137,7 @@ export function MainScreen(props: {
       const subScreen = screenSession.subscribe(event.stream, undefined);
       if (reservList.length) {
         if (reservList[0].nickname !== myName) {
+          console.log('다른사람이 노래 부르기 시작, 6, 메인스크린');
           dispatch(setSsari(6));
         }
       }
@@ -136,21 +147,43 @@ export function MainScreen(props: {
 
   // 화면 위치 바꾸기
   const nextSinger = () => {
-    session
-      .signal({
-        data: '', // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'nextSinger', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`다음은 내차례`, myName);
-      })
-      .catch((error: any) => {
-        console.error('nextSinger 에러', error);
-      });
+    session.signal({
+      data: '', // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'nextSinger', // The type of message (optional)
+    });
   };
 
-  let userMicStream: MediaStream | null = null;
+  const videoRecorderRef = useRef<MediaRecorder>();
+
+  // const mergeAudioStreams = (
+  //   musicStream: MediaStream,
+  //   voiceStream: MediaStream,
+  // ) => {
+  //   // 비디오, 오디오스트림 연결
+  //   const context = new AudioContext();
+  //   const destination = context.createMediaStreamDestination();
+  //   let hasDesktop = false;
+  //   let hasVoice = false;
+  //   if (musicStream && musicStream.getAudioTracks().length > 0) {
+  //     const source1 = context.createMediaStreamSource(musicStream);
+  //     const desktopGain = context.createGain();
+  //     desktopGain.gain.value = 0.5;
+  //     source1.connect(desktopGain).connect(destination);
+  //     hasDesktop = true;
+  //   }
+  //
+  //   if (voiceStream && voiceStream.getAudioTracks().length > 0) {
+  //     const source2 = context.createMediaStreamSource(voiceStream);
+  //     const voiceGain = context.createGain();
+  //     voiceGain.gain.value = 1.0;
+  //     source2.connect(voiceGain).connect(destination);
+  //     hasVoice = true;
+  //   }
+  //
+  //   return hasDesktop || hasVoice ? destination.stream.getAudioTracks() : [];
+  // };
+
   // 화면 공유
   const screenShare = (
     audioContext: AudioContext,
@@ -165,13 +198,57 @@ export function MainScreen(props: {
       })
       .then(async () => {
         // audioSource
-        userMicStream = await navigator.mediaDevices.getUserMedia({
+        const userMicStream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
+
         const userContext = audioContext.createMediaStreamSource(userMicStream);
         userContext.connect(mp3AudioDestination);
-        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
+
+        const tracks = [
+          ...userMicStream.getVideoTracks(),
+          ...mp3AudioDestination.stream.getAudioTracks(),
+        ];
+        const screenStream = new MediaStream(tracks);
+        const testAudioTrack = screenStream.getAudioTracks()[0];
+        console.log(isRecord);
+        if (isRecord) {
+          const videoRecorder = new MediaRecorder(screenStream, {
+            mimeType: 'video/webm',
+          });
+          videoRecorderRef.current = videoRecorder;
+          const blobs: any = [];
+          videoRecorder.ondataavailable = event => {
+            blobs.push(event.data);
+          };
+          videoRecorder.onstop = async () => {
+            const blob = new Blob(blobs, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            console.log('녹화파일', url);
+            const formData = new FormData();
+            const fileName = new Date().toISOString();
+            const file = new File([blob], fileName, {
+              type: 'video/webm',
+            });
+            formData.append('file', file);
+            formData.append(
+              'recordingDto',
+              new Blob([JSON.stringify({ songId: reservList[0].songId })], {
+                type: 'application/json',
+              }),
+            );
+            const res = await axios.post('api/v1/recording', formData, {
+              headers: {
+                Authorization: getCookie('Authorization'),
+                refreshToken: getCookie('refreshToken'),
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+            console.log('녹화파일 저장', res);
+          };
+          videoRecorder.start();
+        }
 
         // videoSource
         const canvas = document.getElementById(
@@ -189,63 +266,9 @@ export function MainScreen(props: {
       });
   };
 
-  let videoRecorder: MediaRecorder | null = null;
-  let videoBlob: Blob | null = null;
-
-  const sendRecording = () => {
-    if (!videoRecorder || !videoBlob) return;
-    const formData = new FormData();
-    const fileName = new Date().toISOString();
-    const file = new File([videoBlob], fileName, {
-      type: 'video/mp4',
-    });
-    console.log('file', file);
-    formData.append('file', file);
-    axios
-      .post(
-        'api/v1/recording',
-        {
-          data: {
-            songId: reservList[0].songId,
-            formData,
-          },
-        },
-        {
-          headers: {
-            Authorization: getCookie('token'),
-          },
-        },
-      )
-      .then(res => {
-        console.log(res);
-      });
-  };
-
-  const recordStart = () => {
-    dispatch(setSsari(5));
-    if (!userMicStream) return;
-    const videoData: Blob[] = [];
-    videoRecorder = new MediaRecorder(userMicStream, {
-      mimeType: 'video/mp4; codecs="avc1.424028, mp4a.40.2"',
-    });
-    videoRecorder.ondataavailable = (event: any) => {
-      if (event.data.size > 0) {
-        videoData.push(event.data);
-      }
-    };
-    videoRecorder.onstop = () => {
-      videoBlob = new Blob(videoData, { type: 'video/webm' });
-      // 이벤트 실행 시에 서버로 파일 POST
-      sendRecording();
-    };
-    videoRecorder.start();
-  };
-
-  const recordStop = () => {
-    dispatch(setSsari(7));
-    if (!videoRecorder) return;
-    videoRecorder.stop();
-    videoRecorder = null;
+  const stopRecord = () => {
+    videoRecorderRef.current?.stop();
+    setIsRecord(false);
   };
 
   // 다른사람 노래부르는 화면 송출 끝날때
@@ -273,20 +296,20 @@ export function MainScreen(props: {
     <div className={styles.modeScreen}>
       {/* 공통 */}
       {nowState === 0 && (
-        <CommonState title={title[0]} recordStart={recordStart} />
+        <CommonState title={title[0]} setIsRecord={setIsRecord} />
       )}
       {nowState === 1 && (
-        <CommonState title={title[1]} recordStart={recordStart} />
+        <CommonState title={title[1]} setIsRecord={setIsRecord} />
       )}
       {nowState === 2 && (
-        <CommonState title={title[2]} recordStart={recordStart} />
+        <CommonState title={title[2]} setIsRecord={setIsRecord} />
       )}
       {/* 대기 상태 */}
       {nowState === 3 && (
-        <CommonState title={title[0]} recordStart={recordStart} />
+        <CommonState title={title[0]} setIsRecord={setIsRecord} />
       )}
       {nowState === 4 && (
-        <CommonState title={title[3]} recordStart={recordStart} />
+        <CommonState title={title[3]} setIsRecord={setIsRecord} />
       )}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
@@ -295,14 +318,14 @@ export function MainScreen(props: {
           nextSong={nextSong}
           screenShare={screenShare}
           screen={screen}
-          recordStop={recordStop}
+          recordStop={stopRecord}
         />
       )}
       {nowState === 5 && singMode === 'P' && nextSong && (
         <PerfectScore screenShare={screenShare} nextSong={nextSong} />
       )}
       {nowState === 6 && singMode === 'P' && (
-        <video className={styles.video} autoPlay ref={videoRef}>
+        <video className={styles.perfect} autoPlay ref={videoRef}>
           <track kind="captions" />
         </video>
       )}

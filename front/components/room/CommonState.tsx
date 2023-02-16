@@ -6,8 +6,11 @@ import { setSsari } from '@/redux/store/ssariSlice';
 
 import styles from '@/styles/room/CommonState.module.scss';
 
-function CommonState(props: { title: string; recordStart: () => void }) {
-  const { title, recordStart } = props;
+function CommonState(props: {
+  title: string;
+  setIsRecord: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { title, setIsRecord } = props;
   const [time, setTime] = useState(0);
 
   // 저장되어있는 상태값 불러오기
@@ -32,6 +35,7 @@ function CommonState(props: { title: string; recordStart: () => void }) {
       setTime(prev => {
         if (prev === 600) {
           if (nowState === 2) {
+            console.log('시간초과, 3, 커먼');
             dispatch(setSsari(3));
           } else {
             window.close();
@@ -57,7 +61,11 @@ function CommonState(props: { title: string; recordStart: () => void }) {
                 disabled={
                   reservList.length === 0 || reservList[0].nickname !== userInfo
                 }
-                onClick={recordStart}
+                onClick={() => {
+                  setIsRecord(true);
+                  console.log('노래 녹화 시작, 5, 커먼');
+                  dispatch(setSsari(5));
+                }}
               >
                 <Image
                   src="img/room/room_video_image.svg"
@@ -79,6 +87,7 @@ function CommonState(props: { title: string; recordStart: () => void }) {
                   reservList.length === 0 || reservList[0].nickname !== userInfo
                 }
                 onClick={() => {
+                  console.log('노래 시작, 5, 커먼');
                   dispatch(setSsari(5));
                 }}
               >

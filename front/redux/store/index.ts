@@ -46,6 +46,7 @@ const persistConfig = {
     'user',
     'ssari',
     'sessionState',
+    'profile',
     'btn',
   ],
 };

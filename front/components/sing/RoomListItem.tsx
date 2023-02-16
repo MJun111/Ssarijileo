@@ -10,6 +10,7 @@ import { RoomInfo } from './RoomList';
 import styles from '@/styles/sing/RoomListItem.module.scss';
 
 function RoomListItem(props: { info: RoomInfo }) {
+  const { info } = props;
   const {
     sessionId,
     title,
@@ -18,8 +19,7 @@ function RoomListItem(props: { info: RoomInfo }) {
     userMaxCount,
     userCount,
     password,
-  } = props.info;
-  if (!userCount) return <></>;
+  } = info;
   const [modalMode, setModalMode] = useState(false);
   const dispatch = useDispatch();
   let backClassName = classNames({

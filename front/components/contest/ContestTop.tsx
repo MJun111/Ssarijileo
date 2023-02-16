@@ -3,13 +3,14 @@ import NextImage from 'next/image';
 import { useComponentSize } from 'react-use-size';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
-
+import { VideoInfo } from '@/pages/contest';
 import Title from '@/components/common/Title';
 import TopImg from '@/components/common/TopImg';
 
 import styles from '@/styles/contest/ContestTop.module.scss';
 
-function ContestTop() {
+function ContestTop(props: { ranking: VideoInfo[] }) {
+  const { ranking } = props;
   const { height, width, ref } = useComponentSize();
   const canvasWidth = width;
   const canvasHeight = height;
@@ -91,29 +92,29 @@ function ContestTop() {
   useAnimation(animate, 0);
 
   // 1등 2등 3등 정보 받기
-  const best = [
-    {
-      id: 1,
-      img: 'video/test.mp4#t=0.5',
-      name: '이수민',
-    },
-    {
-      id: 2,
-      img: 'video/test.mp4#t=0.5',
-      name: '김소윤',
-    },
-    {
-      id: 3,
-      img: 'video/test.mp4#t=0.5',
-      name: '김명준',
-    },
-  ];
+  // const best = [
+  //   {
+  //     id: 1,
+  //     img: 'video/test.mp4#t=0.5',
+  //     name: '이수민',
+  //   },
+  //   {
+  //     id: 2,
+  //     img: 'video/test.mp4#t=0.5',
+  //     name: '김소윤',
+  //   },
+  //   {
+  //     id: 3,
+  //     img: 'video/test.mp4#t=0.5',
+  //     name: '김명준',
+  //   },
+  // ];
 
-  const bestData = best.map(item => {
+  const bestData = ranking.map(item => {
     return (
-      <div className={styles.item} key={item.id}>
+      <div className={styles.item} key={item.singingContestId}>
         <video
-          src={item.img}
+          src={item.file}
           className={styles.video}
           preload="metadata"
           controlsList="noDownload"
@@ -121,7 +122,7 @@ function ContestTop() {
         >
           <track kind="captions" />
         </video>
-        <div className={styles.name}>{item.name}</div>
+        <div className={styles.name}>{item.nickname}</div>
       </div>
     );
   });

@@ -33,6 +33,7 @@ function Index() {
   const dispatch = useDispatch();
   // username
   const storeUser = useSelector((state: RootState) => state.user);
+  const myName = storeUser.nickname;
 
   const [roomInfo, setRoomInfo] = useState<RoomDetail>({} as RoomDetail);
 
@@ -71,7 +72,7 @@ function Index() {
       },
     });
     setRoomInfo(roomDetail.data);
-    setUserCount(roomDetail.data.userList.length);
+    setUserCount(roomDetail.data.userList?.length);
     console.log('방 정보', roomDetail.data);
   };
 
@@ -91,7 +92,7 @@ function Index() {
   const changeSinger = (from: any) => {
     const nextsinger = from.stream.streamManager;
     if (singer[0] === nextsinger) {
-      console.log('똑같은 사람이 부름');
+      // pass
     } else if (nextsinger === publisher[0]) {
       if (singer[0] !== undefined) {
         subscribers.push(singer.pop());
@@ -151,7 +152,7 @@ function Index() {
     } catch (error) {
       // pass
     }
-    if (userCount <= 1 && session) {
+    if (userCount <= 0 && session) {
       try {
         await axios.delete(
           `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
@@ -171,6 +172,7 @@ function Index() {
     if (mySession) {
       mySession.disconnect();
     }
+    console.log('사용자 떠날때, 1, 인덱스');
     dispatch(setSsari(1));
 
     try {
@@ -231,9 +233,6 @@ function Index() {
     setScreenOV(newScreenOV);
     setScreenSession(myScreen);
 
-    console.log('mySession', mySession);
-    console.log('myScreen', myScreen);
-
     // 다른사람 캠 추가
     mySession.on('streamCreated', (event: any) => {
       if (event.stream.typeOfVideo === 'CAMERA') {
@@ -260,7 +259,6 @@ function Index() {
     });
 
     // 내 캠 connect
-    console.log('1. 내캠 커넥트');
     mySession
       .connect(storeSessionState.sessionToken, {
         clientData: storeUser.nickname,
@@ -283,7 +281,6 @@ function Index() {
       });
 
     // 화면 공유 connect
-    console.log('2. 화면 공유 커넥트');
     getToken().then((tokenScreen: any) => {
       myScreen.connect(tokenScreen, {
         clientData: storeSessionState.sessionId,
@@ -291,6 +288,8 @@ function Index() {
       setLoading(false);
     });
   };
+
+  let key = 0;
 
   // 세션 아이디 얻으면 연결 시작
   useEffect(() => {
@@ -334,7 +333,8 @@ function Index() {
         </div>
         <div className={styles.otherScreen}>
           {publisher.map(pub => {
-            return <MyScreen streamManager={pub} key={pub.id} />;
+            key += 1;
+            return <MyScreen streamManager={pub} key={`${pub.id}${key}`} />;
           })}
           {subscribers.map(sub => {
             return <MyScreen streamManager={sub} key={sub.stream.streamId} />;

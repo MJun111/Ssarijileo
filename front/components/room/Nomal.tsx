@@ -52,6 +52,7 @@ function Nomal(props: {
     const deltaTime = (Date.now() - startTimeRef.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
+      console.log('노래끝, 7, 일반모드');
       dispatch(setSsari(7));
       recordStop();
       // 예약목록 0번 인덱스 삭제...
@@ -104,50 +105,50 @@ function Nomal(props: {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    if (storeSsari.ssari === 5) {
-      const fetchMusic = async () => {
-        const musicAudioCtx = new AudioContext();
-        const response = await fetch(nextSong.file);
-        const arrayBuffer = await response.arrayBuffer();
-        const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
-        const musicSource = musicAudioCtx.createBufferSource();
-        const mp3AudioDestination =
-          musicAudioCtx.createMediaStreamDestination();
-        musicSource.buffer = audioBuffer;
-        musicSource.connect(musicAudioCtx.destination);
-        musicRef.current = musicSource;
-        musicSource.onended = async () => {
-          await axios.delete('api/v1/reservation/sing', {
-            headers: {
-              Authorization: getCookie('Authorization'),
-              refreshToken: getCookie('refreshToken'),
-            },
-            data: {
-              songId: nextSong.songId,
-              time: Date.now() - startTimeRef.current,
-            },
-          });
-          dispatch(setSsari(7));
-        };
-        musicRef.current.start();
-        startTimeRef.current = Date.now();
-        await axios.post(
-          'api/v1/reservation/sing',
-          {
+    const fetchMusic = async () => {
+      if (storeSsari.ssari === 6) return;
+      const musicAudioCtx = new AudioContext();
+      const response = await fetch(nextSong.file);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
+      const musicSource = musicAudioCtx.createBufferSource();
+      const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      musicSource.buffer = audioBuffer;
+      musicSource.connect(musicAudioCtx.destination);
+      musicSource.connect(mp3AudioDestination);
+      musicRef.current = musicSource;
+      musicSource.onended = async () => {
+        await axios.delete('api/v1/reservation/sing', {
+          headers: {
+            Authorization: getCookie('Authorization'),
+            refreshToken: getCookie('refreshToken'),
+          },
+          data: {
             songId: nextSong.songId,
+            time: Date.now() - startTimeRef.current,
           },
-          {
-            headers: {
-              Authorization: `${getCookie('Authorization')}`,
-              refreshToken: `${getCookie('refreshToken')}`,
-            },
-          },
-        );
-        setIsPlay(true);
-        screenShare(musicAudioCtx, mp3AudioDestination);
+        });
+        console.log('노래끝, 7, 일반모드');
+        dispatch(setSsari(7));
       };
-      fetchMusic();
-    }
+      musicRef.current.start();
+      startTimeRef.current = Date.now();
+      await axios.post(
+        'api/v1/reservation/sing',
+        {
+          songId: nextSong.songId,
+        },
+        {
+          headers: {
+            Authorization: `${getCookie('Authorization')}`,
+            refreshToken: `${getCookie('refreshToken')}`,
+          },
+        },
+      );
+      setIsPlay(true);
+      screenShare(musicAudioCtx, mp3AudioDestination);
+    };
+    fetchMusic();
   }, [storeSsari.ssari]);
 
   useEffect(() => {
@@ -263,26 +264,23 @@ function Nomal(props: {
         </div>
         <button
           type="button"
-          onClick={() => {
+          onClick={async () => {
             console.log('노래 취소 곡 정보 : ', nextSong);
-            axios
-              .delete('api/v1/reservation/sing', {
-                data: {
-                  songId: nextSong.songId,
-                  time: nowtime,
-                },
-                headers: {
-                  Authorization: `${getCookie('Authorization')}`,
-                  refreshToken: `${getCookie('refreshToken')}`,
-                },
-              })
-              .then(res => {
-                console.log('노래 취소 요청 응답 : ', res.data);
-              });
+            await axios.delete('api/v1/reservation/sing', {
+              data: {
+                songId: nextSong.songId,
+                time: nowtime,
+              },
+              headers: {
+                Authorization: `${getCookie('Authorization')}`,
+                refreshToken: `${getCookie('refreshToken')}`,
+              },
+            });
             musicRef.current?.stop(0);
             recordStop();
             // screenSession.forceunpublish(screen);
-            dispatch(setSsari(7));
+            // console.log('노래취소, 7, 일반모드');
+            // dispatch(setSsari(7));
           }}
           className={styles.nextBtn}
           disabled={!isPlay}

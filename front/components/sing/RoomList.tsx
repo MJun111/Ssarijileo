@@ -57,8 +57,11 @@ function RoomList() {
         refreshToken: `${getCookie('refreshToken')}`,
       },
     });
-    setRooms(response.data);
-    setFilteredRoom(response.data);
+    const roomData = response.data.filter(
+      (room: RoomInfo) => room.userCount !== 0,
+    );
+    setRooms(roomData);
+    setFilteredRoom(roomData);
   }
 
   useEffect(() => {

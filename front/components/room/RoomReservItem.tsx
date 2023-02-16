@@ -5,6 +5,8 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
+import { setReserv } from '@/redux/store/reservSlice';
+import { useDispatch } from 'react-redux';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
 
@@ -38,6 +40,8 @@ function RoomReservItem(props: {
   const storeSessionState = useSelector(
     (state: RootState) => state.sessionState,
   );
+
+  const dispatch = useDispatch();
 
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
@@ -126,7 +130,7 @@ function RoomReservItem(props: {
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-      type: 'reservationList', // The type of message (optional)
+      type: 'reservationList', // The type of message (optional )
     });
   };
   return (
@@ -154,7 +158,7 @@ function RoomReservItem(props: {
         <button
           type="button"
           className={styles.firstReserv}
-          onClick={storeSsari.ssari < 3 ? firstReserv : secondReserv}
+          onClick={storeSsari.ssari < 5 ? firstReserv : secondReserv}
         >
           우선예약
         </button>

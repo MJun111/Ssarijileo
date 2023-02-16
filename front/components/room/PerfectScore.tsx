@@ -1,15 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import axios from 'axios';
 import { PitchDetector } from 'pitchy';
-import { useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { setSsari } from '@/redux/store/ssariSlice';
+import { RootState } from '@/redux/store';
+
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 import { getCookie } from '@/util/cookie';
-import * as data from '@/constants/PerfectScoreData';
 
+import * as data from '@/constants/PerfectScoreData';
 import { NextSong } from '@/components/room/MainScreen';
+
 import styles from '@/styles/room/PerfectScore.module.scss';
 
 interface SongData {
@@ -53,6 +55,7 @@ function PerfectScore(props: {
   }[] = [];
   const [isStarted, setIsStarted] = useState(false);
   const lyrics = nextSong.lyricsList;
+  const storeSsari = useSelector((state: RootState) => state.ssari);
 
   // const stop = () => {
   //   musicRef.current?.stop(0);
@@ -384,6 +387,7 @@ function PerfectScore(props: {
   // 노래 재생
   useEffect(() => {
     const fetchMusic = async () => {
+      if (storeSsari.ssari === 6) return;
       const musicAudioCtx = new AudioContext();
       const noteData = await fetch(nextSong.note);
       const noteJson = await noteData.json();
@@ -402,8 +406,8 @@ function PerfectScore(props: {
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
-      musicRef.current = musicSource;
       musicSource.connect(mp3AudioDestination);
+      musicRef.current = musicSource;
       musicSource.onended = async () => {
         await axios.delete('api/v1/reservation/sing', {
           headers: {
@@ -415,6 +419,7 @@ function PerfectScore(props: {
             time: Date.now() - startTimeRef.current,
           },
         });
+        console.log('노래 끝, 7, 퍼펙트');
         dispatch(setSsari(7));
       };
       setIsStarted(true);

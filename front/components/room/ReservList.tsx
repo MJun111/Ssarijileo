@@ -29,17 +29,18 @@ function ReservList({ session }: any) {
   const toggleIcon = `img/ssari/${theme}/${theme}_ssari_toggle_image.svg`;
 
   const storeReserv = useSelector((state: RootState) => state.reserv);
-  // const storeSsari = useSelector((state: RootState) => state.ssari);
+  const storeUser = useSelector((state: RootState) => state.user);
+  const myName = storeUser.nickname;
   const dispatch = useDispatch();
 
   // 노래 정보 수신
-  useEffect(() => {
-    session.on('signal:reservationList', (event: any) => {
-      const getReserveData = JSON.parse(event.data);
-      console.log('예약리스트', getReserveData);
-      dispatch(setReserv(getReserveData));
-    });
-  }, []);
+  session.on('signal:reservationList', (event: any) => {
+    // const fromUser = JSON.parse(event.from.data).clientData;
+    // if (fromUser === myName) return;
+    const getReserveData = JSON.parse(event.data);
+    console.log('예약리스트', getReserveData);
+    dispatch(setReserv(getReserveData));
+  });
 
   //   현재 곡 제외 예약 목록만 뽑아내기
   const reserv =

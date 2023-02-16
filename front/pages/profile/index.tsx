@@ -75,8 +75,10 @@ function MyPage() {
         <div className={styles.content}>
           <h1>마이페이지</h1>
           <p className={styles.contentHeader}>{type}</p>
-          {type === '계정 관리' && <ContentForm theme={theme} />}
-          {type === '친구 목록' && <FriendForm />}
+          {storeProfile.profile === '계정 관리' && (
+            <ContentForm theme={theme} />
+          )}
+          {storeProfile.profile === '친구 목록' && <FriendForm />}
         </div>
       </div>
     </div>

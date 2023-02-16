@@ -17,6 +17,7 @@ export interface RecordInfo {
   singer: string;
   file: string;
   registerDate: string;
+  status: string;
 }
 
 function Like() {

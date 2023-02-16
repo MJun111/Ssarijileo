@@ -2,11 +2,12 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import styles from '@/styles/common/Title.module.scss';
+import { RootState } from '@/redux/store';
 
 function Title(props: { main: string; sub: string }) {
   const { main, sub } = props;
 
-  const storeLogin: any = useSelector<any>(state => state.login);
+  const storeLogin = useSelector((state: RootState) => state.login);
 
   const goRoom = () => {
     if (window.location.pathname !== '/sing') {

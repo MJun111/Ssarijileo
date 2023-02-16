@@ -19,7 +19,7 @@ function VideoItem(props: { info: RecordInfo }) {
           controlsList="nodownload"
           controls
         >
-          <track kind="captions" />{' '}
+          <track kind="captions" />
         </video>
         <div className={styles.info}>
           <div className={styles.bottom}>
@@ -39,16 +39,12 @@ function VideoItem(props: { info: RecordInfo }) {
               type="button"
               className={styles.addBtn}
               onClick={() => {
-                axios
-                  .post(`api/v1/singing-contest/${recordingId}`, null, {
-                    headers: {
-                      Authorization: `${getCookie('Authorization')}`,
-                      refreshToken: `${getCookie('refreshToken')}`,
-                    },
-                  })
-                  .then(res => {
-                    console.log(res.data);
-                  });
+                axios.post(`api/v1/singing-contest/${recordingId}`, null, {
+                  headers: {
+                    Authorization: getCookie('Authorization'),
+                    refreshToken: getCookie('refreshToken'),
+                  },
+                });
               }}
             >
               글작성
@@ -57,16 +53,12 @@ function VideoItem(props: { info: RecordInfo }) {
               type="button"
               className={styles.deleteBtn}
               onClick={() => {
-                axios
-                  .delete(`api/v1/recording/${recordingId}`, {
-                    headers: {
-                      Authorization: `${getCookie('Authorization')}`,
-                      refreshToken: `${getCookie('refreshToken')}`,
-                    },
-                  })
-                  .then(res => {
-                    console.log(res.data);
-                  });
+                axios.delete(`api/v1/recording/${recordingId}`, {
+                  headers: {
+                    Authorization: getCookie('Authorization'),
+                    refreshToken: getCookie('refreshToken'),
+                  },
+                });
               }}
             >
               삭제
