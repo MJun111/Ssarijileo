@@ -127,6 +127,7 @@ function OrderSong(props: {
             time: Date.now() - startTimeRef.current,
           },
         });
+        console.log('노래 끝, 7, 맞추기');
         dispatch(setSsari(7));
       };
       musicRef.current.start();

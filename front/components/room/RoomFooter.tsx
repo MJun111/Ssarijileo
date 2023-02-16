@@ -22,9 +22,14 @@ function RoomFooter({ session, publisher }: any) {
     publisher[0].publishVideo(!cam);
     setCam(!cam);
   };
+
   const micControl = () => {
-    publisher[0].publishAudio(!mic);
-    setMic(!mic);
+    if (publisher[0]) {
+      publisher[0].publishAudio(!mic);
+      setMic(!mic);
+    } else {
+      alert('마이크를 끌 수 없습니다.');
+    }
   };
 
   // 채팅 듣기 on

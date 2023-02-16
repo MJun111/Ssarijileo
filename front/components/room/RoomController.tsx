@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import styles from '@/styles/room/RoomController.module.scss';
 
 import PitchController from './PitchController';
 import BeatController from './BeatController';
 import VolumeController from './VolumeController';
+
+import styles from '@/styles/room/RoomController.module.scss';
 
 function RoomController({ setModalOpen, camControl, micControl }: any) {
   const [picthModalOpen, setPicthModalOpen] = useState(false);

@@ -171,6 +171,7 @@ function Index() {
     if (mySession) {
       mySession.disconnect();
     }
+    console.log('사용자 떠날때, 1, 인덱스');
     dispatch(setSsari(1));
 
     try {
