@@ -65,6 +65,7 @@ export function MainScreen(props: {
       const getReserveData = JSON.parse(event.data);
       console.log('부른노래가 제거된 예약목록', getReserveData);
       dispatch(setReserv([...getReserveData]));
+      dispatch(setSsari(0));
     });
   }, []);
 

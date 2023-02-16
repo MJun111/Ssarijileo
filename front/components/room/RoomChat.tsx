@@ -76,8 +76,8 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
           <div className={styles.profile}>
             <Image
               src={item.img}
-              width={20}
-              height={20}
+              width={30}
+              height={30}
               alt="profile"
               className={styles.profileIcon}
             />
