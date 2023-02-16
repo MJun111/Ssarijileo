@@ -13,7 +13,7 @@ function SingTop() {
     {
       id: 1,
       main: '원하는 노래를\n마음껏 불러봐요',
-      sub: '친구들과 노래를 선정해서 불러봐요.\n어디서나 즐길 수 있습니다.',
+      sub: '친구들과 노래를 선정해서 불러봐요.\n언제 어디서나 즐길 수 있습니다.',
       img: 'img/room/nomal_image.svg',
     },
     {
