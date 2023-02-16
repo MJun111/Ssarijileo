@@ -21,6 +21,7 @@ function ContestListItem({ info }: VideoProps) {
   const [singId] = useState(singingContestId);
 
   const storeTheme = useSelector((state: RootState) => state.theme);
+  const storeUser = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const theme = storeTheme.theme || 'light';
@@ -41,7 +42,6 @@ function ContestListItem({ info }: VideoProps) {
   // 요청 받아서
 
   // key 필요하면 받아놓기
-  const myName = 'zㅣ존예지';
   const urlInfo = `${file}#t=0.5`;
   return (
     <>
@@ -138,7 +138,7 @@ function ContestListItem({ info }: VideoProps) {
                   {title}-{singer}
                 </div>
               </div>
-              {nickname !== myName && (
+              {nickname !== storeUser.nickname && (
                 <Image
                   src={heartIcon}
                   width={24}
@@ -149,8 +149,30 @@ function ContestListItem({ info }: VideoProps) {
                   onClick={changeLike}
                 />
               )}
-              {nickname === myName && (
-                <button type="button" className={styles.deleteBtn}>
+              {nickname === storeUser.nickname && (
+                <button
+                  type="button"
+                  className={styles.deleteBtn}
+                  onClick={() => {
+                    axios
+                      .put(
+                        'api/v1/singing-contest',
+                        {
+                          singingContestId,
+                          status: 'D',
+                        },
+                        {
+                          headers: {
+                            Authorization: `${getCookie('Authorization')}`,
+                            refreshToken: `${getCookie('refreshToken')}`,
+                          },
+                        },
+                      )
+                      .then(res => {
+                        console.log(res.data);
+                      });
+                  }}
+                >
                   글삭제
                 </button>
               )}
