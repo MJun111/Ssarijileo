@@ -137,7 +137,6 @@ export function MainScreen(props: {
         const response = res.data;
         const runtime = res.data.time.split(':');
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
-        // response.note = JSON.parse(res.data.note);
         setNextSong(response);
         console.log(response);
         if (reservList[0].nickname === myName) {

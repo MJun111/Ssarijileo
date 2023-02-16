@@ -10,6 +10,12 @@ import * as data from '@/constants/PerfectScoreData';
 import { NextSong } from '@/components/room/MainScreen';
 import styles from '@/styles/room/PerfectScore.module.scss';
 
+interface SongData {
+  note: number;
+  time: number;
+  cnt: number;
+}
+
 function PerfectScore(props: {
   screenShare: (
     audioContext: AudioContext,
@@ -24,6 +30,7 @@ function PerfectScore(props: {
     PitchDetector.forFloat32Array(data.BUFFER_SIZE),
   );
   const musicRef = useRef<AudioBufferSourceNode>();
+  const songDataRef = useRef<SongData[]>([]);
   const startTimeRef = useRef<number>(0);
   const halfSize = data.NOTE_WINDOW_SIZE / 2;
   const voiceNoteWindowRef = useRef<number[]>(new Array(halfSize));
@@ -60,8 +67,8 @@ function PerfectScore(props: {
     return Math.sqrt(ret / buffer.length) < data.SILENCE_THRESHOLD;
   };
 
-  const canvasWidth = 950;
-  const canvasHeight = 350;
+  const canvasWidth = 930;
+  const canvasHeight = 330;
   const canvasRef = useCanvas(canvasWidth, canvasHeight);
 
   // 파티클
@@ -126,7 +133,7 @@ function PerfectScore(props: {
   };
 
   const drawlyrics = (ctx: CanvasRenderingContext2D, currTime: number) => {
-    const deltaTime = currTime;
+    const deltaTime = currTime + 2700;
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
       lyrics.shift();
       lyricFlag.current = !lyricFlag.current;
@@ -166,23 +173,9 @@ function PerfectScore(props: {
     }
   };
 
-  const songData: {
-    time: number;
-    note: number;
-    cnt: number;
-  }[] = [];
-  const song = nextSong.note;
-  console.log('song', song);
-  // for (let i = 0; i < song.length; i++) {
-  //   console.log('song[i]', song[i]);
-  //   if (song[i].cnt > 2) {
-  //     songData.push(song[i]);
-  //   }
-  // }
-  // console.log('songData', songData);
-
   const voiceNoteWindow = voiceNoteWindowRef.current;
   const songNoteWindow = songNoteWindowRef.current;
+  const songData = songDataRef.current;
 
   const audioCtx = new AudioContext();
   const analyser = audioCtx.createAnalyser();
@@ -205,7 +198,8 @@ function PerfectScore(props: {
       !dataArrayRef.current ||
       !pitchDetectorRef.current ||
       !analyser ||
-      !isStarted
+      !isStarted ||
+      !songData
     )
       return;
     const ctx = canvasRef.current?.getContext('2d');
@@ -388,27 +382,39 @@ function PerfectScore(props: {
 
   // 노래 재생
   useEffect(() => {
-    const musicAudioCtx = new AudioContext();
-    fetch('sounds/사건의지평선_mr.mp3')
-      .then(response => response.arrayBuffer())
-      .then(arrayBuffer => musicAudioCtx.decodeAudioData(arrayBuffer))
-      .then(audioBuffer => {
-        const musicSource = musicAudioCtx.createBufferSource();
-        musicSource.buffer = audioBuffer;
-        musicSource.connect(musicAudioCtx.destination);
-        musicRef.current = musicSource;
-        startTimeRef.current = Date.now();
-        const mp3AudioDestination =
-          musicAudioCtx.createMediaStreamDestination();
-        musicSource.connect(mp3AudioDestination);
-        musicSource.onended = () => {
-          dispatch(setSsari(7));
-        };
-        setIsStarted(true);
-        screenShare(musicAudioCtx, mp3AudioDestination);
+    const fetchMusic = async () => {
+      const musicAudioCtx = new AudioContext();
+      const noteData = await fetch(nextSong.note);
+      const noteJson = await noteData.json();
+
+      console.log('song', noteJson);
+      for (let i = 0; i < noteJson.length; i++) {
+        if (noteJson[i].cnt > 2) {
+          songData.push(noteJson[i]);
+        }
+      }
+      console.log('songData', songData);
+      const response = await fetch(nextSong.file);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
+      const musicSource = musicAudioCtx.createBufferSource();
+      musicSource.buffer = audioBuffer;
+      musicSource.connect(musicAudioCtx.destination);
+      musicRef.current = musicSource;
+      const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      musicSource.connect(mp3AudioDestination);
+      musicSource.onended = () => {
+        dispatch(setSsari(7));
+      };
+      await setIsStarted(true);
+      startTimeRef.current = Date.now();
+      setTimeout(() => {
         musicRef.current?.start();
-        setIsPossibleStop(true);
-      });
+      }, 2700);
+      screenShare(musicAudioCtx, mp3AudioDestination);
+      setIsPossibleStop(true);
+    };
+    fetchMusic();
   }, []);
 
   return (

@@ -85,6 +85,8 @@ function RoomModal({ setModalOpen }: any) {
     roomWindow.onresize = () => {
       roomWindow.resizeTo(1920, 1080);
     };
+    window.removeEventListener('message', makeRoom);
+    closeModal();
   };
 
   const makeRoom = (e: any) => {
@@ -99,12 +101,13 @@ function RoomModal({ setModalOpen }: any) {
       },
       '*',
     );
-    window.removeEventListener('message', makeRoom);
-    closeModal();
   };
 
   useEffect(() => {
     window.addEventListener('message', makeRoom, true);
+    return () => {
+      window.removeEventListener('message', makeRoom);
+    };
   }, []);
 
   return (
