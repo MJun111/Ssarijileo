@@ -133,7 +133,7 @@ function RoomModal({ setModalOpen }: any) {
       isHost: true,
     };
     await dispatch(setSessionState(reduxData));
-    // openRoom();
+    openRoom();
   };
 
   return (
