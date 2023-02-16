@@ -95,18 +95,11 @@ function ReservList({ session }: any) {
                   });
                 const newReserv = [...reservationList];
                 newReserv.splice(idx, 1);
-                session
-                  .signal({
-                    data: JSON.stringify(newReserv), // Any string (optional)
-                    to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-                    type: 'reservationList', // The type of message (optional)
-                  })
-                  .then(() => {
-                    console.log(`노래 예약 정보 송신 성공`, newReserv);
-                  })
-                  .catch((error: any) => {
-                    console.error('노래 예약 정보 송신 실패', error);
-                  });
+                session.signal({
+                  data: JSON.stringify(newReserv), // Any string (optional)
+                  to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+                  type: 'reservationList', // The type of message (optional)
+                });
               }}
               className={styles.btn}
             >

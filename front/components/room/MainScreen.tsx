@@ -6,12 +6,13 @@ import { getCookie } from '@/util/cookie';
 
 import CommonState from '@/components/room/CommonState';
 import Nomal from '@/components/room/Nomal';
-import styles from '@/styles/room/Screen.module.scss';
 import { setSsari } from '@/redux/store/ssariSlice';
 import { setReserv } from '@/redux/store/reservSlice';
 import PerfectScore from './PerfectScore';
 import OrderSong from './OrderSong';
 import Guess from './Guess';
+
+import styles from '@/styles/room/Screen.module.scss';
 
 interface Reserv {
   nickname: string;
@@ -76,10 +77,6 @@ export function MainScreen(props: {
   const storeReserv = useSelector((state: RootState) => state.reserv);
   useEffect(() => {
     setReservList([...storeReserv.reserv]);
-    if (cycle === 1) {
-      setCycle(2);
-      dispatch(setSsari(0));
-    }
   }, [storeReserv]);
 
   // 저장되어있는 상태값 불러오기 (redux)
@@ -138,7 +135,6 @@ export function MainScreen(props: {
         const runtime = res.data.time.split(':');
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
         setNextSong(response);
-        console.log(response);
         if (reservList[0].nickname === myName) {
           dispatch(setSsari(3));
         } else dispatch(setSsari(4));
@@ -235,7 +231,7 @@ export function MainScreen(props: {
     const file = new File([videoBlob], fileName, {
       type: 'video/mp4',
     });
-    console.log(file);
+    console.log('file', file);
     formData.append('file', file);
     axios
       .post(

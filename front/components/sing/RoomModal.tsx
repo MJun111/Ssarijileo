@@ -111,6 +111,7 @@ function RoomModal({ setModalOpen }: any) {
       sessionId: roomDetail.data,
       title,
       mode,
+      userCount: 1,
       userMaxCount: userLimit,
       isPublic: unlock ? 'Y' : 'N',
       password: unlock ? null : pwd,
@@ -126,6 +127,7 @@ function RoomModal({ setModalOpen }: any) {
         },
       },
     );
+    console.log(roomToken);
 
     const reduxData = {
       sessionId: roomDetail.data,

@@ -38,11 +38,11 @@ function Index() {
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
   const [subscribers, setSubscribers] = useState<any[]>([]);
-  const [screenPublisher, setScreenPublisher] = useState<any>();
   const [singer, setSinger] = useState<any[]>([]);
 
   // 초기 상태값
   const [loading, setLoading] = useState(true);
+  const [userCount, setUserCount] = useState(0);
 
   // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -61,6 +61,7 @@ function Index() {
       },
     });
     setRoomInfo(roomDetail.data);
+    setUserCount(roomDetail.data.userList.length);
     console.log('방 정보', roomDetail);
   };
 
@@ -112,12 +113,6 @@ function Index() {
     }
   };
 
-  // 화면 공유 끄기
-  const leaveScreen = () => {
-    console.log(screenSession);
-    screenSession.unpublish(screenPublisher);
-  };
-
   // 다른 참가자가 떠날때
   const deleteSubscriber = (streamManager: any) => {
     const newsubscribers = subscribers;
@@ -142,12 +137,14 @@ function Index() {
         refreshToken: `${getCookie('refreshToken')}`,
       },
     });
-    await axios.delete(
-      `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
-      {
-        headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
-      },
-    );
+    if (userCount <= 1) {
+      await axios.delete(
+        `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
+        {
+          headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+        },
+      );
+    }
   };
 
   // 사용자가 떠날때
@@ -157,14 +154,34 @@ function Index() {
       mySession.disconnect();
     }
 
+    await axios.put(
+      `api/v1/room/out/${storeSessionState.sessionId}`,
+      {
+        password: roomInfo.password,
+      },
+      {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+        },
+      },
+    );
+    setUserCount(userCount - 1);
+
     if (storeSessionState.isHost) {
       await deleteSession();
     } else {
-      leaveScreen();
       dispatch(setReserv([]));
       dispatch(
         setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
       );
+      if (userCount <= 1) {
+        await axios.delete(
+          `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
+          {
+            headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+          },
+        );
+      }
     }
     window.close();
   };

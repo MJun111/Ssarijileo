@@ -64,24 +64,20 @@ function RoomReservItem(props: {
 
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
-    axios
-      .post(
-        'api/v1/reservation',
-        {
-          sessionId: storeSessionState.sessionId,
-          songId: item.songId,
-          isPriority: 'Y',
+    axios.post(
+      'api/v1/reservation',
+      {
+        sessionId: storeSessionState.sessionId,
+        songId: item.songId,
+        isPriority: 'Y',
+      },
+      {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
         },
-        {
-          headers: {
-            Authorization: `${getCookie('Authorization')}`,
-            refreshToken: `${getCookie('refreshToken')}`,
-          },
-        },
-      )
-      .then(res => {
-        console.log(res);
-      });
+      },
+    );
     const newReserv = [...reservationList];
     newReserv.unshift({
       nickname: userNickname,
@@ -90,38 +86,27 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
-    session
-      .signal({
-        data: JSON.stringify(newReserv), // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'reservationList', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`노래 예약 정보 송신 성공`, newReserv);
-      })
-      .catch((error: any) => {
-        console.error('노래 예약 정보 송신 실패', error);
-      });
+    session.signal({
+      data: JSON.stringify(newReserv), // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'reservationList', // The type of message (optional)
+    });
   };
   const secondReserv = () => {
-    axios
-      .post(
-        'api/v1/reservation',
-        {
-          sessionId: storeSessionState.sessionId,
-          songId: item.songId,
-          isPriority: 'Y',
+    axios.post(
+      'api/v1/reservation',
+      {
+        sessionId: storeSessionState.sessionId,
+        songId: item.songId,
+        isPriority: 'Y',
+      },
+      {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
         },
-        {
-          headers: {
-            Authorization: `${getCookie('Authorization')}`,
-            refreshToken: `${getCookie('refreshToken')}`,
-          },
-        },
-      )
-      .then(res => {
-        console.log(res);
-      });
+      },
+    );
     const newReserv = [...reservationList];
     newReserv.splice(1, 0, {
       nickname: userNickname,
@@ -130,40 +115,29 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
-    session
-      .signal({
-        data: JSON.stringify(newReserv), // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'reservationList', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`노래 예약 정보 송신 성공`, newReserv);
-      })
-      .catch((error: any) => {
-        console.error('노래 예약 정보 송신 실패', error);
-      });
+    session.signal({
+      data: JSON.stringify(newReserv), // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'reservationList', // The type of message (optional)
+    });
   };
 
   // 일반예약 (예약목록 맨 뒤에 추가)
   const nomalReserv = () => {
-    axios
-      .post(
-        'api/v1/reservation',
-        {
-          sessionId: storeSessionState.sessionId,
-          songId: item.songId,
-          isPriority: 'N',
+    axios.post(
+      'api/v1/reservation',
+      {
+        sessionId: storeSessionState.sessionId,
+        songId: item.songId,
+        isPriority: 'N',
+      },
+      {
+        headers: {
+          Authorization: `${getCookie('Authorization')}`,
+          refreshToken: `${getCookie('refreshToken')}`,
         },
-        {
-          headers: {
-            Authorization: `${getCookie('Authorization')}`,
-            refreshToken: `${getCookie('refreshToken')}`,
-          },
-        },
-      )
-      .then(res => {
-        console.log(res);
-      });
+      },
+    );
     const newReserv = [...reservationList];
     newReserv.push({
       nickname: userNickname,
@@ -172,18 +146,11 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
-    session
-      .signal({
-        data: JSON.stringify(newReserv), // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'reservationList', // The type of message (optional)
-      })
-      .then(() => {
-        console.log(`노래 예약 정보 송신 성공`, newReserv);
-      })
-      .catch((error: any) => {
-        console.error('노래 예약 정보 송신 실패', error);
-      });
+    session.signal({
+      data: JSON.stringify(newReserv), // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'reservationList', // The type of message (optional)
+    });
   };
   return (
     <div className={styles.container}>
