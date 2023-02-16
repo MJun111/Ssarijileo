@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { setSessionState } from '@/redux/store/sessionStateSlice';
+import { setRoomOut } from '@/redux/store/roomOutSlice';
+import { getCookie } from '@/util/cookie';
 
 import TopImg from '@/components/common/TopImg';
 import SingTop from '@/components/sing/SingTop';
 import RoomList from '@/components/sing/RoomList';
 import SoundBar from '@/components/common/SoundBar';
-
-import { setSessionState } from '@/redux/store/sessionStateSlice';
-import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/Sing.module.scss';
 
@@ -32,10 +32,11 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    if (storeRoomOut) {
+    if (storeRoomOut.isOut) {
+      dispatch(setRoomOut(false));
       window.location.href = '/sing';
     }
-  }, [storeRoomOut]);
+  }, [storeRoomOut.isOut]);
 
   return (
     <div className={styles.container}>

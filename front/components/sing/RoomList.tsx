@@ -57,8 +57,6 @@ function RoomList() {
         refreshToken: `${getCookie('refreshToken')}`,
       },
     });
-    // const roomsInfo = response.data;
-    console.log(response.data);
     setRooms(response.data);
     setFilteredRoom(response.data);
   }
