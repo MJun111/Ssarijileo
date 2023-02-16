@@ -1,12 +1,15 @@
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCookie } from '@/util/cookie';
 import { RootState } from '@/redux/store';
-import { useEffect, useRef, useState } from 'react';
+import { setSsari } from '@/redux/store/ssariSlice';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
+
 import styles from '@/styles/room/OrderSong.module.scss';
+
 function OrderSong(props: {
   screenShare: (
     audioContext: AudioContext,
@@ -158,5 +161,3 @@ function OrderSong(props: {
 }
 
 export default OrderSong;
-
-import { setSsari } from '@/redux/store/ssariSlice';

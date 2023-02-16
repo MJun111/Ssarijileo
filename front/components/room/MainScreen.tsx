@@ -14,14 +14,6 @@ import Guess from './Guess';
 
 import styles from '@/styles/room/Screen.module.scss';
 
-interface Reserv {
-  nickname: string;
-  songId: number;
-  isPriority: string;
-  title: string;
-  singer: string;
-}
-
 export interface Lyrics {
   lyricsId: number;
   verse: string;

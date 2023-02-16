@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import styles from '@/styles/room/Loading.module.scss';
 import { RootState } from '@/redux/store';
+
+import styles from '@/styles/room/Loading.module.scss';
 
 function Loading() {
   const storeTheme = useSelector((state: RootState) => state.theme);

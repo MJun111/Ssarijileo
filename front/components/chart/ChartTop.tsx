@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NextImage from 'next/image';
 import { useSelector } from 'react-redux';
 import { useComponentSize } from 'react-use-size';

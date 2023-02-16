@@ -54,11 +54,11 @@ function PerfectScore(props: {
   const [isStarted, setIsStarted] = useState(false);
   const lyrics = nextSong.lyricsList;
 
-  const stop = () => {
-    musicRef.current?.stop(0);
-    setIsStarted(false);
-    dispatch(setSsari(2));
-  };
+  // const stop = () => {
+  //   musicRef.current?.stop(0);
+  //   setIsStarted(false);
+  //   dispatch(setSsari(2));
+  // };
 
   const isSilentBuffer = (buffer: Float32Array) => {
     let ret = 0;
