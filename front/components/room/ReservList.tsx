@@ -78,10 +78,7 @@ function ReservList({ session }: any) {
                 axios
                   .delete('api/v1/reservation', {
                     data: {
-                      songId:
-                        reservationList.length !== 0
-                          ? reservationList[0].songId
-                          : null,
+                      songId: item.songId,
                       // 임시 세션 아이디
                       sessionId: storeSessionState.sessionId,
                     },
@@ -94,7 +91,7 @@ function ReservList({ session }: any) {
                     console.log(res.data);
                   });
                 const newReserv = [...reservationList];
-                newReserv.splice(idx, 1);
+                newReserv.splice(idx + 1, 1);
                 session
                   .signal({
                     data: JSON.stringify(newReserv), // Any string (optional)

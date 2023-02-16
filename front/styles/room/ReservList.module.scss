@@ -123,13 +123,15 @@
 
       .listOut {
         width: 460px;
-        @include truncate;
+        overflow: hidden;
 
         .listItem {
-          animation: textLoop 30s linear infinite;
           width: 460px;
           display: flex;
           flex-direction: row;
+          @include truncate;
+          animation: textLoop 30s linear infinite;
+          animation-delay: 2s;
 
           .item {
             margin: 0 15px;
