@@ -82,16 +82,6 @@ function RoomModal({ setModalOpen }: any) {
     );
   });
 
-  // 팝업창에 정보 전달
-  const createRoom = () => {
-    const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
-    if (!roomWindow) return;
-    roomWindow.resizeTo(1920, 1080);
-    roomWindow.onresize = () => {
-      roomWindow.resizeTo(1920, 1080);
-    };
-  };
-
   const makeRoom = (e: any) => {
     console.log('팝업창에 전달해줄 newtitle 값 : ', newtitle);
     e.source.postMessage(
@@ -105,12 +95,25 @@ function RoomModal({ setModalOpen }: any) {
       },
       '*',
     );
+  };
+
+  // 팝업창에 정보 전달
+  const createRoom = () => {
+    const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
+    if (!roomWindow) return;
+    roomWindow.resizeTo(1920, 1080);
+    roomWindow.onresize = () => {
+      roomWindow.resizeTo(1920, 1080);
+    };
     window.removeEventListener('message', makeRoom);
     closeModal();
   };
 
   useEffect(() => {
     window.addEventListener('message', makeRoom, true);
+    return () => {
+      window.removeEventListener('message', makeRoom);
+    };
   }, []);
 
   return (

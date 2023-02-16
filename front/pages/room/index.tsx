@@ -216,7 +216,9 @@ function Index() {
   const bodyElt = document.querySelector('body');
   bodyElt?.setAttribute('oncontextmenu', 'return false;');
 
-  window.addEventListener('beforeunload', () => {
+  window.addEventListener('beforeunload', e => {
+    e.preventDefault();
+    e.returnValue = '';
     leaveSession();
   });
 
