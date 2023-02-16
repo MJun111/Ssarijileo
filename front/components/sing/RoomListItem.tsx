@@ -4,17 +4,26 @@ import classNames from 'classnames';
 import { useDispatch } from 'react-redux';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
 import { RoomInfo } from './RoomList';
-// import axios from 'axios';
+import axios from 'axios';
 // import { getCookie } from '@/util/cookie';
 
 import styles from '@/styles/sing/RoomListItem.module.scss';
+import { getCookie } from '@/util/cookie';
 
 type RoomProps = {
   info: RoomInfo;
 };
 
 function RoomListItem({ info }: RoomProps) {
-  const { sessionId, title, mode, isPublic, userCount, password } = info;
+  const {
+    sessionId,
+    title,
+    mode,
+    isPublic,
+    userMaxCount,
+    userCount,
+    password,
+  } = info;
   const [modalMode, setModalMode] = useState(false);
   const dispatch = useDispatch();
   let backClassName = classNames({
@@ -67,44 +76,52 @@ function RoomListItem({ info }: RoomProps) {
   }, []);
 
   // 비밀번호 관리
-  const [roomPassword, setPassword] = useState('');
+  const [pwd, setPwd] = useState('');
   const changePwd = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    setPwd(e.target.value);
   };
 
-  // 임시 비밀번호
-  const pwd = password;
+  const openRoom = () => {
+    const roomWindow = window.open('room/', 'roomWindow', 'resizeable');
+    if (!roomWindow) return;
+    roomWindow.resizeTo(1920, 1080);
+    roomWindow.onresize = () => {
+      roomWindow.resizeTo(1920, 1080);
+    };
+  };
+
+  const getToRoom = async (password: string | null) => {
+    const roomToken = await axios.post(
+      `api/v1/room/connection/${sessionId}`,
+      { password },
+      {
+        headers: {
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
+        },
+      },
+    );
+    const reduxData = {
+      sessionId,
+      roomToken: roomToken.data,
+      isHost: false,
+    };
+    dispatch(setSessionState(reduxData));
+  };
+
   const openWindow = async () => {
-    if (userCount === 6) {
+    console.log(userCount, userMaxCount);
+    if (userCount >= userMaxCount) {
       window.alert('현재 이 방은 최대인원입니다. 다른 방을 이용해주세요.');
       return;
     }
-    // console.log('클릭');
-    // const response = await axios({
-    //   method: 'DELETE',
-    //   url: `api/v1/room/${sessionId}`,
-    //   headers: {
-    //     Authorization: `${getCookie('Authorization')}`,
-    //     refreshToken: `${getCookie('refreshToken')}`,
-    //   },
-    // });
-    // console.log(response);
-    // dispatch(setSessionId(''));
-
     // lock일 경우 비밀번호 창 띄우기
-    dispatch(setSessionState(sessionId));
     if (isPublic === 'N') {
       setModalMode(true);
     } else {
-      const popupWindow = window.open('room/', 'windowName', 'resizeable');
-      if (!popupWindow) return;
-      popupWindow.resizeTo(1920, 1080);
-      popupWindow.onresize = () => {
-        popupWindow.resizeTo(1920, 1080);
-      };
-      if (popupWindow.closed) {
-        console.log('closed');
-      }
+      setModalMode(false);
+      await getToRoom(null);
+      openRoom();
     }
   };
 
@@ -137,22 +154,13 @@ function RoomListItem({ info }: RoomProps) {
               <button
                 className={styles.okBtn}
                 type="button"
-                onClick={() => {
-                  if (roomPassword === pwd) {
+                onClick={async () => {
+                  if (password === pwd) {
                     setModalMode(false);
-                    dispatch(setSessionState(sessionId));
-                    const popupWindow = window.open(
-                      'room/',
-                      'windowName',
-                      'resizeable',
-                    );
-                    if (!popupWindow) return;
-                    popupWindow.resizeTo(1920, 1080);
-                    popupWindow.onresize = () => {
-                      popupWindow.resizeTo(1920, 1080);
-                    };
+                    await getToRoom(null);
+                    openRoom();
                   } else {
-                    setPassword('');
+                    setPwd('');
                     window.alert('비밀번호가 틀렸습니다. 🔒');
                   }
                 }}

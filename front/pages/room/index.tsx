@@ -6,6 +6,7 @@ import { OpenVidu } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
+import { setRoomOut } from '@/redux/store/roomOutSlice';
 import { getCookie } from '@/util/cookie';
 
 import RoomHeader from '@/components/room/RoomHeader';
@@ -182,6 +183,7 @@ function Index() {
   bodyElt?.setAttribute('oncontextmenu', 'return false;');
 
   window.addEventListener('beforeunload', () => {
+    dispatch(setRoomOut(true));
     leaveSession();
   });
 

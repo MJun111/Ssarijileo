@@ -133,7 +133,7 @@ function PerfectScore(props: {
   };
 
   const drawlyrics = (ctx: CanvasRenderingContext2D, currTime: number) => {
-    const deltaTime = currTime + 2700;
+    const deltaTime = currTime - 2.7;
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
       lyrics.shift();
       lyricFlag.current = !lyricFlag.current;
