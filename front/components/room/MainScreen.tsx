@@ -70,7 +70,9 @@ export function MainScreen(props: {
   }, []);
 
   const nextCycle = () => {
-    const nextReserList = reservList.splice(1);
+    // console.log('현재 인원 : ', session.connections.numberOfElements);
+    const nextReserList = [...reservList];
+    nextReserList.shift();
     session.signal({
       data: JSON.stringify(nextReserList), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)

@@ -22,7 +22,7 @@ function RoomFriend({ setModalOpen }: any) {
 
   useEffect(() => {
     axios
-      .get(`api/v1/friend/${storeUser.nickname}`, {
+      .get(`api/v1/friend/my/${storeUser.nickname}`, {
         headers: {
           Authorization: `${getCookie('Authorization')}`,
           refreshToken: `${getCookie('refreshToken')}`,
