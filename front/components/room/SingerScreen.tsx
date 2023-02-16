@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from '@/styles/room/Screen.module.scss';
 import { RootState } from '@/redux/store';
 import { setBtn } from '@/redux/store/btnSlice';
+
+import styles from '@/styles/room/Screen.module.scss';
 
 function SingerScreen(props: { streamManager: any; session: any }) {
   const { streamManager, session } = props;
@@ -11,6 +12,7 @@ function SingerScreen(props: { streamManager: any; session: any }) {
   const screen = streamManager;
   const storeBtn = useSelector((state: RootState) => state.btn);
   const dispatch = useDispatch();
+  const storeUser = useSelector((state: RootState) => state.user);
 
   let screenClass = classnames({
     [styles.singerScreen]: true,

@@ -5,6 +5,8 @@ import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
+import { setReserv } from '@/redux/store/reservSlice';
+import { useDispatch } from 'react-redux';
 
 import styles from '@/styles/room/RoomReservItem.module.scss';
 
@@ -39,6 +41,8 @@ function RoomReservItem(props: {
     (state: RootState) => state.sessionState,
   );
 
+  const dispatch = useDispatch();
+
   // 우선예약 (예약목록 맨 앞에 추가)
   const firstReserv = () => {
     axios.post(
@@ -63,6 +67,7 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
+    dispatch(setReserv(newReserv));
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
@@ -92,6 +97,7 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
+    dispatch(setReserv(newReserv));
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
@@ -123,6 +129,7 @@ function RoomReservItem(props: {
       title: item.title,
       singer: item.singer,
     });
+    dispatch(setReserv(newReserv));
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)

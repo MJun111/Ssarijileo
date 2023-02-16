@@ -61,15 +61,17 @@ export function MainScreen(props: {
   const nowState = storeSsari.ssari;
 
   // 노래 끝나고 다음 상태 사이클 진행
-  // useEffect(() => {
-  //   session.on('signal:nextCycleReserv', (event: any) => {
-  //     const getReserveData = JSON.parse(event.data);
-  //     console.log('부른노래가 제거된 예약목록', getReserveData);
-  //     console.log('다음 사이클 진행, 0, 메인스크린');
-  //     dispatch(setReserv([...getReserveData]));
-  //     dispatch(setSsari(0));
-  //   });
-  // }, []);
+  useEffect(() => {
+    session.on('signal:nextCycleReserv', (event: any) => {
+      const fromUser = JSON.parse(event.from.data).clientData;
+      if (fromUser === myName) return;
+      const getReserveData = JSON.parse(event.data);
+      console.log('부른노래가 제거된 예약목록', getReserveData);
+      console.log('다음 사이클 진행, 0, 메인스크린');
+      dispatch(setReserv([...getReserveData]));
+      dispatch(setSsari(0));
+    });
+  }, []);
 
   const nextCycle = () => {
     const nextReserList = [...reservList];
@@ -78,11 +80,10 @@ export function MainScreen(props: {
     dispatch(setSsari(0));
     session.signal({
       data: JSON.stringify(nextReserList), // Any string (optional)
-      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
       type: 'nextCycleReserv', // The type of message (optional)
     });
     console.log('다음 사이클 진행, 0, 메인스크린');
-    dispatch(setSsari(0));
   };
 
   // 노래방 상태관리

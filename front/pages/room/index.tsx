@@ -33,6 +33,7 @@ function Index() {
   const dispatch = useDispatch();
   // username
   const storeUser = useSelector((state: RootState) => state.user);
+  const myName = storeUser.nickname;
 
   const [roomInfo, setRoomInfo] = useState<RoomDetail>({} as RoomDetail);
 
@@ -71,7 +72,7 @@ function Index() {
       },
     });
     setRoomInfo(roomDetail.data);
-    setUserCount(roomDetail.data.userList.length);
+    setUserCount(roomDetail.data.userList?.length);
     console.log('방 정보', roomDetail.data);
   };
 

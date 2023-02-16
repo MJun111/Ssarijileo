@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 import RoomController from './RoomController';
 import RoomFriend from './RoomFriend';
@@ -16,6 +18,9 @@ function RoomFooter({ session, publisher }: any) {
   const [chatList, setChatList] = useState<any>([]);
   const [cam, setCam] = useState(true);
   const [mic, setMic] = useState(true);
+
+  const storeUser = useSelector((store: RootState) => store.user);
+  const myName = storeUser.nickname;
 
   // cam, mic on off
   const camControl = () => {
@@ -35,6 +40,8 @@ function RoomFooter({ session, publisher }: any) {
   // 채팅 듣기 on
   const chatOn = () => {
     session.on('signal:chat', (event: any) => {
+      const fromUser = JSON.parse(event.from.data).clientData;
+      if (fromUser === myName) return;
       const newChat = JSON.parse(event.data);
       chatList.push(newChat);
       setChatList([...chatList]);
@@ -43,6 +50,9 @@ function RoomFooter({ session, publisher }: any) {
 
   // 채팅 보내기
   const sendChat = (sendMassage: string) => {
+    const chatContent = JSON.parse(sendMassage);
+    chatList.push(chatContent);
+    setChatList([...chatList]);
     session.signal({
       data: sendMassage,
       to: [],
