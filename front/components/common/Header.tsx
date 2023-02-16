@@ -23,21 +23,20 @@ function Header() {
   if (window.location.pathname === '/room') return null;
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [themeMode, setThemeMode] = useState('light');
-  const [nowLogin, setNowLogin] = useState(false);
   const [checked, setChecked] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [profileImg, setProfileImg] = useState('');
   const dispatch = useDispatch();
 
   const storeLogin = useSelector((state: RootState) => state.login);
   const storeTheme = useSelector((state: RootState) => state.theme);
   const storeUser = useSelector((state: RootState) => state.user);
+  const themeMode = storeTheme.theme;
+  const nowLogin = storeLogin.login;
+  const profileImg = storeUser.img;
 
   const changeMode = useCallback(() => {
     setChecked(!checked);
     const theme = themeMode === 'light' ? 'dark' : 'light';
-    setThemeMode(theme);
     dispatch(setTheme(theme));
   }, [checked, themeMode]);
 
@@ -47,18 +46,9 @@ function Header() {
 
   useEffect(() => {
     const theme = storeTheme.theme || 'light';
-    setThemeMode(theme);
     dispatch(setTheme(theme));
     setChecked(theme === 'dark');
   }, []);
-
-  useEffect(() => {
-    setNowLogin(storeLogin.login);
-  }, [storeLogin]);
-
-  useEffect(() => {
-    setProfileImg(storeUser.img);
-  }, [storeUser]);
 
   const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -241,7 +231,6 @@ function Header() {
   }, []);
 
   const allDelCookies = () => {
-    setNowLogin(false);
     dispatch(setLogin(false));
     setCookie('Authorization', '', 0);
     setCookie('refreshToken', '', 0);

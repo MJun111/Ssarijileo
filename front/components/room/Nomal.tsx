@@ -282,7 +282,6 @@ function Nomal(props: {
             musicRef.current?.stop(0);
             recordStop();
             // screenSession.forceunpublish(screen);
-            console.log(musicRef.current);
             dispatch(setSsari(7));
           }}
           className={styles.nextBtn}

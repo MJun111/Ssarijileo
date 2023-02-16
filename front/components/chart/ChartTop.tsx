@@ -18,13 +18,8 @@ function ChartTop(props: {
   month: ChartItem[];
 }) {
   const { day, week, month } = props;
-  const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
-
-  useEffect(() => {
-    const theme = storeTheme.theme || 'light';
-    setThemeMode(theme);
-  }, [storeTheme]);
+  const { theme } = storeTheme;
 
   const { height, width, ref } = useComponentSize();
   const canvasWidth = width;
@@ -33,7 +28,7 @@ function ChartTop(props: {
   const canvasRef = useCanvas(canvasWidth, canvasHeight);
 
   const noteImages = (num: number) =>
-    `img/chart/${themeMode}/${themeMode}_chart_heart${num}_image.svg`;
+    `img/chart/${theme}/${theme}_chart_heart${num}_image.svg`;
   const noteWindow: {
     speed: {
       x: number;
@@ -99,10 +94,10 @@ function ChartTop(props: {
     }
   };
 
-  const heartA = `img/chart/${themeMode}/${themeMode}_chart_heart1_image.svg`;
-  const heartB = `img/chart/${themeMode}/${themeMode}_chart_heart2_image.svg`;
-  const heartC = `img/chart/${themeMode}/${themeMode}_chart_heart3_image.svg`;
-  const heartD = `img/chart/${themeMode}/${themeMode}_chart_heart4_image.svg`;
+  const heartA = `img/chart/${theme}/${theme}_chart_heart1_image.svg`;
+  const heartB = `img/chart/${theme}/${theme}_chart_heart2_image.svg`;
+  const heartC = `img/chart/${theme}/${theme}_chart_heart3_image.svg`;
+  const heartD = `img/chart/${theme}/${theme}_chart_heart4_image.svg`;
 
   useAnimation(animate, 0);
 

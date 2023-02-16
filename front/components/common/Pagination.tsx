@@ -14,18 +14,15 @@ type PaginationProps = {
 };
 
 function Pagination({ totalPosts, limit, page, setPage }: PaginationProps) {
-  const [themeMode, setThemeMode] = useState('light');
   const [currPage, setCurrPage] = useState(page);
 
   const storeTheme = useSelector((state: RootState) => state.theme);
+  const { theme } = storeTheme;
 
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [themeMode, storeTheme]);
-  const firstIcon = `img/common/${themeMode}/${themeMode}_first_image.svg`;
-  const prevIcon = `img/common/${themeMode}/${themeMode}_prev_image.svg`;
-  const nextIcon = `img/common/${themeMode}/${themeMode}_next_image.svg`;
-  const lastIcon = `img/common/${themeMode}/${themeMode}_last_image.svg`;
+  const firstIcon = `img/common/${theme}/${theme}_first_image.svg`;
+  const prevIcon = `img/common/${theme}/${theme}_prev_image.svg`;
+  const nextIcon = `img/common/${theme}/${theme}_next_image.svg`;
+  const lastIcon = `img/common/${theme}/${theme}_last_image.svg`;
 
   // 한 페이지에 보여줄 아이템 개수, 아이템 list 전달받기
   const firstNum = currPage - (currPage % 5) + 1;

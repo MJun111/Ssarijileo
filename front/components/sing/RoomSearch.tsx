@@ -17,14 +17,10 @@ function RoomSearch(props: {
 }) {
   const { optionItem, rooms, setFilteredRoom, setPage } = props;
   // 다크모드 상태 관리
-  const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
+  const { theme } = storeTheme;
 
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
-
-  const toggle = `img/common/${themeMode}/${themeMode}_toggle_open_image.svg`;
+  const toggle = `img/common/${theme}/${theme}_toggle_open_image.svg`;
 
   const [sortType, setSortType] = useState('Default');
   const [searchText, setSearchText] = useState('');

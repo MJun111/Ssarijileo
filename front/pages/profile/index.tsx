@@ -12,24 +12,15 @@ import styles from '@/styles/profile/Profile.module.scss';
 import { setProfile } from '@/redux/store/profileSlice';
 
 function MyPage() {
-  const [themeMode, setThemeMode] = useState('light');
   const [type, setType] = useState('계정 관리');
-  const [nicknameValue, setNicknameValue] = useState('');
-  const [profileImg, setProfileImg] = useState('');
 
   const storeTheme: any = useSelector((state: RootState) => state.theme);
   const storeUser: any = useSelector((state: RootState) => state.user);
   const storeProfile: any = useSelector((state: RootState) => state.profile);
+  const { theme } = storeTheme;
+  const profileImg = storeUser.img;
+  const nicknameValue = storeUser.nickname;
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
-
-  useEffect(() => {
-    setProfileImg(storeUser.img);
-    setNicknameValue(storeUser.nickname);
-  }, [storeUser]);
 
   useEffect(() => {
     const token = getCookie('Authorization');
@@ -84,7 +75,7 @@ function MyPage() {
         <div className={styles.content}>
           <h1>마이페이지</h1>
           <p className={styles.contentHeader}>{type}</p>
-          {type === '계정 관리' && <ContentForm theme={themeMode} />}
+          {type === '계정 관리' && <ContentForm theme={theme} />}
           {type === '친구 목록' && <FriendForm />}
         </div>
       </div>

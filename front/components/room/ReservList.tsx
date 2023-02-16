@@ -11,13 +11,9 @@ import { getCookie } from '@/util/cookie';
 import styles from '@/styles/room/ReservList.module.scss';
 
 function ReservList({ session }: any) {
-  const [themeMode, setThemeMode] = useState('light');
   // 다크모드 관리
   const storeTheme = useSelector((state: RootState) => state.theme);
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
-
+  const { theme } = storeTheme;
   const [modalOpen, setModalOpen] = useState(false);
   // 예약목록 모달 관리
   const showModal = () => {
@@ -30,7 +26,7 @@ function ReservList({ session }: any) {
   });
 
   // 다크모드에 따라 아이콘 경로 변경
-  const toggleIcon = `img/ssari/${themeMode}/${themeMode}_ssari_toggle_image.svg`;
+  const toggleIcon = `img/ssari/${theme}/${theme}_ssari_toggle_image.svg`;
 
   const storeReserv = useSelector((state: RootState) => state.reserv);
   // const storeSsari = useSelector((state: RootState) => state.ssari);

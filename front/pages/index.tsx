@@ -106,16 +106,12 @@ function Home(props: {
   ranking: RankingItem[];
 }) {
   const { chartItemA, chartItemB, ranking } = props;
-  const [themeMode, setThemeMode] = useState('light');
   const storeTheme = useSelector((state: RootState) => state.theme);
-
-  useEffect(() => {
-    setThemeMode(storeTheme.theme);
-  }, [storeTheme]);
+  const { theme } = storeTheme;
 
   const img = {
-    team: `img/common/${themeMode || 'light'}/${
-      themeMode || 'light'
+    team: `img/common/${theme || 'light'}/${
+      theme || 'light'
     }_team_info_image.svg`,
   };
 

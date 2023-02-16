@@ -7,24 +7,35 @@ import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
 import { setRoomOut } from '@/redux/store/roomOutSlice';
-import { getCookie } from '@/util/cookie';
+import { setSsari } from '@/redux/store/ssariSlice';
 
+import { getCookie } from '@/util/cookie';
 import RoomHeader from '@/components/room/RoomHeader';
 import MainScreen from '@/components/room/MainScreen';
 import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
-import Loading from '@/components/room/Loading';
 import SingerScreen from '@/components/room/SingerScreen';
+import Loading from '@/components/room/Loading';
 
 import styles from '@/styles/Room.module.scss';
+
+export interface RoomDetail {
+  isPublic: string;
+  mode: string;
+  password: string | null;
+  sessionId: string;
+  title: string;
+  userId: string;
+  userList: string[];
+  userMaxCount: number;
+}
 
 function Index() {
   const dispatch = useDispatch();
   // username
   const storeUser = useSelector((state: RootState) => state.user);
 
-  // sessionId (Redux 값받아오기)
-  const [roomInfo, setRoomInfo] = useState<any>();
+  const [roomInfo, setRoomInfo] = useState<RoomDetail>({} as RoomDetail);
 
   const storeSessionState = useSelector(
     (state: RootState) => state.sessionState,
@@ -62,7 +73,7 @@ function Index() {
     });
     setRoomInfo(roomDetail.data);
     setUserCount(roomDetail.data.userList.length);
-    console.log('방 정보', roomDetail);
+    console.log('방 정보', roomDetail.data);
   };
 
   // api screen
@@ -137,7 +148,7 @@ function Index() {
         refreshToken: `${getCookie('refreshToken')}`,
       },
     });
-    if (userCount <= 1) {
+    if (userCount <= 1 && session) {
       await axios.delete(
         `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
         {
@@ -153,18 +164,13 @@ function Index() {
     if (mySession) {
       mySession.disconnect();
     }
+    dispatch(setSsari(1));
 
-    await axios.put(
-      `api/v1/room/out/${storeSessionState.sessionId}`,
-      {
-        password: roomInfo.password,
+    await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
       },
-      {
-        headers: {
-          Authorization: `${getCookie('Authorization')}`,
-        },
-      },
-    );
+    });
     setUserCount(userCount - 1);
 
     if (storeSessionState.isHost) {
@@ -174,7 +180,7 @@ function Index() {
       dispatch(
         setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
       );
-      if (userCount <= 1) {
+      if (userCount <= 1 && mySession) {
         await axios.delete(
           `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
           {

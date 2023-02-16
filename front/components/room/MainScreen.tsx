@@ -49,30 +49,23 @@ export function MainScreen(props: {
   publisher: any;
   session: any;
 }) {
-  // const { singMode, subscribers, screenOV, screenSession, publisher, session } = props;
   const { singMode, screenOV, screenSession, publisher, session } = props;
   const [screen, setScreen] = useState<any>(undefined);
   const [nextSong, setNextSong] = useState<NextSong>();
   const [screenPublisher, setScreenPublisher] = useState<any>();
-  const [cycle, setCycle] = useState(1);
   const dispatch = useDispatch();
 
   // 내 닉네임 정보 받아오기 (redux)
-  const [myName, setMyname] = useState('');
   const storeUser = useSelector((state: RootState) => state.user);
-  useEffect(() => {
-    setMyname(storeUser.nickname);
-  }, [storeUser]);
+  const myName = storeUser.nickname;
 
   // 노래 예약 목록 받아오기 (redux)
-  const [reservList, setReservList] = useState<Reserv[]>([]);
   const storeReserv = useSelector((state: RootState) => state.reserv);
-  useEffect(() => {
-    setReservList([...storeReserv.reserv]);
-  }, [storeReserv]);
+  const reservList = storeReserv.reserv;
 
   // 저장되어있는 상태값 불러오기 (redux)
   const storeSsari = useSelector((state: RootState) => state.ssari);
+  const nowState = storeSsari.ssari;
 
   // 노래 끝나고 다음 상태 사이클 진행
   useEffect(() => {
@@ -85,25 +78,25 @@ export function MainScreen(props: {
 
   const nextCycle = () => {
     const nextReserList = reservList.splice(1);
-    session
-      .signal({
-        data: JSON.stringify(nextReserList), // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: 'nextCycleReserv', // The type of message (optional)
-      })
+    session.signal({
+      data: JSON.stringify(nextReserList), // Any string (optional)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      type: 'nextCycleReserv', // The type of message (optional)
+    });
+    dispatch(setSsari(0));
   };
 
   // 노래방 상태관리
   useEffect(() => {
-    if (storeSsari.ssari === 0) {
+    console.log('현재 상태값', nowState);
+    if (nowState === 0) {
       // if (subscribers.length !== 0) dispatch(setSsari(1));
       dispatch(setSsari(1));
     }
-    if (storeSsari.ssari === 1) {
+    if (nowState === 1) {
       if (reservList.length > 0) dispatch(setSsari(2));
     }
-    if (storeSsari.ssari === 2) {
-      setCycle(1);
+    if (nowState === 2) {
       axios({
         method: 'GET',
         url: `api/v1/song/detail/${reservList[0].songId}`,
@@ -121,14 +114,14 @@ export function MainScreen(props: {
         } else dispatch(setSsari(4));
       });
     }
-    if (storeSsari.ssari === 7) {
+    if (nowState === 7) {
       screenSession.unpublish(screenPublisher);
       nextCycle();
     }
-  }, [storeSsari.ssari]);
+  }, [nowState]);
 
   useEffect(() => {
-    if (reservList.length === 1 && storeSsari.ssari === 1) {
+    if (reservList.length === 1 && nowState === 1) {
       dispatch(setSsari(2));
     }
   }, [reservList]);
@@ -168,7 +161,9 @@ export function MainScreen(props: {
     audioContext: AudioContext,
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => {
-    publisher[0].publishAudio(false);
+    if (publisher.length > 0) {
+      publisher[0].publishAudio(false);
+    }
     screenOV
       .getUserMedia({
         audioSource: undefined,
@@ -285,25 +280,25 @@ export function MainScreen(props: {
   return (
     <div className={styles.modeScreen}>
       {/* 공통 */}
-      {storeSsari.ssari === 0 && (
+      {nowState === 0 && (
         <CommonState title={title[0]} recordStart={recordStart} />
       )}
-      {storeSsari.ssari === 1 && (
+      {nowState === 1 && (
         <CommonState title={title[1]} recordStart={recordStart} />
       )}
-      {storeSsari.ssari === 2 && (
+      {nowState === 2 && (
         <CommonState title={title[2]} recordStart={recordStart} />
       )}
       {/* 대기 상태 */}
-      {storeSsari.ssari === 3 && (
+      {nowState === 3 && (
         <CommonState title={title[0]} recordStart={recordStart} />
       )}
-      {storeSsari.ssari === 4 && (
+      {nowState === 4 && (
         <CommonState title={title[3]} recordStart={recordStart} />
       )}
       {/* 일반 노래방 */}
       {/* 진행 상태 */}
-      {[5, 6].includes(storeSsari.ssari) && singMode === 'N' && nextSong && (
+      {[5, 6].includes(nowState) && singMode === 'N' && nextSong && (
         <Nomal
           nextSong={nextSong}
           screenShare={screenShare}
@@ -311,18 +306,18 @@ export function MainScreen(props: {
           recordStop={recordStop}
         />
       )}
-      {storeSsari.ssari === 5 && singMode === 'P' && nextSong && (
+      {nowState === 5 && singMode === 'P' && nextSong && (
         <PerfectScore screenShare={screenShare} nextSong={nextSong} />
       )}
-      {storeSsari.ssari === 6 && singMode === 'P' && (
+      {nowState === 6 && singMode === 'P' && (
         <video className={styles.video} autoPlay ref={videoRef}>
           <track kind="captions" />
         </video>
       )}
-      {storeSsari.ssari === 5 && singMode === 'O' && (
+      {nowState === 5 && singMode === 'O' && (
         <OrderSong screenShare={screenShare} nextSong={nextSong} />
       )}
-      {storeSsari.ssari === 6 && singMode === 'O' && (
+      {nowState === 6 && singMode === 'O' && (
         <Guess session={session} nextSong={nextSong} />
       )}
     </div>
