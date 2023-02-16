@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import styles from '@/styles/room/Guess.module.scss';
-import { NextSong } from './MainScreen';
 
-function Guess(props: { session: any; nextSong: NextSong }) {
+function Guess(props: { session: any; nextSong: any }) {
   const { session, nextSong } = props;
   const lyricList = nextSong.lyricsList.map((item: any) => {
     // setInterval로 다음 가사 시간 전까지 class지정
