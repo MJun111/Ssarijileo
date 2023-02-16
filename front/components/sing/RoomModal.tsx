@@ -4,12 +4,15 @@ import classNames from 'classnames';
 
 import styles from '@/styles/sing/RoomModal.module.scss';
 
+let modaltitle = '1';
+let modalmode = 'N';
+
 function RoomModal({ setModalOpen }: any) {
   // 모달창 open 여부
   const closeModal = () => {
     setModalOpen(false);
   };
-
+  console.log('room모달 컴포넌트 실행');
   // 방제
   const [titleWarning, setTitleWarning] = useState(false);
   const [newtitle, setTitle] = useState('방');
@@ -20,6 +23,7 @@ function RoomModal({ setModalOpen }: any) {
     }
     setTitleWarning(false);
     setTitle(event.target.value);
+    modaltitle = event.target.value;
   };
 
   const titleClass = classNames({
@@ -70,6 +74,7 @@ function RoomModal({ setModalOpen }: any) {
         type="button"
         onClick={() => {
           setnewMode(str);
+          modalmode = str;
         }}
       >
         {arrB[idx]}
@@ -88,11 +93,12 @@ function RoomModal({ setModalOpen }: any) {
   };
 
   const makeRoom = (e: any) => {
+    console.log('팝업창에 전달해줄 newtitle 값 : ', newtitle);
     e.source.postMessage(
       {
         sessionId: undefined,
-        title: newtitle,
-        mode: newMode,
+        title: modaltitle,
+        mode: modalmode,
         userMaxCount: 6,
         isPublic: 'Y',
         password: null,
