@@ -176,7 +176,7 @@ function Header() {
     );
     const reduxData = {
       sessionId,
-      roomToken: roomToken.data,
+      sessionToken: roomToken.data,
       isHost: false,
     };
     dispatch(setSessionState(reduxData));

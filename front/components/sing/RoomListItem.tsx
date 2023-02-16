@@ -119,8 +119,8 @@ function RoomListItem({ info }: RoomProps) {
     if (isPublic === 'N') {
       setModalMode(true);
     } else {
-      setModalMode(false);
       await getToRoom(null);
+      setModalMode(false);
       openRoom();
     }
   };
@@ -156,8 +156,8 @@ function RoomListItem({ info }: RoomProps) {
                 type="button"
                 onClick={async () => {
                   if (password === pwd) {
-                    setModalMode(false);
                     await getToRoom(null);
+                    setModalMode(false);
                     openRoom();
                   } else {
                     setPwd('');
