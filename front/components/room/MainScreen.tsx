@@ -74,10 +74,9 @@ export function MainScreen(props: {
   }, []);
 
   const nextCycle = () => {
+    // console.log('현재 인원 : ', session.connections.numberOfElements);
     const nextReserList = [...reservList];
     nextReserList.shift();
-    dispatch(setReserv([...nextReserList]));
-    dispatch(setSsari(0));
     session.signal({
       data: JSON.stringify(nextReserList), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
