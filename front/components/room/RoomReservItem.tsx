@@ -154,7 +154,7 @@ function RoomReservItem(props: {
         <button
           type="button"
           className={styles.firstReserv}
-          onClick={storeSsari.ssari < 3 ? firstReserv : secondReserv}
+          onClick={storeSsari.ssari < 5 ? firstReserv : secondReserv}
         >
           우선예약
         </button>

@@ -61,22 +61,27 @@ export function MainScreen(props: {
   const nowState = storeSsari.ssari;
 
   // 노래 끝나고 다음 상태 사이클 진행
-  useEffect(() => {
-    session.on('signal:nextCycleReserv', (event: any) => {
-      const getReserveData = JSON.parse(event.data);
-      console.log('부른노래가 제거된 예약목록', getReserveData);
-      dispatch(setReserv([...getReserveData]));
-      dispatch(setSsari(0));
-    });
-  }, []);
+  // useEffect(() => {
+  //   session.on('signal:nextCycleReserv', (event: any) => {
+  //     const getReserveData = JSON.parse(event.data);
+  //     console.log('부른노래가 제거된 예약목록', getReserveData);
+  //     console.log('다음 사이클 진행, 0, 메인스크린');
+  //     dispatch(setReserv([...getReserveData]));
+  //     dispatch(setSsari(0));
+  //   });
+  // }, []);
 
   const nextCycle = () => {
-    const nextReserList = reservList.splice(1);
+    const nextReserList = [...reservList];
+    nextReserList.shift();
+    dispatch(setReserv([...nextReserList]));
+    dispatch(setSsari(0));
     session.signal({
       data: JSON.stringify(nextReserList), // Any string (optional)
-      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+      to: [], // Array of Connection objects (optional. Broadcast to everyone if empty
       type: 'nextCycleReserv', // The type of message (optional)
     });
+    console.log('다음 사이클 진행, 0, 메인스크린');
     dispatch(setSsari(0));
   };
 
@@ -85,10 +90,14 @@ export function MainScreen(props: {
     console.log('현재 상태값', nowState);
     if (nowState === 0) {
       // if (subscribers.length !== 0) dispatch(setSsari(1));
+      console.log('이거 터지면 버그, 1, 메인스크린');
       dispatch(setSsari(1));
     }
     if (nowState === 1) {
-      if (reservList.length > 0) dispatch(setSsari(2));
+      if (reservList.length > 0) {
+        console.log('예약목록 있음, 2, 메인스크린');
+        dispatch(setSsari(2));
+      }
     }
     if (nowState === 2) {
       axios({
@@ -104,6 +113,7 @@ export function MainScreen(props: {
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
         setNextSong(response);
         if (reservList[0].nickname === myName) {
+          console.log('내차례, 3, 메인스크린');
           dispatch(setSsari(3));
         } else dispatch(setSsari(4));
       });
@@ -116,6 +126,7 @@ export function MainScreen(props: {
 
   useEffect(() => {
     if (reservList.length === 1 && nowState === 1) {
+      console.log('예약목록 1개 있음, 2, 메인스크린');
       dispatch(setSsari(2));
     }
   }, [reservList]);
@@ -126,6 +137,7 @@ export function MainScreen(props: {
       const subScreen = screenSession.subscribe(event.stream, undefined);
       if (reservList.length) {
         if (reservList[0].nickname !== myName) {
+          console.log('다른사람이 노래 부르기 시작, 6, 메인스크린');
           dispatch(setSsari(6));
         }
       }
