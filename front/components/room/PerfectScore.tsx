@@ -402,8 +402,8 @@ function PerfectScore(props: {
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
-      musicRef.current = musicSource;
       musicSource.connect(mp3AudioDestination);
+      musicRef.current = musicSource;
       musicSource.onended = async () => {
         await axios.delete('api/v1/reservation/sing', {
           headers: {

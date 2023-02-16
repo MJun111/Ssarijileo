@@ -149,66 +149,7 @@ export function MainScreen(props: {
       });
   };
 
-  let userMicStream: MediaStream | null = null;
-  let videoRecorder: MediaRecorder | null = null;
-  let videoBlob: Blob | null = null;
-
-  const sendRecording = () => {
-    if (!videoRecorder || !videoBlob) return;
-    const formData = new FormData();
-    const fileName = new Date().toISOString();
-    const file = new File([videoBlob], fileName, {
-      type: 'video/mp4',
-    });
-    console.log('file', file);
-    formData.append('file', file);
-    axios
-      .post(
-        'api/v1/recording',
-        {
-          data: {
-            songId: reservList[0].songId,
-            formData,
-          },
-        },
-        {
-          headers: {
-            Authorization: getCookie('token'),
-          },
-        },
-      )
-      .then(res => {
-        console.log(res);
-      });
-  };
-
-  const recordStart = () => {
-    dispatch(setSsari(5));
-    if (!userMicStream) return;
-    const videoData: Blob[] = [];
-    videoRecorder = new MediaRecorder(userMicStream, {
-      mimeType: 'video/webm; codecs=vp9,opus',
-    });
-    videoRecorder.ondataavailable = (event: any) => {
-      if (event.data.size > 0) {
-        videoData.push(event.data);
-      }
-    };
-    videoRecorder.onstop = () => {
-      videoBlob = new Blob(videoData, { type: 'video/webm' });
-      // 이벤트 실행 시에 서버로 파일 POST
-      sendRecording();
-    };
-    videoRecorder.start();
-  };
-
-  const recordStop = () => {
-    dispatch(setSsari(7));
-    console.log('videoRecorder', videoRecorder);
-    if (!videoRecorder) return;
-    videoRecorder.stop();
-    videoRecorder = null;
-  };
+  const videoRecorderRef = useRef<MediaRecorder>();
 
   // 화면 공유
   const screenShare = (
@@ -224,20 +165,57 @@ export function MainScreen(props: {
       })
       .then(async () => {
         // audioSource
-        userMicStream = await navigator.mediaDevices.getUserMedia({
+        const userMicStream = await navigator.mediaDevices.getUserMedia({
           video: true,
           audio: true,
         });
         const userContext = audioContext.createMediaStreamSource(userMicStream);
         userContext.connect(mp3AudioDestination);
-        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
+        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks();
+
+        if (isRecord) {
+          const videoRecorder = new MediaRecorder(mp3AudioDestination.stream, {
+            mimeType: 'video/webm',
+          });
+          videoRecorderRef.current = videoRecorder;
+          const blobs: any = [];
+          videoRecorder.ondataavailable = event => {
+            blobs.push(event.data);
+          };
+          videoRecorder.onstop = async () => {
+            const blob = new Blob(blobs, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            console.log('녹화파일', url);
+            const formData = new FormData();
+            const fileName = new Date().toISOString();
+            const file = new File([blob], fileName, {
+              type: 'video/webm',
+            });
+            formData.append('file', file);
+            formData.append(
+              'recordingDto',
+              new Blob([JSON.stringify({ songId: reservList[0].songId })], {
+                type: 'application/json',
+              }),
+            );
+            const res = await axios.post('api/v1/recording', formData, {
+              headers: {
+                Authorization: getCookie('Authorization'),
+                refreshToken: getCookie('refreshToken'),
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+            console.log('녹화파일 저장', res);
+          };
+          videoRecorder.start();
+        }
 
         // videoSource
         const canvas = document.getElementById(
           'screen-screen',
         ) as HTMLCanvasElement | null;
 
-        const testVideoTrack = canvas?.captureStream(30).getVideoTracks()[0];
+        const testVideoTrack = canvas?.captureStream(30).getVideoTracks();
         const newScreenPublisher = screenOV.initPublisher(undefined, {
           audioSource: testAudioTrack,
           videoSource: testVideoTrack,
@@ -246,6 +224,11 @@ export function MainScreen(props: {
         setScreenPublisher(newScreenPublisher);
         screenSession.publish(newScreenPublisher);
       });
+  };
+
+  const stopRecord = () => {
+    videoRecorderRef.current?.stop();
+    setIsRecord(false);
   };
 
   // 다른사람 노래부르는 화면 송출 끝날때
@@ -295,7 +278,7 @@ export function MainScreen(props: {
           nextSong={nextSong}
           screenShare={screenShare}
           screen={screen}
-          recordStop={recordStop}
+          recordStop={stopRecord}
         />
       )}
       {nowState === 5 && singMode === 'P' && nextSong && (

@@ -21,11 +21,12 @@ function Video() {
     axios
       .get('api/v1/recording/my', {
         headers: {
-          Authorization: `${getCookie('Authorization')}`,
-          refreshToken: `${getCookie('refreshToken')}`,
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
         },
       })
       .then(res => {
+        console.log(res.data);
         setRecordList(res.data);
         setFilteredRecordList(res.data);
       });

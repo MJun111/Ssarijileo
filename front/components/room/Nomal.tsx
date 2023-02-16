@@ -104,50 +104,48 @@ function Nomal(props: {
   useAnimation(drawLyrics, 0);
 
   useEffect(() => {
-    if (storeSsari.ssari === 5) {
-      const fetchMusic = async () => {
-        const musicAudioCtx = new AudioContext();
-        const response = await fetch(nextSong.file);
-        const arrayBuffer = await response.arrayBuffer();
-        const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
-        const musicSource = musicAudioCtx.createBufferSource();
-        const mp3AudioDestination =
-          musicAudioCtx.createMediaStreamDestination();
-        musicSource.buffer = audioBuffer;
-        musicSource.connect(musicAudioCtx.destination);
-        musicRef.current = musicSource;
-        musicSource.onended = async () => {
-          await axios.delete('api/v1/reservation/sing', {
-            headers: {
-              Authorization: getCookie('Authorization'),
-              refreshToken: getCookie('refreshToken'),
-            },
-            data: {
-              songId: nextSong.songId,
-              time: Date.now() - startTimeRef.current,
-            },
-          });
-          dispatch(setSsari(7));
-        };
-        musicRef.current.start();
-        startTimeRef.current = Date.now();
-        await axios.post(
-          'api/v1/reservation/sing',
-          {
+    const fetchMusic = async () => {
+      const musicAudioCtx = new AudioContext();
+      const response = await fetch(nextSong.file);
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
+      const musicSource = musicAudioCtx.createBufferSource();
+      const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      musicSource.buffer = audioBuffer;
+      musicSource.connect(musicAudioCtx.destination);
+      musicSource.connect(mp3AudioDestination);
+      musicRef.current = musicSource;
+      musicSource.onended = async () => {
+        await axios.delete('api/v1/reservation/sing', {
+          headers: {
+            Authorization: getCookie('Authorization'),
+            refreshToken: getCookie('refreshToken'),
+          },
+          data: {
             songId: nextSong.songId,
+            time: Date.now() - startTimeRef.current,
           },
-          {
-            headers: {
-              Authorization: `${getCookie('Authorization')}`,
-              refreshToken: `${getCookie('refreshToken')}`,
-            },
-          },
-        );
-        setIsPlay(true);
-        screenShare(musicAudioCtx, mp3AudioDestination);
+        });
+        dispatch(setSsari(7));
       };
-      fetchMusic();
-    }
+      musicRef.current.start();
+      startTimeRef.current = Date.now();
+      await axios.post(
+        'api/v1/reservation/sing',
+        {
+          songId: nextSong.songId,
+        },
+        {
+          headers: {
+            Authorization: `${getCookie('Authorization')}`,
+            refreshToken: `${getCookie('refreshToken')}`,
+          },
+        },
+      );
+      setIsPlay(true);
+      screenShare(musicAudioCtx, mp3AudioDestination);
+    };
+    fetchMusic();
   }, [storeSsari.ssari]);
 
   useEffect(() => {
