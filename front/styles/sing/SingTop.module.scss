@@ -17,7 +17,7 @@
     align-items: center;
 
     .topImg {
-      background: var(--color-text);
+      background: $black;
       border-radius: 30px;
       @media screen and (max-width: 1250px) {
         display: none;
