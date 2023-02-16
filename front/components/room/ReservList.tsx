@@ -77,7 +77,6 @@ function ReservList({ session }: any) {
                   to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
                   type: 'reservationList', // The type of message (optional)
                 });
->>>>>>> front/components/room/ReservList.tsx
               }}
               className={styles.btn}
             >
