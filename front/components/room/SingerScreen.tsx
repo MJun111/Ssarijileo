@@ -1,13 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import classnames from 'classnames';
-import styles from '@/styles/room/Screen.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
+import styles from '@/styles/room/Screen.module.scss';
 import { RootState } from '@/redux/store';
 import { setBtn } from '@/redux/store/btnSlice';
 
 function SingerScreen(props: { streamManager: any; session: any }) {
   const { streamManager, session } = props;
-  const [isBtn, setIsBtn] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
   const screen = streamManager;
   const storeBtn = useSelector((state: RootState) => state.btn);
@@ -19,7 +18,6 @@ function SingerScreen(props: { streamManager: any; session: any }) {
     [styles.no]: storeBtn.btn === 'no',
   });
   useEffect(() => {
-    setIsBtn(storeBtn.btn);
     screenClass = classnames({
       [styles.singerScreen]: true,
       [styles.ok]: storeBtn.btn === 'ok',
