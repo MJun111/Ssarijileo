@@ -329,7 +329,6 @@ function Index() {
               screenOV={screenOV}
               session={session}
               screenSession={screenSession}
-              publisher={publisher}
             />
           </div>
         </div>

@@ -38,10 +38,10 @@ export function MainScreen(props: {
   // subscribers: any[];
   screenOV: any;
   screenSession: any;
-  publisher: any;
+  // publisher: any;
   session: any;
 }) {
-  const { singMode, screenOV, screenSession, publisher, session } = props;
+  const { singMode, screenOV, screenSession, session } = props;
   const [screen, setScreen] = useState<any>(undefined);
   const [nextSong, setNextSong] = useState<NextSong>();
   const [screenPublisher, setScreenPublisher] = useState<any>();
