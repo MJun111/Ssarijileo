@@ -14,6 +14,7 @@ import ssariSlice from './ssariSlice';
 import sessionStateSlice from './sessionStateSlice';
 import profileSlice from './profileSlice';
 import roomOutSlice from '@/redux/store/roomOutSlice';
+import btnSlice from './btnSlice';
 
 import storage from 'redux-persist/lib/storage';
 
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   sessionState: sessionStateSlice.reducer,
   profile: profileSlice.reducer,
   roomOut: roomOutSlice.reducer,
+  btn: btnSlice.reducer,
 });
 
 const persistConfig = {
@@ -47,6 +49,7 @@ const persistConfig = {
     'ssari',
     'sessionState',
     'roomOut',
+    'btn',
   ],
 };
 

@@ -1,12 +1,29 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import classnames from 'classnames';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from '@/styles/room/Screen.module.scss';
+import { RootState } from '@/redux/store';
+import { setBtn } from '@/redux/store/btnSlice';
 
 function SingerScreen(props: { streamManager: any; session: any }) {
   const { streamManager, session } = props;
-  const [isBtn, setIsBtn] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
   const screen = streamManager;
+  const storeBtn = useSelector((state: RootState) => state.btn);
+  const dispatch = useDispatch();
+
+  let screenClass = classnames({
+    [styles.singerScreen]: true,
+    [styles.ok]: storeBtn.btn === 'ok',
+    [styles.no]: storeBtn.btn === 'no',
+  });
+  useEffect(() => {
+    screenClass = classnames({
+      [styles.singerScreen]: true,
+      [styles.ok]: storeBtn.btn === 'ok',
+      [styles.no]: storeBtn.btn === 'no',
+    });
+  }, [storeBtn]);
 
   useEffect(() => {
     if (screen && !!videoRef.current) {
@@ -14,36 +31,15 @@ function SingerScreen(props: { streamManager: any; session: any }) {
     }
   }, [screen]);
 
-  let screenClass = classnames({
-    [styles.singerScreen]: true,
-  });
-
-  useEffect(() => {
-    screenClass = classnames({
-      [styles.singerScreen]: true,
-      [styles.ok]: isBtn === 'ok',
-      [styles.no]: isBtn === 'no',
-    });
-  }, [isBtn]);
-
   useEffect(() => {
     session.on('signal:btn', (event: any) => {
       const btnType = event.data;
-      console.log('예약리스트', btnType);
-      setIsBtn(btnType);
+      dispatch(setBtn(btnType));
       setTimeout(() => {
-        setIsBtn('');
-        console.log(isBtn);
-      }, 3000);
+        dispatch(setBtn(''));
+      }, 2000);
     });
   }, []);
-
-  // console.log(isBtn);
-  // const screenClass = classnames({
-  //   [styles.singerScreen]: true,
-  //   [styles.ok]: isBtn === 'ok',
-  //   [styles.no]: isBtn === 'no',
-  // });
 
   return (
     <div className={screenClass}>
