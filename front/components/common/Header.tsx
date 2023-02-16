@@ -6,7 +6,6 @@ import axios from 'axios';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
 import { RootState } from '@/redux/store';
