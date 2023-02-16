@@ -245,7 +245,7 @@ export function MainScreen(props: {
         }
 
         const audioTracks = mergeAudioStreams(
-          screenStream,
+          userMicStream,
           mp3AudioDestination.stream,
         );
 
