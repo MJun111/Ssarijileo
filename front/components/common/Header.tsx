@@ -5,6 +5,7 @@ import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { setTheme } from '@/redux/store/themeSlice';
 import { setLogin } from '@/redux/store/loginSlice';
 import { RootState } from '@/redux/store';
@@ -17,7 +18,6 @@ import styles from '@/styles/common/Header.module.scss';
 import { getCookie, setCookie } from '@/util/cookie';
 import { setProfile } from '@/redux/store/profileSlice';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
-import axios from 'axios';
 
 function Header() {
   if (window.location.pathname === '/room') return null;
