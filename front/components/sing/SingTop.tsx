@@ -12,15 +12,15 @@ function SingTop() {
   const slideContent = [
     {
       id: 1,
-      main: '원하는 노래를\n정확히 불러봐요',
-      sub: '정확한 음정과 박자를 맞춰 노래를 부르면\n높은 점수를 얻을 수 있습니다.',
-      img: 'img/room/guess_image.svg',
+      main: '원하는 노래를\n마음껏 불러봐요',
+      sub: '친구들과 노래를 선정해서 불러봐요.\n어디서나 즐길 수 있습니다.',
+      img: 'img/room/nomal_image.svg',
     },
     {
       id: 2,
-      main: '원하는 노래를\n이어서 불러봐요',
-      sub: '친구들과 노래를 선정해서 이어불러봐요.\n힌트도 있으니 너무 걱정마세요.',
-      img: 'img/room/nomal_image.svg',
+      main: '원하는 노래를\n정확히 불러봐요',
+      sub: '정확한 음정과 박자를 맞춰 노래를 부르면\n높은 점수를 얻을 수 있습니다.',
+      img: 'img/room/perfect_image.svg',
     },
     {
       id: 3,
