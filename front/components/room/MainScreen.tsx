@@ -152,7 +152,7 @@ export function MainScreen(props: {
   const videoRecorderRef = useRef<MediaRecorder>();
 
   const mergeAudioStreams = (
-    desktopStream: MediaStream,
+    musicStream: MediaStream,
     voiceStream: MediaStream,
   ) => {
     // 비디오, 오디오스트림 연결
@@ -160,10 +160,10 @@ export function MainScreen(props: {
     const destination = context.createMediaStreamDestination();
     let hasDesktop = false;
     let hasVoice = false;
-    if (desktopStream && desktopStream.getAudioTracks().length > 0) {
-      const source1 = context.createMediaStreamSource(desktopStream);
+    if (musicStream && musicStream.getAudioTracks().length > 0) {
+      const source1 = context.createMediaStreamSource(musicStream);
       const desktopGain = context.createGain();
-      desktopGain.gain.value = 0.7;
+      desktopGain.gain.value = 0.5;
       source1.connect(desktopGain).connect(destination);
       hasDesktop = true;
     }
@@ -171,7 +171,7 @@ export function MainScreen(props: {
     if (voiceStream && voiceStream.getAudioTracks().length > 0) {
       const source2 = context.createMediaStreamSource(voiceStream);
       const voiceGain = context.createGain();
-      voiceGain.gain.value = 0.7;
+      voiceGain.gain.value = 1.0;
       source2.connect(voiceGain).connect(destination);
       hasVoice = true;
     }
@@ -197,13 +197,19 @@ export function MainScreen(props: {
           video: true,
           audio: true,
         });
+        // const displayMediaStream = await navigator.mediaDevices.getDisplayMedia(
+        //   {
+        //     audio: true,
+        //   },
+        // );
 
         const userContext = audioContext.createMediaStreamSource(userMicStream);
         userContext.connect(mp3AudioDestination);
+        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
 
         const tracks = [
           ...userMicStream.getVideoTracks(),
-          ...mp3AudioDestination.stream.getAudioTracks(),
+          ...mergeAudioStreams(mp3AudioDestination.stream, userMicStream),
         ];
         const screenStream = new MediaStream(tracks);
 
@@ -243,13 +249,6 @@ export function MainScreen(props: {
           };
           videoRecorder.start();
         }
-
-        const audioTracks = mergeAudioStreams(
-          userMicStream,
-          mp3AudioDestination.stream,
-        );
-
-        const testAudioTrack = audioTracks[0];
 
         // videoSource
         const canvas = document.getElementById(
@@ -326,7 +325,7 @@ export function MainScreen(props: {
         <PerfectScore screenShare={screenShare} nextSong={nextSong} />
       )}
       {nowState === 6 && singMode === 'P' && (
-        <video className={styles.video} autoPlay ref={videoRef}>
+        <video className={styles.perfect} autoPlay ref={videoRef}>
           <track kind="captions" />
         </video>
       )}
