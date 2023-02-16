@@ -197,22 +197,17 @@ export function MainScreen(props: {
           video: true,
           audio: true,
         });
-        // const displayMediaStream = await navigator.mediaDevices.getDisplayMedia(
-        //   {
-        //     audio: true,
-        //   },
-        // );
 
         const userContext = audioContext.createMediaStreamSource(userMicStream);
         userContext.connect(mp3AudioDestination);
-        const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
 
         const tracks = [
           ...userMicStream.getVideoTracks(),
-          ...mergeAudioStreams(mp3AudioDestination.stream, userMicStream),
+          ...mp3AudioDestination.stream.getAudioTracks(),
         ];
         const screenStream = new MediaStream(tracks);
-
+        const testAudioTrack = screenStream.getAudioTracks()[0];
+        console.log(isRecord);
         if (isRecord) {
           const videoRecorder = new MediaRecorder(screenStream, {
             mimeType: 'video/webm',
