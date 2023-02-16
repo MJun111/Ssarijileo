@@ -154,9 +154,7 @@ export function MainScreen(props: {
     audioContext: AudioContext,
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => {
-    if (publisher.length > 0) {
-      publisher[0].publishAudio(false);
-    }
+    publisher[0].publishAudio(false);
     screenOV
       .getUserMedia({
         audioSource: undefined,
