@@ -125,7 +125,7 @@ export function MainScreen(props: {
       if (reservList.length > 0) dispatch(setSsari(2));
     }
     if (nowState === 2) {
-      setCycle(2);
+      setCycle(1);
       axios({
         method: 'GET',
         url: `api/v1/song/detail/${reservList[0].songId}`,
@@ -147,7 +147,6 @@ export function MainScreen(props: {
     }
     if (nowState === 7) {
       screenSession.unpublish(screenPublisher);
-      publisher[0].publishAudio(true);
       nextCycle();
     }
   }, [nowState]);
@@ -170,6 +169,22 @@ export function MainScreen(props: {
       setScreen(subScreen);
     }
   });
+
+  // 화면 위치 바꾸기
+  const nextSinger = () => {
+    session
+      .signal({
+        data: '', // Any string (optional)
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: 'nextSinger', // The type of message (optional)
+      })
+      .then(() => {
+        console.log(`다음은 내차례`, myName);
+      })
+      .catch((error: any) => {
+        console.error('nextSinger 에러', error);
+      });
+  };
 
   let userMicStream: MediaStream | null = null;
   // 화면 공유
@@ -205,6 +220,7 @@ export function MainScreen(props: {
           audioSource: testAudioTrack,
           videoSource: testVideoTrack,
         });
+        nextSinger();
         setScreenPublisher(newScreenPublisher);
         screenSession.publish(newScreenPublisher);
       });

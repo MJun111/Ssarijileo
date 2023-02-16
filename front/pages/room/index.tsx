@@ -121,6 +121,7 @@ function Index() {
       setPublisher([...publisher]);
     } else if (publisher[0] === undefined) {
       publisher.push(singer.pop());
+      publisher[0].publishAudio(true);
       setPublisher([...publisher]);
       const singerIdx = subscribers.indexOf(nextsinger, 0);
       if (singerIdx > -1) {

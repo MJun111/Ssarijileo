@@ -36,7 +36,7 @@ function RoomModal({ setModalOpen }: any) {
   });
 
   // 라디오 값 관리
-  const [newMode, setnewMode] = useState('P');
+  const [newMode, setnewMode] = useState('N');
   const arrA = ['N', 'P', 'R', 'O'];
   const arrB = ['일반노래방', '퍼펙트스코어', '이어부르기', '가사 맞추기'];
   const Mode = arrA.map((str: string, idx) => {
