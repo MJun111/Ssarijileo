@@ -197,15 +197,9 @@ export function MainScreen(props: {
           video: true,
           audio: true,
         });
-        // const displayMediaStream = await navigator.mediaDevices.getDisplayMedia(
-        //   {
-        //     audio: true,
-        //   },
-        // );
 
         const userContext = audioContext.createMediaStreamSource(userMicStream);
         userContext.connect(mp3AudioDestination);
-        // const testAudioTrack = mp3AudioDestination.stream.getAudioTracks()[0];
 
         const tracks = [
           ...userMicStream.getVideoTracks(),
@@ -250,7 +244,12 @@ export function MainScreen(props: {
           videoRecorder.start();
         }
 
-        const testAudioTrack = screenStream.getAudioTracks()[0];
+        const audioTracks = mergeAudioStreams(
+          screenStream,
+          mp3AudioDestination.stream,
+        );
+
+        const testAudioTrack = audioTracks[0];
 
         // videoSource
         const canvas = document.getElementById(
