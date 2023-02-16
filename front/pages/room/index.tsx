@@ -97,6 +97,7 @@ function Index() {
         subscribers.push(singer.pop());
         setSubscribers([...subscribers]);
       }
+      nextsinger.publishAudio(false);
       singer.push(nextsinger);
       publisher.pop();
       setSinger([...singer]);
