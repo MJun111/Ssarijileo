@@ -126,7 +126,7 @@ function RoomReservItem(props: {
     session.signal({
       data: JSON.stringify(newReserv), // Any string (optional)
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-      type: 'reservationList', // The type of message (optional)
+      type: 'reservationList', // The type of message (optional )
     });
   };
   return (
