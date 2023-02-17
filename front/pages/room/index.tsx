@@ -151,18 +151,18 @@ function Index() {
     } catch (error) {
       // pass
     }
-    if (userCount <= 0) {
-      try {
-        await axios.delete(
-          `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
-          {
-            headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
-          },
-        );
-      } catch (error) {
-        // pass
-      }
-    }
+    // if (userCount <= 0) {
+    //   try {
+    //     await axios.delete(
+    //       `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
+    //       {
+    //         headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+    //       },
+    //     );
+    //   } catch (error) {
+    //     // pass
+    //   }
+    // }
   };
 
   // 사용자가 떠날때
