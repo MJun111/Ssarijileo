@@ -123,7 +123,7 @@ function OrderSong(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Date.now() - startTimeRef.current,
+            time: Math.floor(Date.now() - startTimeRef.current),
           },
         });
         console.log('노래 끝, 7, 맞추기');

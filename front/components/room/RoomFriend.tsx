@@ -63,11 +63,15 @@ function RoomFriend({ setModalOpen }: any) {
           type="button"
           className={styles.invite}
           onClick={() => {
-            axios.post('api/v1/friend/invite', {
-              fromUserNickname: storeUser.nickname,
-              toUserNickname: item.nickname,
-              sessionId: storeSessionState.sessionId,
-            });
+            try {
+              axios.post('api/v1/friend/invite', {
+                fromUserNickname: storeUser.nickname,
+                toUserNickname: item.nickname,
+                sessionId: storeSessionState.sessionId,
+              });
+            } catch (e) {
+              // pass
+            }
           }}
         >
           초대하기

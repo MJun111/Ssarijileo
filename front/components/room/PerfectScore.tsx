@@ -235,10 +235,6 @@ function PerfectScore(props: {
     if (currentTime > songData[songIndex].time) {
       songIndex += 1;
     }
-    if (songIndex >= songData.length) {
-      setIsStarted(false);
-      return;
-    }
     if (
       songNoteWindow[halfSize][0] !== -1 &&
       songNoteWindow[halfSize][0] === songNoteWindow[halfSize + 1][0]
@@ -280,8 +276,9 @@ function PerfectScore(props: {
       }
       block = 1;
     }
-
-    songNoteWindow.push([songData[songIndex].note, 0]);
+    if (songIndex < songData.length) {
+      songNoteWindow.push([songData[songIndex].note, 0]);
+    }
     if (songNoteWindow.length > data.NOTE_WINDOW_SIZE) {
       songNoteWindow.shift();
     }
@@ -416,7 +413,7 @@ function PerfectScore(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Date.now() - startTimeRef.current,
+            time: Math.floor(Date.now() - startTimeRef.current),
           },
         });
         console.log('노래 끝, 7, 퍼펙트');

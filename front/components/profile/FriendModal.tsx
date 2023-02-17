@@ -95,19 +95,23 @@ function FriendModal({ setModalOpen }: RoomProps) {
                 },
               )
               .then(res => {
-                axios.post('api/v1/friend/request', {
-                  fromUserNickname: storeUser.nickname,
-                  toUserNickname: item.nickname,
-                  friendId: res.data.friendId,
-                });
-                const newFriendList = friendList.filter(
-                  f => f.nickname !== item.nickname,
-                );
-                setFriendList(newFriendList);
-                const newFilteredFriendList = filteredFriendList.filter(
-                  f => f.nickname !== item.nickname,
-                );
-                setFilteredFriendList(newFilteredFriendList);
+                try {
+                  axios.post('api/v1/friend/request', {
+                    fromUserNickname: storeUser.nickname,
+                    toUserNickname: item.nickname,
+                    friendId: res.data.friendId,
+                  });
+                  const newFriendList = friendList.filter(
+                    f => f.nickname !== item.nickname,
+                  );
+                  setFriendList(newFriendList);
+                  const newFilteredFriendList = filteredFriendList.filter(
+                    f => f.nickname !== item.nickname,
+                  );
+                  setFilteredFriendList(newFilteredFriendList);
+                } catch (err) {
+                  // pass
+                }
               });
           }}
         />
