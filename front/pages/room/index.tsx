@@ -187,7 +187,6 @@ function Index() {
     setUserCount(newUserCount);
 
     if (newUserCount <= 0) {
-      console.log('!!!!');
       await deleteSession();
     } else {
       dispatch(setReserv([]));
