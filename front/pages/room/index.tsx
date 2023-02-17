@@ -135,10 +135,6 @@ function Index() {
 
   // api delete session
   const deleteSession = async () => {
-    dispatch(setReserv([]));
-    dispatch(
-      setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
-    );
     try {
       await axios({
         method: 'DELETE',
@@ -151,6 +147,10 @@ function Index() {
     } catch (error) {
       // pass
     }
+    dispatch(setReserv([]));
+    dispatch(
+      setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
+    );
     // if (userCount <= 0) {
     //   try {
     //     await axios.delete(
