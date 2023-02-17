@@ -156,9 +156,16 @@ nodejs - 18.12.1 LTS
 
 #### - 가사맞추기
 
+##### 노래 부르는 참가자
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/55950992/219534477-a05620c8-e1b8-47b2-845b-04aa3920f892.gif">
+</p>
+
+##### 일반 참가자
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/55950992/219557464-c698668a-2d52-4ea3-a518-a3746f07c447.gif">
 </p>
 
 ### < 녹화 >
