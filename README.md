@@ -26,6 +26,7 @@ https://www.notion.so/7e19bc36f9f54413b33dc1a2f0d3ef46
 #### 프로젝트 소개 : 집에서 즐기는 랜선 노래방 싸리질러 🎤🎵
 
 #### 개발환경
+
 ## Back-end
 
 
@@ -36,6 +37,7 @@ InteliJ - Ultimate v.2021.2.4
 MySQL 8.0.31
 
 Spring Boot 2.7.7
+
 
 ## Front-end
 
@@ -49,6 +51,15 @@ Scss
 nodejs - 18.12.1 LTS
 
 <br />
+
+## 주요기능
+
+webRTC - openVidu
+
+실시간 알림 - SSE
+
+노래방 - web Audio API
+
 <br />
 
 ## 화면구현
