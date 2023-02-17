@@ -174,19 +174,20 @@ function Index() {
     console.log('사용자 떠날때, 1, 인덱스');
     dispatch(setSsari(1));
 
-    try {
-      await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
+    const outRoom = await axios.put(
+      `api/v1/room/out/${storeSessionState.sessionId}`,
+      null,
+      {
         headers: {
           Authorization: `${getCookie('Authorization')}`,
         },
-      });
-    } catch (error) {
-      // pass
-    }
+      },
+    );
     const newUserCount = userCount - 1;
     setUserCount(newUserCount);
 
     if (newUserCount <= 0) {
+      console.log('!!!!');
       await deleteSession();
     } else {
       dispatch(setReserv([]));
@@ -210,9 +211,9 @@ function Index() {
   const bodyElt = document.querySelector('body');
   bodyElt?.setAttribute('oncontextmenu', 'return false;');
 
-  window.addEventListener('beforeunload', () => {
-    leaveSession();
-  });
+  // window.addEventListener('beforeunload', () => {
+  //   leaveSession();
+  // });
 
   // connect 진행!!!!
   const joinSession = () => {
@@ -241,9 +242,9 @@ function Index() {
     });
 
     // 세션이 없어졌을 때
-    mySession.on('sessionDisconnected', () => {
-      leaveSession();
-    });
+    // mySession.on('sessionDisconnected', () => {
+    //   leaveSession();
+    // });
 
     // 다음 singer
     mySession.on('signal:nextSinger', (event: any) => {
