@@ -52,7 +52,6 @@ function Index() {
 
   // 초기 상태값
   const [loading, setLoading] = useState(true);
-  const [userCount, setUserCount] = useState(0);
 
   // 테마모드
   const storeTheme = useSelector((state: RootState) => state.theme);
@@ -71,7 +70,6 @@ function Index() {
       },
     });
     setRoomInfo(roomDetail.data);
-    setUserCount(roomDetail.data.userList?.length);
     console.log('방 정보', roomDetail.data);
   };
 
@@ -178,16 +176,23 @@ function Index() {
     console.log('사용자 떠날때, 1, 인덱스');
     dispatch(setSsari(1));
 
+    const currRoomDetail = await axios({
+      method: 'GET',
+      url: `api/v1/room/${storeSessionState.sessionId}`,
+      headers: {
+        Authorization: `${getCookie('Authorization')}`,
+        refreshToken: `${getCookie('refreshToken')}`,
+      },
+    });
+    const userCount = currRoomDetail.data.userList.length;
+
     await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
       headers: {
         Authorization: getCookie('Authorization'),
       },
     });
 
-    const newUserCount = userCount - 1;
-    setUserCount(newUserCount);
-
-    if (newUserCount <= 0) {
+    if (userCount === 1) {
       await deleteSession();
     } else {
       await asyncOut();
