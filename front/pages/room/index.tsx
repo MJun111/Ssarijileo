@@ -132,6 +132,8 @@ function Index() {
   };
 
   const asyncOut = async () => {
+    console.log('사용자 떠날때, 1, 인덱스');
+    dispatch(setSsari(1));
     dispatch(setReserv([]));
     dispatch(
       setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
@@ -153,18 +155,6 @@ function Index() {
       // pass
     }
     await asyncOut();
-    // if (userCount <= 0) {
-    //   try {
-    //     await axios.delete(
-    //       `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
-    //       {
-    //         headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
-    //       },
-    //     );
-    //   } catch (error) {
-    //     // pass
-    //   }
-    // }
   };
 
   // 사용자가 떠날때
@@ -173,8 +163,6 @@ function Index() {
     if (mySession) {
       mySession.disconnect();
     }
-    console.log('사용자 떠날때, 1, 인덱스');
-    dispatch(setSsari(1));
 
     const currRoomDetail = await axios({
       method: 'GET',
