@@ -133,6 +133,13 @@ function Index() {
     }
   };
 
+  const asyncOut = async () => {
+    dispatch(setReserv([]));
+    dispatch(
+      setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
+    );
+  };
+
   // api delete session
   const deleteSession = async () => {
     try {
@@ -147,10 +154,7 @@ function Index() {
     } catch (error) {
       // pass
     }
-    dispatch(setReserv([]));
-    dispatch(
-      setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
-    );
+    await asyncOut();
     // if (userCount <= 0) {
     //   try {
     //     await axios.delete(
@@ -174,25 +178,19 @@ function Index() {
     console.log('사용자 떠날때, 1, 인덱스');
     dispatch(setSsari(1));
 
-    const outRoom = await axios.put(
-      `api/v1/room/out/${storeSessionState.sessionId}`,
-      null,
-      {
-        headers: {
-          Authorization: `${getCookie('Authorization')}`,
-        },
+    await axios.put(`api/v1/room/out/${storeSessionState.sessionId}`, null, {
+      headers: {
+        Authorization: getCookie('Authorization'),
       },
-    );
+    });
+
     const newUserCount = userCount - 1;
     setUserCount(newUserCount);
 
     if (newUserCount <= 0) {
       await deleteSession();
     } else {
-      dispatch(setReserv([]));
-      dispatch(
-        setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
-      );
+      await asyncOut();
     }
     window.close();
   };

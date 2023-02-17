@@ -102,8 +102,8 @@ export function MainScreen(props: {
         method: 'GET',
         url: `api/v1/song/detail/${reservList[0].songId}`,
         headers: {
-          Authorization: `${getCookie('Authorization')}`,
-          refreshToken: `${getCookie('refreshToken')}`,
+          Authorization: getCookie('Authorization'),
+          refreshToken: getCookie('refreshToken'),
         },
       }).then(res => {
         const response = res.data;
