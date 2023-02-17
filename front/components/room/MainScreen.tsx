@@ -64,15 +64,12 @@ export function MainScreen(props: {
   useEffect(() => {
     session.on('signal:nextCycleReserv', (event: any) => {
       const getReserveData = JSON.parse(event.data);
-      console.log('부른노래가 제거된 예약목록', getReserveData);
-      console.log('다음 사이클 진행, 0, 메인스크린');
       dispatch(setReserv([...getReserveData]));
       dispatch(setSsari(0));
     });
   }, []);
 
   const nextCycle = () => {
-    // console.log('현재 인원 : ', session.connections.numberOfElements);
     const nextReserList = [...reservList];
     nextReserList.shift();
     session.signal({
@@ -80,20 +77,15 @@ export function MainScreen(props: {
       to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
       type: 'nextCycleReserv', // The type of message (optional)
     });
-    console.log('다음 사이클 진행, 0, 메인스크린');
   };
 
   // 노래방 상태관리
   useEffect(() => {
-    console.log('현재 상태값', nowState);
     if (nowState === 0) {
-      // if (subscribers.length !== 0) dispatch(setSsari(1));
-      console.log('이거 터지면 버그, 1, 메인스크린');
       dispatch(setSsari(1));
     }
     if (nowState === 1) {
       if (reservList.length > 0) {
-        console.log('예약목록 있음, 2, 메인스크린');
         dispatch(setSsari(2));
       }
     }
@@ -111,7 +103,6 @@ export function MainScreen(props: {
         response.time = Number(runtime[1]) * 60 + Number(runtime[2]);
         setNextSong(response);
         if (reservList[0].nickname === myName) {
-          console.log('내차례, 3, 메인스크린');
           dispatch(setSsari(3));
         } else dispatch(setSsari(4));
       });
@@ -124,7 +115,6 @@ export function MainScreen(props: {
 
   useEffect(() => {
     if (reservList.length === 1 && nowState === 1) {
-      console.log('예약목록 1개 있음, 2, 메인스크린');
       dispatch(setSsari(2));
     }
   }, [reservList]);
@@ -135,7 +125,6 @@ export function MainScreen(props: {
       const subScreen = screenSession.subscribe(event.stream, undefined);
       if (reservList.length) {
         if (reservList[0].nickname !== myName) {
-          console.log('다른사람이 노래 부르기 시작, 6, 메인스크린');
           dispatch(setSsari(6));
         }
       }
@@ -210,7 +199,6 @@ export function MainScreen(props: {
         ];
         const screenStream = new MediaStream(tracks);
         const testAudioTrack = screenStream.getAudioTracks()[0];
-        console.log(isRecord);
         if (isRecord) {
           const videoRecorder = new MediaRecorder(screenStream, {
             mimeType: 'video/webm',
@@ -222,8 +210,6 @@ export function MainScreen(props: {
           };
           videoRecorder.onstop = async () => {
             const blob = new Blob(blobs, { type: 'video/webm' });
-            const url = URL.createObjectURL(blob);
-            console.log('녹화파일', url);
             const formData = new FormData();
             const fileName = new Date().toISOString();
             const file = new File([blob], fileName, {
@@ -243,7 +229,6 @@ export function MainScreen(props: {
                 'Content-Type': 'multipart/form-data',
               },
             });
-            console.log('녹화파일 저장', res);
           };
           videoRecorder.start();
         }

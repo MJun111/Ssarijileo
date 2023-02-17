@@ -52,7 +52,6 @@ function Nomal(props: {
     const deltaTime = (Date.now() - startTimeRef.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
-      console.log('노래끝, 7, 일반모드');
       dispatch(setSsari(7));
       recordStop();
       // 예약목록 0번 인덱스 삭제...
@@ -128,7 +127,6 @@ function Nomal(props: {
             time: Math.floor(Date.now() - startTimeRef.current),
           },
         });
-        console.log('노래끝, 7, 일반모드');
         dispatch(setSsari(7));
       };
       musicRef.current.start();
@@ -152,11 +150,8 @@ function Nomal(props: {
   }, [storeSsari.ssari]);
 
   useEffect(() => {
-    console.log('nowState!!', storeSsari.ssari);
-    console.log('!!!!!!!!!', videoRef.current);
     if (screen !== undefined && !!videoRef.current) {
       screen.addVideoElement(videoRef.current);
-      console.log('!!!!!!!!!2', videoRef.current);
     }
   }, [screen]);
 
@@ -265,7 +260,6 @@ function Nomal(props: {
         <button
           type="button"
           onClick={async () => {
-            console.log('노래 취소 곡 정보 : ', nextSong);
             await axios.delete('api/v1/reservation/sing', {
               data: {
                 songId: nextSong.songId,
@@ -278,9 +272,6 @@ function Nomal(props: {
             });
             musicRef.current?.stop(0);
             recordStop();
-            // screenSession.forceunpublish(screen);
-            // console.log('노래취소, 7, 일반모드');
-            // dispatch(setSsari(7));
           }}
           className={styles.nextBtn}
           disabled={!isPlay}

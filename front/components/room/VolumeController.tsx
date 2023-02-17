@@ -71,8 +71,7 @@ function VolumeController({ setVolumeModal }: any) {
                   },
                 },
               )
-              .then(res => {
-                console.log('볼륨, 에코 변경 요청 : ', res.data);
+              .then(() => {
                 dispatch(setEcho(echoInfo));
                 dispatch(setVolume(volumeInfo));
               });

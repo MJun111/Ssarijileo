@@ -388,14 +388,11 @@ function PerfectScore(props: {
       const musicAudioCtx = new AudioContext();
       const noteData = await fetch(nextSong.note);
       const noteJson = await noteData.json();
-
-      console.log('song', noteJson);
       for (let i = 0; i < noteJson.length; i++) {
         if (noteJson[i].cnt > 2) {
           songData.push(noteJson[i]);
         }
       }
-      console.log('songData', songData);
       const response = await fetch(nextSong.file);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
@@ -416,7 +413,6 @@ function PerfectScore(props: {
             time: Math.floor(Date.now() - startTimeRef.current),
           },
         });
-        console.log('노래 끝, 7, 퍼펙트');
         dispatch(setSsari(7));
       };
       setIsStarted(true);

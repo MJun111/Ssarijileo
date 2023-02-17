@@ -49,13 +49,11 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
     if (sendMessage.trim() === '') return;
     sendChat(chatInfo);
     setChat('');
-    console.log('upChat', chatInfo);
   };
 
   const keyUpChat = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      console.log(sendMessage);
       upChat();
     }
   };

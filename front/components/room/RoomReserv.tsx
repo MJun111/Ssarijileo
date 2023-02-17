@@ -44,7 +44,6 @@ function RoomReserv(props: {
         refreshToken: `${getCookie('refreshToken')}`,
       },
     }).then(res => {
-      console.log(res.data);
       setAllMusicList(res.data);
       setMusicList(res.data);
     });

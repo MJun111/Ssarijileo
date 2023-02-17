@@ -35,7 +35,6 @@ function CommonState(props: {
       setTime(prev => {
         if (prev === 600) {
           if (nowState === 2) {
-            console.log('시간초과, 3, 커먼');
             dispatch(setSsari(3));
           } else {
             window.close();
@@ -63,7 +62,6 @@ function CommonState(props: {
                 }
                 onClick={() => {
                   setIsRecord(true);
-                  console.log('노래 녹화 시작, 5, 커먼');
                   dispatch(setSsari(5));
                 }}
               >
@@ -87,7 +85,6 @@ function CommonState(props: {
                   reservList.length === 0 || reservList[0].nickname !== userInfo
                 }
                 onClick={() => {
-                  console.log('노래 시작, 5, 커먼');
                   dispatch(setSsari(5));
                 }}
               >

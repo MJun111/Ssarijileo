@@ -24,16 +24,6 @@ const nextConfig = {
         destination:
           'http://i8b302.p.ssafy.io:8060/api/v1/friend/request/:path*',
       },
-      // {
-      //   source: '/song-file/:path*',
-      //   destination:
-      //     'https://ssafy-ssarijileo.s3.ap-northeast-2.amazonaws.com/song-file/:path*',
-      // },
-      // {
-      //   source: '/note-file/:path*',
-      //   destination:
-      //     'https://ssafy-ssarijileo.s3.ap-northeast-2.amazonaws.com/note-file/:path*',
-      // },
       {
         source: '/api/v1/:path*',
         destination: 'http://i8b302.p.ssafy.io:8000/api/v1/:path*',

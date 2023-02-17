@@ -36,7 +36,6 @@ function ReservList({ session }: any) {
     // const fromUser = JSON.parse(event.from.data).clientData;
     // if (fromUser === myName) return;
     const getReserveData = JSON.parse(event.data);
-    console.log('예약리스트', getReserveData);
     dispatch(setReserv(getReserveData));
   });
 
