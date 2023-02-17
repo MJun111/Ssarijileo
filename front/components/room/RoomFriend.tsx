@@ -85,7 +85,7 @@ function RoomFriend({ setModalOpen }: any) {
   const bind = useDrag(
     ({ down, offset: [ox, oy] }) =>
       api.start({ x: ox, y: oy, immediate: down }),
-    { bounds: { bottom: 0, top: -180, right: 1063, left: -22 } },
+    { bounds: { bottom: 0, top: -260, right: 1225, left: -20 } },
   );
 
   return (

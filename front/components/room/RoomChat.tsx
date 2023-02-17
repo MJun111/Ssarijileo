@@ -94,7 +94,7 @@ function RoomChat({ setModalOpen, sendChat, chatList }: any) {
   const bind = useDrag(
     ({ down, offset: [ox, oy] }) =>
       api.start({ x: ox, y: oy, immediate: down }),
-    { bounds: { bottom: 0, top: -120, right: 20, left: -1115 } },
+    { bounds: { bottom: 0, top: -200, right: 15, left: -1275 } },
   );
 
   return (

@@ -90,7 +90,7 @@ function RoomReserv(props: {
   const bind = useDrag(
     ({ down, offset: [ox, oy] }) =>
       api.start({ x: ox, y: oy, immediate: down }),
-    { bounds: { left: -127, bottom: 0, top: -80, right: 597 } },
+    { bounds: { left: -120, bottom: 0, top: -160, right: 760 } },
   );
 
   return (
