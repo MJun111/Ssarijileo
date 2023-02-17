@@ -183,9 +183,10 @@ function Index() {
     } catch (error) {
       // pass
     }
-    setUserCount(userCount - 1);
+    const newUserCount = userCount - 1;
+    setUserCount(newUserCount);
 
-    if (userCount <= 0) {
+    if (newUserCount <= 0) {
       await deleteSession();
     } else {
       dispatch(setReserv([]));
