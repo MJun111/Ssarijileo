@@ -90,3 +90,9 @@ https://www.notion.so/7e19bc36f9f54413b33dc1a2f0d3ef46
 <p align="center">
   <img src="https://user-images.githubusercontent.com/55950992/216386822-908346a3-e5f4-4752-9e37-aafe625a6403.gif">
 </p>
+
+
+
+### < 시스템 아키텍처 >
+
+![](C:\Users\SSAFY\AppData\Roaming\marktext\images\2023-02-17-11-17-14-image.png) 
