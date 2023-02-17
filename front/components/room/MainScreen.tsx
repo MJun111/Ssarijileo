@@ -222,7 +222,7 @@ export function MainScreen(props: {
                 type: 'application/json',
               }),
             );
-            const res = await axios.post('api/v1/recording', formData, {
+            await axios.post('api/v1/recording', formData, {
               headers: {
                 Authorization: getCookie('Authorization'),
                 refreshToken: getCookie('refreshToken'),
