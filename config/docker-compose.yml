@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # mysql
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+  # openvidu
+  openvidu:
+    container_name: openvidu
+    image: openvidu/openvidu-dev:2.25.0
+    restart: on-failure
+    environment:
+      - OPENVIDU_SECRET=ssafy
+      - openvidu.publicurl=http://i8b302.p.ssafy.io:4443/
+    ports:
+      - 4443:4443
+
+  # redis
+  redis:
+    container_name: redis
+    image: redis
+    command: redis-server --port 6379
+    hostname: redis

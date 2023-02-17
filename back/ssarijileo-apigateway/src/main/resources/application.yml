@@ -1,0 +1,54 @@
+server:
+  port: 8000
+
+spring:
+  # swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+  # application-jwt
+  profiles:
+    include: jwt
+
+  # API id for MSA & routes
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+#      default-filters:
+#        - AuthorizationHeaderFilter
+      routes:
+        - id: auth-service
+          uri: http://localhost:8090
+
+          predicates:
+            - Path=/api/v1/user/**
+          filters:
+            - AuthorizationHeaderFilter
+        - id: ssarijileo-service
+          uri: http://localhost:8080
+          predicates:
+            - Path=/api/v1/song/**, /api/v1/song-setting/**, /api/v1/singing-contest/**, /api/v1/recording/**, /api/v1/singing/**, /api/v1/friend/**, /api/v1/profile/**
+          filters:
+            - AuthorizationHeaderFilter
+        - id: webrtc-service
+          uri: http://localhost:5000
+          predicates:
+            - Path=/api/v1/room/**, /api/v1/reservation/**
+          filters:
+            - AuthorizationHeaderFilter
+        - id: ranking-service
+          uri: http://localhost:8050
+          predicates:
+            - Path=/api/v1/ranking/**
+          filters:
+            - RankingFilter
+
+# log level setting
+logging:
+  level:
+    root: info
+    com.ssafy: debug
+    org.springframework.cloud.gateway: debug
+    reactor.netty.http.client: debug

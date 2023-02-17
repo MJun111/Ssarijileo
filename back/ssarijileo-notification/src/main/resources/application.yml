@@ -1,0 +1,16 @@
+server:
+  port: 8060
+  ssl:
+    enabled: false
+
+# log level setting
+logging:
+  level:
+    root: info
+    com:
+      ssafy: debug
+
+# feign
+feign:
+  hystrix:
+    enabled: true

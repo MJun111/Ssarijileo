@@ -1,0 +1,45 @@
+server:
+  port: 8050
+
+spring:
+  # API id for MSA
+  application:
+    name: ssarijileo-service
+  # MySQL
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://i8b302.p.ssafy.io:3306/ssarijileo?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: ssafy
+    password: ssafy
+  # JPA Properties
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: true
+
+# log level setting
+logging:
+  level:
+    root: info
+    com:
+      ssafy: debug
+  #redis
+  cache:
+    type: redis
+  redis:
+    host: localhost
+    port: 6379
+    url: redis://localhost:6379
+# feign
+feign:
+  hystrix:
+    enabled: true
