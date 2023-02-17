@@ -14,9 +14,9 @@ import { setProfile } from '@/redux/store/profileSlice';
 function MyPage() {
   const [type, setType] = useState('계정 관리');
 
-  const storeTheme: any = useSelector((state: RootState) => state.theme);
-  const storeUser: any = useSelector((state: RootState) => state.user);
-  const storeProfile: any = useSelector((state: RootState) => state.profile);
+  const storeTheme = useSelector((state: RootState) => state.theme);
+  const storeUser = useSelector((state: RootState) => state.user);
+  const storeProfile = useSelector((state: RootState) => state.profile);
   const { theme } = storeTheme;
   const profileImg = storeUser.img;
   const nicknameValue = storeUser.nickname;

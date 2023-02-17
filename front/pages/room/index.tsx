@@ -16,6 +16,8 @@ import RoomFooter from '@/components/room/RoomFooter';
 import SingerScreen from '@/components/room/SingerScreen';
 import Loading from '@/components/room/Loading';
 
+import { Session } from 'openvidu-browser';
+
 import styles from '@/styles/Room.module.scss';
 
 export interface RoomDetail {
@@ -41,9 +43,11 @@ function Index() {
   );
 
   // OV
-  const [screenOV, setScreenOV] = useState<any>(undefined);
-  const [session, setSession] = useState<any>(undefined);
-  const [screenSession, setScreenSession] = useState<any>(undefined);
+  const [screenOV, setScreenOV] = useState<OpenVidu | undefined>(undefined);
+  const [session, setSession] = useState<Session | undefined>(undefined);
+  const [screenSession, setScreenSession] = useState<Session | undefined>(
+    undefined,
+  );
 
   // 화면
   const [publisher, setPublisher] = useState<any[]>([]);
@@ -188,11 +192,8 @@ function Index() {
     window.close();
   };
 
-  document.onkeydown = (e: any) => {
-    if (
-      (e.ctrlKey && (e.keyCode === 78 || e.keyCode === 82)) ||
-      e.keyCode === 116
-    ) {
+  document.onkeydown = (e: KeyboardEvent) => {
+    if ((e.ctrlKey && (e.key === 'R' || e.key === 'N')) || e.key === 'F5') {
       e.preventDefault();
       alert('새로고침을 할 수 없습니다.');
     }
