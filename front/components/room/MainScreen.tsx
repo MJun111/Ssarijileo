@@ -63,8 +63,6 @@ export function MainScreen(props: {
   // 노래 끝나고 다음 상태 사이클 진행
   useEffect(() => {
     session.on('signal:nextCycleReserv', (event: any) => {
-      const fromUser = JSON.parse(event.from.data).clientData;
-      if (fromUser === myName) return;
       const getReserveData = JSON.parse(event.data);
       console.log('부른노래가 제거된 예약목록', getReserveData);
       console.log('다음 사이클 진행, 0, 메인스크린');
