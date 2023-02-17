@@ -185,7 +185,7 @@ function Index() {
     }
     setUserCount(userCount - 1);
 
-    if (storeSessionState.isHost) {
+    if (userCount <= 0 && session) {
       await deleteSession();
     } else {
       dispatch(setReserv([]));
