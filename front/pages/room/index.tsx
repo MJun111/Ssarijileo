@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { OpenVidu } from 'openvidu-browser';
+import { OpenVidu, StreamManager, Session } from 'openvidu-browser';
 import { RootState } from '@/redux/store';
 import { setReserv } from '@/redux/store/reservSlice';
 import { setSessionState } from '@/redux/store/sessionStateSlice';
@@ -15,8 +15,6 @@ import MyScreen from '@/components/room/MyScreen';
 import RoomFooter from '@/components/room/RoomFooter';
 import SingerScreen from '@/components/room/SingerScreen';
 import Loading from '@/components/room/Loading';
-
-import { Session } from 'openvidu-browser';
 
 import styles from '@/styles/Room.module.scss';
 
@@ -126,7 +124,7 @@ function Index() {
   };
 
   // 다른 참가자가 떠날때
-  const deleteSubscriber = (streamManager: any) => {
+  const deleteSubscriber = (streamManager: StreamManager) => {
     const newsubscribers = subscribers;
     const index = subscribers.indexOf(streamManager, 0);
     if (index > -1) {
@@ -265,7 +263,7 @@ function Index() {
       });
 
     // 화면 공유 connect
-    getToken().then((tokenScreen: any) => {
+    getToken().then(tokenScreen => {
       myScreen.connect(tokenScreen, {
         clientData: storeSessionState.sessionId,
       });
