@@ -192,14 +192,6 @@ function Index() {
       dispatch(
         setSessionState({ sessionId: '', sessionToken: '', isHost: false }),
       );
-      if (userCount <= 1 && mySession) {
-        await axios.delete(
-          `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
-          {
-            headers: { Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
-          },
-        );
-      }
     }
     window.close();
   };
