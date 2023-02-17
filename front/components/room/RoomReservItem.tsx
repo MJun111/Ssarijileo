@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { getCookie } from '@/util/cookie';
 
