@@ -151,7 +151,7 @@ function Index() {
     } catch (error) {
       // pass
     }
-    if (userCount <= 0 && session) {
+    if (userCount <= 0) {
       try {
         await axios.delete(
           `https://i8b302.p.ssafy.io/openvidu/api/sessions/${storeSessionState.sessionId}`,
@@ -185,7 +185,7 @@ function Index() {
     }
     setUserCount(userCount - 1);
 
-    if (userCount <= 0 && session) {
+    if (userCount <= 0) {
       await deleteSession();
     } else {
       dispatch(setReserv([]));
