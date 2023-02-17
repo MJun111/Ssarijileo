@@ -150,13 +150,24 @@ function OrderSong(props: {
   }, []);
 
   return (
-    <canvas
-      id="screen-screen"
-      ref={canvasRef}
-      width={canvasWidth}
-      height={canvasHeight}
-      className={styles.canvas}
-    />
+    <>
+      <canvas
+        id="screen-screen"
+        ref={canvasRef}
+        width={canvasWidth}
+        height={canvasHeight}
+        className={styles.canvas}
+      />
+      <button
+        type="button"
+        className={styles.btn}
+        onClick={() => {
+          dispatch(setSsari(7));
+        }}
+      >
+        다음 곡으로
+      </button>
+    </>
   );
 }
 
