@@ -1,0 +1,80 @@
+@import '../color';
+
+@mixin setting {
+  position: absolute;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  .back {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+  }
+
+  .container {
+    position: fixed;
+    width: 600px;
+    height: 300px;
+    bottom: 70px;
+    left: calc(50% - 300px);
+    border-radius: 300px 300px 0 0;
+    background-color: var(--color-background);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+    z-index: 999;
+
+    .pitch {
+      @include setting();
+      bottom: 20px;
+      left: 50px;
+    }
+    .beat {
+      @include setting();
+      top: 95px;
+      left: 140px;
+    }
+    .volume {
+      @include setting();
+      top: 40px;
+      left: 265px;
+    }
+    .musicNote {
+      @include setting();
+      top: 95px;
+      right: 140px;
+    }
+    .jump {
+      @include setting();
+      bottom: 20px;
+      right: 50px;
+    }
+
+    .icon {
+      filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+      margin-bottom: 10px;
+    }
+    .context {
+      font-weight: bold;
+      color: var(--color-text);
+    }
+
+    .setting {
+      @include setting();
+      bottom: 30px;
+      left: 275px;
+      filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+    }
+  }
+}

@@ -1,0 +1,27 @@
+@import '../color';
+@import '../mixin';
+
+.swiper {
+  width: 80%;
+  margin: 0 auto;
+  @include _576 {
+    width: 90%;
+  }
+
+  .swiperSlide {
+    width: 100%;
+    height: 800px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .topImg {
+      background: $black;
+      border-radius: 30px;
+      @media screen and (max-width: 1250px) {
+        display: none;
+      }
+    }
+  }
+}

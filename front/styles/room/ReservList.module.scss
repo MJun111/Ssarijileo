@@ -1,0 +1,167 @@
+@import '../color';
+@import '../mixin';
+
+.container {
+  width: 700px;
+  height: 35px;
+  background: var(--color-linearB);
+  margin: 0 20px;
+  border-radius: 10px;
+  position: relative;
+  line-height: 35px;
+  padding: 0 20px;
+  z-index: 999;
+
+  .modal {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 740px;
+    max-height: 200px;
+    color: var(--color-text);
+    font-size: 14px;
+    background: var(--color-background);
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+    overflow-y: scroll;
+
+    .modalItem {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: center;
+      margin: 10px 20px;
+      padding: 10px 20px;
+      border-radius: 10px;
+
+      .number {
+        width: 50px;
+        color: var(--color-text);
+        font-size: 20px;
+      }
+      .title {
+        width: 200px;
+        @include truncate;
+      }
+      .singer {
+        width: 200px;
+        @include truncate;
+      }
+      .name {
+        width: 100px;
+      }
+      .btn {
+        width: 100px;
+        height: 30px;
+        background: var(--color-btn);
+        border: 0px;
+        border-radius: 8px;
+        color: $white;
+        font-weight: bold;
+        cursor: pointer;
+        font-family: 'Jalnan', sans-serif;
+        font-size: 12px;
+      }
+    }
+    .modalItem:hover {
+      background-color: var(--color-linearB);
+    }
+  }
+  .modal::-webkit-scrollbar {
+    width: 8px; /* 스크롤바의 너비 */
+  }
+
+  .modal::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: var(--color-roomB); /* 스크롤바의 색상 */
+    border-radius: 10px;
+  }
+
+  .modal::-webkit-scrollbar-track {
+    margin: 10px;
+    background: var(--color-linearB); /*스크롤바 뒷 배경 색상*/
+    border-radius: 10px;
+  }
+  .modalOpen {
+    display: block;
+  }
+
+  .reservList {
+    all: unset;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+
+    .list {
+      display: flex;
+      flex-direction: row;
+
+      .nowPlay {
+        width: 180px;
+        margin-right: 20px;
+        font-weight: bold;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        color: var(--color-black);
+        @include truncate;
+
+        .out {
+          @include truncate;
+          cursor: pointer;
+
+          .title {
+            color: var(--color-ssari);
+          }
+        }
+        .out:hover {
+          animation: textLoop 10s linear infinite;
+        }
+      }
+
+      .listOut {
+        width: 460px;
+        overflow: hidden;
+
+        .listItem {
+          width: 460px;
+          display: flex;
+          flex-direction: row;
+          @include truncate;
+          animation: textLoop 30s linear infinite;
+          animation-delay: 2s;
+
+          .item {
+            margin: 0 15px;
+            font-size: 12px;
+            color: $dark;
+          }
+        }
+      }
+    }
+    .toggleIcon {
+      padding-top: 5px;
+      width: 5%;
+      height: auto;
+      margin: 0 20px;
+    }
+  }
+}
+
+@keyframes textLoop {
+  0% {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  5% {
+    overflow: visible;
+    text-overflow: unset;
+  }
+  100% {
+    transform: translateX(-100%);
+    overflow: visible;
+    text-overflow: unset;
+  }
+}

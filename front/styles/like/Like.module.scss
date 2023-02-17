@@ -1,0 +1,36 @@
+@import '../color';
+
+.container {
+  padding: 0 10%;
+  margin: 50px 0;
+
+  .top {
+    text-align: center;
+    color: var(--color-text);
+
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      padding-bottom: 30px;
+      border-bottom: 2px solid var(--color-text);
+    }
+    .menu {
+      margin: 20px 0;
+      .music {
+        all: unset;
+        width: 100px;
+        border-right: 2px solid var(--color-text);
+        cursor: pointer;
+      }
+      .video {
+        all: unset;
+        width: 100px;
+        cursor: pointer;
+      }
+      .isSelect {
+        font-weight: bold;
+        color: $main;
+      }
+    }
+  }
+}

@@ -1,0 +1,150 @@
+@import '../color';
+@import '../mixin';
+
+.chart {
+  width: 80%;
+  margin: 50px auto;
+
+  .chartTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .chartIcon {
+      filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 0 20px;
+      color: var(--color-text);
+    }
+  }
+
+  .moreView {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    margin: 30px 0;
+    cursor: pointer;
+
+    .context {
+      all: unset;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--color-text);
+      margin-right: 10px;
+    }
+  }
+
+  .chartList {
+    margin: 30px 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20%;
+    @include _768 {
+      grid-template-columns: 1fr;
+      grid-gap: 0;
+    }
+
+    .list {
+      //max-width: 40vw;
+      @include _768 {
+        max-width: 100%;
+      }
+
+      .song {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 20px;
+        justify-content: flex-start;
+        padding: 10px;
+        border-radius: 8px;
+
+        .img {
+          width: 70px;
+          height: 70px;
+          background-color: var(--color-black);
+          border-radius: 6px;
+        }
+
+        .rank {
+          font-size: 30px;
+          font-weight: bold;
+          color: var(--color-black);
+          margin: 3px 30px 0 30px;
+        }
+
+        .songInfo {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          text-align: left;
+          overflow: hidden;
+
+          .songTitle {
+            @include truncate;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-black);
+            max-width: 200px;
+            @include _1024 {
+              max-width: 150px;
+            }
+            @media screen and (max-width: 900px) {
+              max-width: 120px;
+            }
+            @include _768 {
+              max-width: 200px;
+            }
+          }
+          .singer {
+            color: var(--color-black);
+            @include truncate;
+            max-width: 200px;
+            @include _1024 {
+              max-width: 150px;
+            }
+            @media screen and (max-width: 900px) {
+              max-width: 120px;
+            }
+            @include _768 {
+              max-width: 200px;
+            }
+          }
+        }
+      }
+
+      .song:hover {
+        background: linear-gradient(
+          var(--color-linearA),
+          var(--color-linearB),
+          var(--color-linearC)
+        );
+      }
+      .song:hover .songInfo .isLong {
+        animation: textLoop 10s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes textLoop {
+  0% {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  5% {
+    overflow: visible;
+    text-overflow: unset;
+  }
+  100% {
+    transform: translateX(-100%);
+    overflow: visible;
+    text-overflow: unset;
+  }
+}

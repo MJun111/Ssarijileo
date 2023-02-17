@@ -1,0 +1,190 @@
+@import '../color';
+@import '../mixin';
+
+.header {
+  display: grid;
+  justify-content: space-around;
+  background-color: rgba(0 0 0 / 0%);
+  z-index: 999;
+  grid-template-columns: 2fr 3fr 2fr;
+  padding: 0 10%;
+
+  .logo {
+    img {
+      width: auto;
+    }
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    @include _768 {
+      display: none;
+    }
+
+    .pages {
+      all: unset;
+      text-decoration: none;
+      font-weight: bold;
+      color: var(--color-text);
+      cursor: pointer;
+    }
+  }
+
+  .dropdown {
+    position: relative;
+    display: none;
+
+    @include _768 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      font-weight: bold;
+      font-size: medium;
+      color: var(--color-text);
+      margin-left: 1rem;
+    }
+
+    .content {
+      z-index: 1;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      width: 150px;
+      text-align: center;
+      background-color: var(--color-background);
+      border-radius: 5px;
+
+      li {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--color-border);
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--color-hover);
+        }
+        .pages {
+          all: unset;
+          text-decoration: none;
+          font-weight: bold;
+          color: var(--color-text);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .icons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    .icon {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: auto 20px;
+
+      .switch {
+        width: 50px;
+        height: 25px;
+        display: block;
+        position: relative;
+        border-radius: 30px;
+        background-color: var(--color-background);
+        box-shadow: 0 0 10px 1px rgba(0 0 0 / 15%);
+        cursor: pointer;
+        transition: all 0.2s ease-in;
+
+        /* 토글 버튼 */
+        .checkbox {
+          all: unset;
+          /* 버튼은 토글보다 작아야함  */
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          top: 50%;
+          left: 4px;
+          transform: translateY(-50%);
+          border-radius: 50%;
+          background-color: var(--color-text);
+          cursor: pointer;
+          transition: all 0.2s ease-in;
+        }
+        .checkbox:checked {
+          left: calc(100% - 24px) !important;
+        }
+      }
+      img {
+        margin-left: 10px;
+      }
+    }
+
+    .loginBtn {
+      background-color: var(--color-text);
+      color: var(--color-background);
+      width: 70px;
+      height: 30px;
+      border-radius: 6px;
+      border: 0;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: 'Jalnan', sans-serif;
+    }
+    .loginBtn:hover {
+      background-color: $main;
+      color: $white;
+    }
+
+    .toastBox {
+      cursor: pointer;
+      .toast {
+        div {
+          background-color: #fff;
+          color: $dark;
+          font-weight: bold;
+          font-family: 'Jalnan', sans-serif;
+
+          div[role=progressbar] {
+            background: var(--color-roomB);
+          }
+        }
+      }
+    }
+
+    .logout {
+      cursor: pointer;
+      margin-right: 5px;
+    }
+
+    .profile {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #e1e1e1;
+      border-radius: 50%;
+      margin-left: 10px;
+
+      img {
+        margin-left: 0;
+      }
+    }
+  }
+}

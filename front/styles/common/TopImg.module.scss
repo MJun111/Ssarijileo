@@ -1,0 +1,12 @@
+@import '../color';
+@import '../mixin';
+
+.background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 0;
+  @include _576 {
+    display: none;
+  }
+}

@@ -1,0 +1,34 @@
+@import '../color';
+
+.container {
+  padding: 0 10%;
+
+  .list {
+    margin: 50px 0;
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--color-text);
+      margin: 20px 0;
+
+      .icon {
+        filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
+      }
+    }
+
+    .context {
+      margin-right: 16px;
+    }
+  }
+
+  .line {
+    height: 2px;
+    border: 0;
+    background: linear-gradient(
+      270deg,
+      var(--color-roomA) 0%,
+      var(--color-roomB) 52.6%,
+      var(--color-roomC) 100%
+    );
+  }
+}

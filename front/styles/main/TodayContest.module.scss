@@ -1,0 +1,148 @@
+@import '../color';
+@import '../mixin';
+
+@mixin td_style {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.container {
+  width: 80%;
+  margin: 50px auto;
+
+  .contestTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    .contestIcon {
+      filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
+    }
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      margin: 0 20px;
+      color: var(--color-text);
+    }
+  }
+
+  .contestRank {
+    width: 100%;
+    margin: 30px 0;
+
+    .rankTable {
+      width: 100%;
+      padding: 30px;
+      border-spacing: 0 30px;
+
+      thead {
+        color: var(--color-black);
+        @include _768 {
+          display: none;
+        }
+      }
+      tbody {
+        color: var(--color-black);
+        @include _768 {
+          display: none;
+        }
+
+        .item {
+          border-radius: 10px;
+          transition: all 1s;
+          background: var(--color-today-contest);
+          @include truncate;
+          cursor: pointer;
+
+          td {
+            padding: 20px;
+            @include td_style();
+          }
+
+          .medal {
+            border-radius: 20px 0 0 20px;
+            width: 5%;
+
+            .medalIcon {
+              filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
+            }
+          }
+          .profile {
+            width: 5%;
+
+            .content {
+              width: 60px;
+              height: 60px;
+              border-radius: 50%;
+              background-color: $white;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+          .name {
+            width: 15%;
+          }
+          .title {
+            width: 20%;
+          }
+          .singer {
+            width: 20%;
+          }
+          .like {
+            width: 15%;
+            font-size: 20px;
+            color: $main;
+            border-radius: 0 20px 20px 0;
+          }
+        }
+        .item:hover {
+          background: linear-gradient(
+            var(--color-linearA),
+            var(--color-linearB),
+            var(--color-linearC)
+          );
+        }
+      }
+
+      .simpleRank {
+        display: none;
+        cursor: pointer;
+
+        @include _768 {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          grid-gap: 10px;
+        }
+
+        .simpleItem {
+          border-radius: 10px;
+          transition: all 1s;
+          background: var(--color-today-contest);
+          display: flex;
+          flex-direction: column;
+          padding: 2rem 0;
+
+          .medal {
+            border-radius: 20px 0 0 20px;
+            width: 5%;
+
+            .medalIcon {
+              filter: drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5));
+            }
+          }
+        }
+
+        .simpleItem:hover {
+          background: linear-gradient(
+            var(--color-linearA),
+            var(--color-linearB),
+            var(--color-linearC)
+          );
+        }
+      }
+    }
+  }
+}

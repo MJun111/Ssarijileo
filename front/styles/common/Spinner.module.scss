@@ -1,0 +1,64 @@
+@import '../color.scss';
+
+@mixin line {
+  width: 8px;
+  position: absolute;
+  border-radius: 5px;
+  bottom: 55%;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(#1ee95d),
+    to(#5714ce)
+  );
+  background: -webkit-linear-gradient(top, #1ee95d, #5714ce);
+  background: -o-linear-gradient(top, #1ee95d, #5714ce);
+  background: linear-gradient(to bottom, #1ee95d, #5714ce);
+}
+
+.containner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($color: #000000, $alpha: 0.8);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+
+  .context {
+    position: absolute;
+    font-size: 20px;
+    color: $line;
+    top: 50%;
+    left: 50%;
+  }
+  .line1 {
+    @include line;
+    left: 50%;
+    animation: line-grow 0.5s ease alternate infinite;
+  }
+
+  .line2 {
+    @include line;
+    left: 52%;
+    animation: line-grow 0.5s 0.2s ease alternate infinite;
+  }
+
+  .line3 {
+    @include line;
+    left: 54%;
+    animation: line-grow 0.5s 0.4s ease alternate infinite;
+  }
+}
+
+@keyframes line-grow {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: 7%;
+  }
+}

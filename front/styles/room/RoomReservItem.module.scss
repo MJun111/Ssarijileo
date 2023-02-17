@@ -1,0 +1,148 @@
+@import '../color';
+@import '../mixin';
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--color-text);
+
+  .img {
+    width: 45px;
+    height: 45px;
+    background-color: var(--color-black);
+    border-radius: 6px;
+
+    .albumImg {
+      border-radius: 6px;
+    }
+  }
+
+  .rank {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .titleCover {
+    width: 40%;
+    overflow: hidden;
+    text-align: left;
+
+    .title {
+      @include truncate;
+      font-size: 18px;
+      font-weight: bold;
+      width: 100%;
+      text-align: left;
+      // max-width: 200px;
+      //   @include _1024 {
+      //     max-width: 150px;
+      //   }
+      //   @media screen and (max-width: 900px) {
+      //     max-width: 120px;
+      //   }
+      //   @include _768 {
+      //     max-width: 200px;
+      //   }
+    }
+  }
+  .singerCover {
+    width: 20%;
+    overflow: hidden;
+
+    .singer {
+      @include truncate;
+      font-size: 14px;
+      width: 100%;
+      // max-width: 200px;
+      //   max-width: 200px;
+      //   @include _1024 {
+      //     max-width: 150px;
+      //   }
+      //   @media screen and (max-width: 900px) {
+      //     max-width: 120px;
+      //   }
+      //   @include _768 {
+      //     max-width: 200px;
+      //   }
+    }
+  }
+  .albumCover {
+    width: 20%;
+    overflow: hidden;
+    .album {
+      @include truncate;
+      font-size: 14px;
+      width: 100%;
+    }
+  }
+
+  .btnList {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 240px;
+
+    .firstReserv {
+      width: 80px;
+      height: 23px;
+      border: 1px solid var(--color-btn);
+      border-radius: 6px;
+      background: var(--color-background);
+      color: var(--color-btn);
+      font-weight: bold;
+      font-size: 12px;
+      margin: 0 20px;
+      cursor: pointer;
+    }
+    .nomalReserv {
+      width: 80px;
+      height: 23px;
+      border: 1px solid var(--color-btn);
+      border-radius: 6px;
+      background: var(--color-btn);
+      color: var(--color-background);
+      font-weight: bold;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .firstReserv:hover,
+    .nomalReserv:hover {
+      background: var(--color-hover);
+      border: 1px solid var(--color-hover);
+      color: var(--color-background);
+    }
+  }
+}
+.container:hover {
+  background: linear-gradient(
+    var(--color-linearA),
+    var(--color-linearB),
+    var(--color-linearC)
+  );
+  cursor: pointer;
+}
+.container:hover .isLong {
+  animation: textLoop 10s linear infinite;
+}
+.container:hover .btnList {
+  display: block;
+}
+@keyframes textLoop {
+  0% {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  5% {
+    overflow: visible;
+    text-overflow: unset;
+  }
+  100% {
+    transform: translateX(-100%);
+    overflow: visible;
+    text-overflow: unset;
+  }
+}

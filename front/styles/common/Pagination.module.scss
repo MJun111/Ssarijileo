@@ -1,0 +1,33 @@
+@import '../color';
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 50px 0;
+
+  .btn {
+    all: unset;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    border: 2px solid var(--color-page);
+    border-radius: 3px;
+    color: var(--color-text);
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn:hover {
+    border: 2px solid var(--color-btn);
+    color: var(--color-btn);
+  }
+  .nowPage {
+    background: var(--color-btn);
+    color: $white;
+    z-index: 98;
+  }
+  .nowPage:hover {
+    color: $white;
+  }
+}

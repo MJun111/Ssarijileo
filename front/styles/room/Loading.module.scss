@@ -1,0 +1,40 @@
+@import '../color';
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  background: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .loading {
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .loadImg {
+      width: 200px;
+      height: 200px;
+      margin: auto;
+
+      transform-origin: 50%;
+      animation: Rotate 3.5s infinite ease;
+    }
+
+    .loadContext {
+      font-size: 20px;
+      text-align: center;
+      color: var(--color-placeHolder);
+    }
+  }
+}
+
+@keyframes Rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}

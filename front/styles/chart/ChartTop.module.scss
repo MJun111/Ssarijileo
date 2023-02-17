@@ -1,0 +1,86 @@
+@import '../mixin';
+
+.container {
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10%;
+
+  .canvas {
+    position: absolute;
+    left: 0;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .topList {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    right: 100px;
+
+    .item {
+      z-index: 10;
+      width: 220px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: var(--color-text);
+      cursor: pointer;
+      transition: all 1s ease;
+      @include _1440 {
+        display: none;
+      }
+
+      .albumCover {
+        border-radius: 15px;
+        margin-bottom: 10px;
+        filter: drop-shadow(-10px 10px 5px rgba(0, 0, 0, 0.25));
+      }
+    }
+    .item:hover {
+      transform: scale(110%);
+    }
+  }
+
+  .heartA {
+    position: absolute;
+    top: 450px;
+    left: 80px;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+    @include _1024 {
+      display: none;
+    }
+  }
+
+  .heartB {
+    position: absolute;
+    top: 340px;
+    left: 20px;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+    @include _1024 {
+      display: none;
+    }
+  }
+
+  .heartC {
+    position: absolute;
+    top: 320px;
+    left: 640px;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+    @include _1024 {
+      display: none;
+    }
+  }
+
+  .heartD {
+    position: absolute;
+    top: 380px;
+    left: 600px;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+    @include _1024 {
+      display: none;
+    }
+  }
+}

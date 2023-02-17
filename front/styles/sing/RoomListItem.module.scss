@@ -1,0 +1,223 @@
+@import '../color';
+
+@mixin btn {
+  width: 70px;
+  height: 25px;
+  border-radius: 6px;
+  font-family: 'Jalnan', sans-serif;
+  font-size: 12px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  .back {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+  }
+  .modal {
+    position: absolute;
+    top: calc(50vh - 60px);
+    left: calc(50vw - 210px);
+    width: 400px;
+    height: 100px;
+    background: var(--color-background);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    padding: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    color: var(--color-text);
+
+    .input {
+      outline: none;
+      width: 250px;
+      height: 30px;
+      border: 1px solid var(--color-text);
+      background: var(--color-background);
+      border-radius: 6px;
+      padding: 0 10px;
+      font-family: 'Jalnan', sans-serif;
+      color: var(--color-text);
+    }
+    .input::placeholder {
+      color: var(--color-text);
+      font-size: 12px;
+    }
+
+    .btnList {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 20px;
+
+      .okBtn {
+        @include btn();
+        border: 1px solid var(--color-text);
+        background: var(--color-background);
+        color: var(--color-text);
+      }
+      .okBtn:hover {
+        border: 1px solid var(--color-text);
+        background: var(--color-text);
+        color: var(--color-background);
+      }
+      .closeBtn {
+        @include btn();
+        border: 1px solid #ea9800;
+        background: var(--color-background);
+        color: #ea9800;
+      }
+      .closeBtn:hover {
+        border: 1px solid #ea9800;
+        background: #ea9800;
+        color: $white;
+      }
+    }
+  }
+}
+.component {
+  position: relative;
+
+  .container {
+    width: 336px;
+    height: 181px;
+    border: 1px solid $line;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+    background: $white;
+    margin: 20px 0;
+    cursor: pointer;
+
+    .back {
+      width: 256px;
+      height: 141px;
+      padding: 20px 40px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 1s;
+
+      .top {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .title {
+          font-weight: bold;
+        }
+        .type {
+          width: 100px;
+          height: 30px;
+          border-radius: 20px;
+          font-size: 12px;
+          line-height: 30px;
+          text-align: center;
+          font-weight: bold;
+          background: $white;
+        }
+        .nomal {
+          border: 2px solid #000;
+          color: #000;
+        }
+        .perfect {
+          border: 2px solid #5d1abc;
+          color: #5d1abc;
+        }
+        .relay {
+          border: 2px solid #c7241a;
+          color: #c7241a;
+        }
+        .guess {
+          border: 2px solid #1f7d34;
+          color: #1f7d34;
+        }
+      }
+
+      .play {
+        margin: auto;
+        visibility: hidden;
+      }
+
+      .bottom {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .lock {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          font-size: 14px;
+          font-weight: bold;
+
+          .type {
+            margin-right: 10px;
+          }
+        }
+        .member {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          .count {
+            margin-left: 15px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .nomal {
+      background: $line;
+    }
+    .perfect {
+      background: linear-gradient(
+        104.12deg,
+        rgba(93, 195, 234, 0.31) 21.5%,
+        rgba(163, 134, 232, 0.355) 51.53%,
+        rgba(246, 138, 221, 0.355) 84.6%
+      );
+    }
+    .relay {
+      background: linear-gradient(
+        104.12deg,
+        rgba(255, 210, 196, 0.31) 21.5%,
+        rgba(255, 184, 180, 0.355) 51.53%,
+        rgba(255, 67, 55, 0.355) 84.6%
+      );
+    }
+    .guess {
+      background: linear-gradient(
+        104.12deg,
+        rgba(172, 234, 93, 0.31) 21.5%,
+        rgba(82, 213, 88, 0.355) 51.53%,
+        rgba(23, 194, 71, 0.355) 84.6%
+      );
+    }
+  }
+
+  .container:hover .play {
+    visibility: visible;
+  }
+  .container:hover .back {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}

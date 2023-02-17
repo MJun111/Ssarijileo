@@ -1,0 +1,180 @@
+@import '../color';
+@import '../mixin';
+
+@mixin btn {
+  width: 70px;
+  height: 25px;
+  border-radius: 6px;
+  font-family: 'Jalnan', sans-serif;
+  font-size: 12px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+
+  .back {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.25);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+  }
+  .modal {
+    position: absolute;
+    top: calc(50vh - 60px);
+    left: calc(50vw - 210px);
+    width: 400px;
+    height: 100px;
+    background: var(--color-background);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    padding: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    color: var(--color-text);
+
+    .btnList {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 20px;
+
+      .okBtn {
+        @include btn();
+        border: 1px solid var(--color-text);
+        background: var(--color-background);
+        color: var(--color-text);
+      }
+      .okBtn:hover {
+        border: 1px solid var(--color-text);
+        background: var(--color-text);
+        color: var(--color-background);
+      }
+      .closeBtn {
+        @include btn();
+        border: 1px solid #ea9800;
+        background: var(--color-background);
+        color: #ea9800;
+      }
+      .closeBtn:hover {
+        border: 1px solid #ea9800;
+        background: #ea9800;
+        color: $white;
+      }
+    }
+  }
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  color: var(--color-text);
+  width: calc(100% - 80px);
+
+  .img {
+    width: 70px;
+    height: 70px;
+    background-color: var(--color-black);
+    border-radius: 6px;
+  }
+
+  .rank {
+    font-size: 30px;
+    font-weight: bold;
+  }
+  .titleCover {
+    width: 40%;
+    overflow: hidden;
+    text-align: left;
+
+    .title {
+      @include truncate;
+      font-size: 24px;
+      font-weight: bold;
+      width: 100%;
+      text-align: left;
+      // max-width: 200px;
+      //   @include _1024 {
+      //     max-width: 150px;
+      //   }
+      //   @media screen and (max-width: 900px) {
+      //     max-width: 120px;
+      //   }
+      //   @include _768 {
+      //     max-width: 200px;
+      //   }
+    }
+  }
+  .singerCover {
+    width: 20%;
+    overflow: hidden;
+
+    .singer {
+      @include truncate;
+      font-size: 20px;
+      width: 100%;
+      // max-width: 200px;
+      //   max-width: 200px;
+      //   @include _1024 {
+      //     max-width: 150px;
+      //   }
+      //   @media screen and (max-width: 900px) {
+      //     max-width: 120px;
+      //   }
+      //   @include _768 {
+      //     max-width: 200px;
+      //   }
+    }
+  }
+  .albumCover {
+    width: 20%;
+    overflow: hidden;
+    .album {
+      @include truncate;
+      font-size: 20px;
+      width: 100%;
+    }
+  }
+}
+.container:hover {
+  background: linear-gradient(
+    var(--color-linearA),
+    var(--color-linearB),
+    var(--color-linearC)
+  );
+  cursor: pointer;
+}
+.container:hover .isLong {
+  animation: textLoop 10s linear infinite;
+}
+@keyframes textLoop {
+  0% {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  5% {
+    overflow: visible;
+    text-overflow: unset;
+  }
+  100% {
+    transform: translateX(-100%);
+    overflow: visible;
+    text-overflow: unset;
+  }
+}

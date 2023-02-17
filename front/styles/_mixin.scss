@@ -1,0 +1,68 @@
+@mixin _1440 {
+  @media (max-width: 1439px) {
+    @content;
+  }
+}
+
+@mixin _1024 {
+  @media (max-width: 1023px) {
+    @content;
+  }
+}
+
+@mixin _768 {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin _576 {
+  @media (max-width: 575px) {
+    @content;
+  }
+}
+
+@mixin _480 {
+  @media (max-width: 479px) {
+    @content;
+  }
+}
+
+@mixin truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@mixin container {
+  padding: 0 10%;
+}
+
+@mixin noteA {
+  position: absolute;
+  top: 100px;
+  right: 920px;
+  filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+  @include _1440 {
+    display: none;
+  }
+}
+@mixin noteB {
+  position: absolute;
+  top: 300px;
+  right: 640px;
+  filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+  z-index: 1;
+  @include _1440 {
+    display: none;
+  }
+}
+@mixin noteC {
+  position: absolute;
+  top: 120px;
+  right: 500px;
+  filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.5));
+  @include _1440 {
+    display: none;
+  }
+}

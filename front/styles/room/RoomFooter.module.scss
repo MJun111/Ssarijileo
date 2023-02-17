@@ -1,0 +1,87 @@
+@import '../color';
+
+@mixin btn {
+  width: 90px;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  font-family: 'Jalnan', sans-serif;
+}
+
+.container {
+  width: 95%;
+  height: 35px;
+  background: var(--color-background);
+  padding: 10px 20px;
+  margin: 10px auto;
+  border-radius: 20px;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 30%;
+
+    .btnList {
+      width: 200px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      .friend {
+        @include btn();
+        background: var(--color-background);
+        color: var(--color-btn);
+        border: 1px solid var(--color-btn);
+      }
+      .reserv {
+        @include btn();
+        background: var(--color-btn);
+        color: $white;
+        border: 0px;
+      }
+      .friend:hover,
+      .reserv:hover {
+        background: var(--color-hover);
+        color: var(--color-background);
+        border: 0px;
+      }
+    }
+    .sound {
+      width: 120px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+
+      .clap {
+        filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.25));
+        cursor: pointer;
+      }
+      .tambourine {
+        filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.25));
+        padding-top: 5px;
+        cursor: pointer;
+      }
+    }
+    .controller {
+      position: absolute;
+      left: calc(50% - 22.5px);
+      filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.25));
+      cursor: pointer;
+    }
+  }
+  .chat {
+    filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.25));
+    cursor: pointer;
+  }
+}

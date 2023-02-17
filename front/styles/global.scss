@@ -1,0 +1,56 @@
+@use 'color' as *;
+
+body[data-theme='light'] {
+  --color-background: #{$white};
+  --color-text: #{$dark};
+  --color-btn: #{$dark};
+  --color-hover: #{$main};
+  --color-ssari: #{$main};
+  --color-black: #{$black};
+  --color-white: #{$white};
+  --color-line: #{$line};
+  --color-placeHolder: #{$placeholder};
+  --color-page: #{$line};
+  --color-send: #{$line};
+  --color-linearA: rgba(25, 155, 223, 0.21);
+  --color-linearB: rgba(187, 135, 229, 0.21);
+  --color-linearC: rgba(246, 138, 221, 0.08);
+  --color-roomC: rgb(94, 194, 234);
+  --color-roomB: rgb(169, 134, 232);
+  --color-roomA: rgb(247, 138, 221);
+  --color-today-contest: rgba(122, 122, 122, 0.3);
+  --color-star: #{$main};
+}
+
+body[data-theme='dark'] {
+  --color-background: #{$dark};
+  --color-text: #{$white};
+  --color-btn: #{$main};
+  --color-hover: #{$white};
+  --color-ssari: #{$black};
+  --color-black: #{$white};
+  --color-white: #{$black};
+  --color-line: #{$white};
+  --color-placeHolder: #{$white};
+  --color-page: rgba(255, 255, 255, 0.25);
+  --color-send: #{$dark};
+  --color-linearA: rgba(104, 225, 147, 0.5);
+  --color-linearB: rgba(56, 205, 200, 0.5);
+  --color-linearC: rgba(31, 92, 125, 0.5);
+  --color-roomC: rgb(107, 225, 145);
+  --color-roomB: rgb(57, 206, 200);
+  --color-roomA: rgb(31, 92, 125);
+  --color-today-contest: rgba(191, 191, 191, 0.5);
+  --color-star: rgba(255, 199, 0, 1);
+}
+
+body {
+  margin: 0;
+  -webkit-user-select: none;
+  font-family: 'Jalnan', sans-serif;
+  overflow-x: hidden;
+}
+
+img {
+  -webkit-user-drag: none;
+}

@@ -1,0 +1,148 @@
+@import '../color';
+
+.layout {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  .back {
+    all: unset;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+  }
+  .container {
+    position: fixed;
+    width: 350px;
+    height: 500px;
+    bottom: 70px;
+    right: 40px;
+    background-color: var(--color-background);
+    border-radius: 20px;
+    box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.25);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .top {
+      height: 30px;
+      padding: 0 10px;
+      background: var(--color-background);
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      .close {
+        padding-top: 5px;
+        cursor: pointer;
+      }
+    }
+    .main {
+      height: 330px;
+      overflow-y: scroll;
+      background: var(--color-linearB);
+
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+
+      .chat {
+        width: 200px;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 15px;
+        font-size: 10px;
+        padding: 10px;
+        margin: 5px 0;
+        color: var(--color-text);
+        word-break: break-all;
+
+        .profileInfo {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 5px;
+
+          .profileIcon {
+            width: 30px;
+            height: 30px;
+            border-radius: 30px;
+            background: $line;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+          }
+          .name {
+            font-weight: bold;
+          }
+        }
+      }
+      .myChat {
+        margin-left: auto;
+        background: $main;
+        color: $dark;
+      }
+      .otherChat {
+        background: $white;
+        color: $dark;
+      }
+    }
+    .main::-webkit-scrollbar {
+      width: 10px; /* 스크롤바의 너비 */
+    }
+
+    .main::-webkit-scrollbar-thumb {
+      height: 30%; /* 스크롤바의 길이 */
+      background: var(--color-roomB); /* 스크롤바의 색상 */
+      border-radius: 10px;
+    }
+
+    .main::-webkit-scrollbar-track {
+      margin: 10px;
+      background: var(--color-linearB); /*스크롤바 뒷 배경 색상*/
+      border-radius: 10px;
+    }
+    .input {
+      all: unset;
+      width: 330px;
+      height: 60px;
+      padding: 10px;
+      overflow: hidden;
+      word-break: break-all;
+      overflow-y: scroll;
+      font-size: 12px;
+      background: var(--color-background);
+      color: var(--color-text);
+    }
+    .input::-webkit-scrollbar {
+      width: 10px; /* 스크롤바의 너비 */
+    }
+
+    .input::-webkit-scrollbar-thumb {
+      height: 30%; /* 스크롤바의 길이 */
+      background: var(--color-roomB); /* 스크롤바의 색상 */
+      border-radius: 10px;
+    }
+
+    .input::-webkit-scrollbar-track {
+      margin: 10px;
+      background: var(--color-linearB); /*스크롤바 뒷 배경 색상*/
+      border-radius: 10px;
+    }
+    .btn {
+      height: 40px;
+      border: 0px;
+      border-radius: 0 0 20px 20px;
+      cursor: pointer;
+      background: var(--color-send);
+      color: var(--color-text);
+      border-top: 1px solid $main;
+      font-family: 'Jalnan', sans-serif;
+    }
+  }
+}

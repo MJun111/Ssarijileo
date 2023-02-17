@@ -1,0 +1,27 @@
+@import '../color';
+@import '../mixin';
+
+.container {
+  width: 100%;
+
+  .noteA {
+    @include noteA;
+  }
+  .noteB {
+    @include noteB;
+  }
+  .noteC {
+    @include noteC;
+  }
+
+  .title {
+    width: 80%;
+    padding-bottom: 30px;
+    margin: 50px auto;
+    text-align: center;
+    font-size: 30px;
+    color: var(--color-text);
+    font-weight: bold;
+    border-bottom: 3px solid var(--color-text);
+  }
+}

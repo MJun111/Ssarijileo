@@ -1,0 +1,7 @@
+@import 'mixin';
+
+.main {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+}

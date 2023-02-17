@@ -1,0 +1,84 @@
+@import '../color';
+
+@mixin btn_style {
+  width: 200px;
+  height: 50px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-family: 'Jalnan', sans-serif;
+}
+
+.title {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+
+  .top {
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+
+    .point {
+      font-family: 'Miniver', cursive;
+      color: $main;
+      margin-bottom: 10px;
+    }
+
+    .line {
+      width: 300px;
+      height: 1px;
+      border: 0;
+      background-color: $main;
+      margin-left: 10px;
+    }
+  }
+
+  .main {
+    font-size: 44px;
+    //font-weight: bold;
+    color: var(--color-text);
+    //font-family: 'Inter', sans-serif;
+    z-index: 1;
+    white-space: pre-line;
+  }
+
+  .sub {
+    font-size: 16px;
+    color: var(--color-placeHolder);
+    margin: 20px 0;
+    z-index: 1;
+    white-space: pre-line;
+    line-height: 24px;
+  }
+
+  .btn {
+    z-index: 3;
+    .singBtn {
+      @include btn_style;
+      border: 0;
+      background-color: var(--color-btn);
+      color: $white;
+      cursor: pointer;
+    }
+    .singBtn:hover {
+      border: 1px solid var(--color-hover);
+      background-color: var(--color-hover);
+      color: var(--color-background);
+    }
+    .chartBtn {
+      @include btn_style;
+      margin-left: 20px;
+      border: 1px solid var(--color-btn);
+      background-color: var(--color-background);
+      color: var(--color-btn);
+      cursor: pointer;
+      z-index: 3;
+    }
+    .chartBtn:hover {
+      border: 1px solid var(--color-hover);
+      background-color: var(--color-hover);
+      color: var(--color-background);
+    }
+  }
+}

@@ -1,0 +1,53 @@
+@import '../color';
+
+.controls {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .micBar {
+    -webkit-appearance: none;
+    //width: calc(80% - 70px);
+    width: 100%;
+    min-width: 150px;
+    outline: none;
+    background: rgba($color: #ffe283, $alpha: 0.3);
+    height: 8px;
+    border-radius: 10px;
+  }
+  .micBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 15px;
+    width: 15px;
+    border-radius: 10px;
+    border: 5px solid $white;
+    background: #ffe283;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(19, 56, 77, 0.2);
+  }
+  .echoBar {
+    -webkit-appearance: none;
+    //width: calc(80% - 70px);
+    width: 100%;
+    min-width: 150px;
+    outline: none;
+    background: rgba($color: $main, $alpha: 0.3);
+    height: 8px;
+    border-radius: 10px;
+  }
+  .echoBar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 15px;
+    width: 15px;
+    border-radius: 10px;
+    border: 5px solid $white;
+    background: $main;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(19, 56, 77, 0.2);
+  }
+  .number {
+    margin-left: 20px;
+    color: var(--color-text);
+  }
+}
