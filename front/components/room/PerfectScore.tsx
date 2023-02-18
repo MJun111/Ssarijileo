@@ -137,7 +137,7 @@ function PerfectScore(props: {
   };
 
   const drawlyrics = (ctx: CanvasRenderingContext2D, currTime: number) => {
-    const deltaTime = currTime - 2.5;
+    const deltaTime = currTime - 2.7;
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
       lyrics.shift();
       lyricFlag.current = !lyricFlag.current;
@@ -422,7 +422,7 @@ function PerfectScore(props: {
       startTimeRef.current = Date.now();
       setTimeout(() => {
         musicRef.current?.start();
-      }, 2500);
+      }, 2700);
       screenShare(musicAudioCtx, mp3AudioDestination);
       await axios.post(
         'api/v1/reservation/sing',
