@@ -127,7 +127,7 @@ function Nomal(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current),
+            time: Math.floor(Date.now() - startTimeRef.current / 1000),
           },
         });
         dispatch(setSsari(7));
@@ -266,7 +266,7 @@ function Nomal(props: {
             await axios.delete('api/v1/reservation/sing', {
               data: {
                 songId: nextSong.songId,
-                time: nowtime,
+                time: Math.floor(Date.now() - startTimeRef.current / 1000),
               },
               headers: {
                 Authorization: getCookie('Authorization'),

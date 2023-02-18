@@ -413,7 +413,7 @@ function PerfectScore(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current),
+            time: Math.floor(Date.now() - startTimeRef.current / 1000),
           },
         });
         dispatch(setSsari(7));
