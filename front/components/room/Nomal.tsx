@@ -99,6 +99,21 @@ function Nomal(props: {
 
   useAnimation(drawLyrics, 0);
 
+  const stopMusic = async () => {
+    await axios.delete('api/v1/reservation/sing', {
+      headers: {
+        Authorization: getCookie('Authorization'),
+        refreshToken: getCookie('refreshToken'),
+      },
+      data: {
+        songId: nextSong.songId,
+        time: Math.floor((Date.now() - startTimeRef.current) / 1000),
+      },
+    });
+    dispatch(setSsari(7));
+    recordStop();
+  };
+
   useEffect(() => {
     const fetchMusic = async () => {
       if (storeSsari.ssari === 6) return;
@@ -115,18 +130,8 @@ function Nomal(props: {
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
       musicRef.current = musicSource;
-      musicSource.onended = async () => {
-        await axios.delete('api/v1/reservation/sing', {
-          headers: {
-            Authorization: getCookie('Authorization'),
-            refreshToken: getCookie('refreshToken'),
-          },
-          data: {
-            songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current / 1000),
-          },
-        });
-        dispatch(setSsari(7));
+      musicRef.current.onended = () => {
+        stopMusic();
       };
       musicRef.current.start();
       startTimeRef.current = Date.now();
@@ -260,7 +265,7 @@ function Nomal(props: {
           type="button"
           onClick={async () => {
             musicRef.current?.stop(0);
-            recordStop();
+            await stopMusic();
           }}
           className={styles.nextBtn}
           disabled={!isPlay}

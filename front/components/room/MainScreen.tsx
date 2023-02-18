@@ -312,11 +312,11 @@ export function MainScreen(props: {
           <track kind="captions" />
         </video>
       )}
-      {nowState === 5 && singMode === 'O' && (
+      {nowState === 5 && singMode === 'O' && nextSong && (
         <OrderSong screenShare={screenShare} nextSong={nextSong} />
       )}
-      {nowState === 6 && singMode === 'O' && (
-        <Guess session={session} nextSong={nextSong} />
+      {nowState === 6 && singMode === 'O' && nextSong && (
+        <Guess session={session} nextSong={nextSong} screen={screen} />
       )}
     </div>
   );

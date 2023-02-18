@@ -405,7 +405,7 @@ function PerfectScore(props: {
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
       musicRef.current = musicSource;
-      musicSource.onended = async () => {
+      musicRef.current.onended = async () => {
         await axios.delete('api/v1/reservation/sing', {
           headers: {
             Authorization: getCookie('Authorization'),
@@ -413,7 +413,7 @@ function PerfectScore(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current / 1000),
+            time: Math.floor((Date.now() - startTimeRef.current) / 1000),
           },
         });
         dispatch(setSsari(7));

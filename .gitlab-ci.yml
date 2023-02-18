@@ -5,7 +5,7 @@ deploy_preview:
   stage: deploy
   except:
     - master
-    - hotfix/*
+    - hotfix/final-contest
   script:
     - cd front
     - touch .env
@@ -20,7 +20,7 @@ deploy_production:
   stage: deploy
   only:
     - master
-    - hotfix/*
+    - hotfix/final-contest
   script:
     - cd front
     - touch .env
