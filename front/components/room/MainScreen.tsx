@@ -249,7 +249,7 @@ export function MainScreen(props: {
       });
   };
 
-  const stopRecord = () => {
+  const recordStop = () => {
     videoRecorderRef.current?.stop();
     setIsRecord(false);
   };
@@ -301,7 +301,7 @@ export function MainScreen(props: {
           nextSong={nextSong}
           screenShare={screenShare}
           screen={screen}
-          recordStop={stopRecord}
+          recordStop={recordStop}
         />
       )}
       {nowState === 5 && singMode === 'P' && nextSong && (

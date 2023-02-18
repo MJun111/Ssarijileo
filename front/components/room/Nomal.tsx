@@ -52,10 +52,6 @@ function Nomal(props: {
     const deltaTime = (Date.now() - startTimeRef.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
-      dispatch(setSsari(7));
-      recordStop();
-      // 예약목록 0번 인덱스 삭제...
-      musicRef.current?.stop(0);
       return;
     }
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
