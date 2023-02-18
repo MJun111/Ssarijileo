@@ -73,9 +73,8 @@
         background-size: 400px 50px;
         background: #ffcfcf;
       }
-      canvas {
-        width: 0;
-        height: 0;
+      .video {
+        display: none;
       }
     }
   }

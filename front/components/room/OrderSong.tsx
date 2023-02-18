@@ -7,6 +7,7 @@ import { setSsari } from '@/redux/store/ssariSlice';
 
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
+import { NextSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/OrderSong.module.scss';
 
@@ -15,7 +16,7 @@ function OrderSong(props: {
     audioContext: AudioContext,
     mp3AudioDestination: MediaStreamAudioDestinationNode,
   ) => void;
-  nextSong: any;
+  nextSong: NextSong;
 }) {
   const { screenShare, nextSong } = props;
   const dispatch = useDispatch();
