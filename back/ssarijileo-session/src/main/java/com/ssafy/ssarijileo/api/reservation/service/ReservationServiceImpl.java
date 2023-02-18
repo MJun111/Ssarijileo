@@ -58,7 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public void deleteSing(SingingDto singingDto) {
 		singingDto.setState("C");
-		LocalTime localTime = LocalTime.ofSecondOfDay(singingDto.getTime());
+		LocalTime localTime = LocalTime.ofSecondOfDay(singingDto.getTime() > 0 ? singingDto.getTime() : 1);
 		singingDto.setSingingTime(localTime.toString());
 		singingClient.deleteSinging(singingDto);
 	}
