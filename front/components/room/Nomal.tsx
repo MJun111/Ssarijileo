@@ -259,16 +259,6 @@ function Nomal(props: {
         <button
           type="button"
           onClick={async () => {
-            await axios.delete('api/v1/reservation/sing', {
-              data: {
-                songId: nextSong.songId,
-                time: Math.floor(Date.now() - startTimeRef.current / 1000),
-              },
-              headers: {
-                Authorization: getCookie('Authorization'),
-                refreshToken: getCookie('refreshToken'),
-              },
-            });
             musicRef.current?.stop(0);
             recordStop();
           }}
