@@ -130,7 +130,7 @@ function Nomal(props: {
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
       musicRef.current = musicSource;
-      musicSource.onended = () => {
+      musicRef.current.onended = () => {
         stopMusic();
       };
       musicRef.current.start();
@@ -265,7 +265,7 @@ function Nomal(props: {
           type="button"
           onClick={async () => {
             musicRef.current?.stop(0);
-            await stopMusic();
+            // await stopMusic();
           }}
           className={styles.nextBtn}
           disabled={!isPlay}

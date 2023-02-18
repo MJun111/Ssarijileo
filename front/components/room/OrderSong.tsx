@@ -132,7 +132,7 @@ function OrderSong(props: {
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
       musicRef.current = musicSource;
-      musicSource.onended = () => {
+      musicRef.current.onended = () => {
         stopMusic();
       };
       musicRef.current.start();
@@ -169,7 +169,7 @@ function OrderSong(props: {
         className={styles.btn}
         onClick={async () => {
           musicRef.current?.stop(0);
-          await stopMusic();
+          // await stopMusic();
         }}
       >
         다음 곡으로
