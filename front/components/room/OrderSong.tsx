@@ -110,7 +110,7 @@ function OrderSong(props: {
       },
       data: {
         songId: nextSong.songId,
-        time: Math.floor(Date.now() - startTimeRef.current / 1000),
+        time: Math.floor((Date.now() - startTimeRef.current) / 1000),
       },
     });
     dispatch(setSsari(7));
@@ -144,8 +144,8 @@ function OrderSong(props: {
         },
         {
           headers: {
-            Authorization: `${getCookie('Authorization')}`,
-            refreshToken: `${getCookie('refreshToken')}`,
+            Authorization: getCookie('Authorization'),
+            refreshToken: getCookie('refreshToken'),
           },
         },
       );
