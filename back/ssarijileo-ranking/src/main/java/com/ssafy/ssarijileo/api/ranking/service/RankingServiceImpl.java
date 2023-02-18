@@ -46,8 +46,6 @@ public class RankingServiceImpl implements RankingService {
         return list;
     }
 
-    // 시연 때만 막아둠
-    /*
     // 매일 새벽 3시 30분에 일간랭킹 연산 후 캐시 저장
     @Scheduled(cron = "0 30 3 * * *")
     public void dailyGetRanking() {
@@ -65,7 +63,6 @@ public class RankingServiceImpl implements RankingService {
     public void monthlyGetRanking() {
         getRanking(RankingType.MONTH);
     }
-    */
 
     @Override
     public List<RankingDto> getRanking(RankingType rankingType) {
