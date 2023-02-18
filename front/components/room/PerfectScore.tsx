@@ -386,6 +386,7 @@ function PerfectScore(props: {
     const fetchMusic = async () => {
       if (storeSsari.ssari === 6) return;
       const musicAudioCtx = new AudioContext();
+      const gainNode = musicAudioCtx.createGain();
       const noteData = await fetch(nextSong.note);
       const noteJson = await noteData.json();
       for (let i = 0; i < noteJson.length; i++) {
@@ -398,6 +399,8 @@ function PerfectScore(props: {
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      gainNode.gain.value = 0.5;
+      musicSource.connect(gainNode);
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
@@ -410,7 +413,7 @@ function PerfectScore(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current),
+            time: Math.floor(Date.now() - startTimeRef.current / 1000),
           },
         });
         dispatch(setSsari(7));

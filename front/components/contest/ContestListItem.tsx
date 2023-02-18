@@ -149,23 +149,19 @@ function ContestListItem({ info }: VideoProps) {
                   type="button"
                   className={styles.deleteBtn}
                   onClick={() => {
-                    axios
-                      .put(
-                        'api/v1/singing-contest',
-                        {
-                          singingContestId,
-                          status: 'D',
+                    axios.put(
+                      'api/v1/singing-contest',
+                      {
+                        singingContestId,
+                        status: 'D',
+                      },
+                      {
+                        headers: {
+                          Authorization: `${getCookie('Authorization')}`,
+                          refreshToken: `${getCookie('refreshToken')}`,
                         },
-                        {
-                          headers: {
-                            Authorization: `${getCookie('Authorization')}`,
-                            refreshToken: `${getCookie('refreshToken')}`,
-                          },
-                        },
-                      )
-                      .then(res => {
-                        console.log(res.data);
-                      });
+                      },
+                    );
                   }}
                 >
                   글삭제

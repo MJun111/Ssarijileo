@@ -10,8 +10,8 @@ import { setNickname } from '@/redux/store/userSlice';
 import MicControlBar from '@/components/common/MicControlBar';
 import EchoControlBar from '@/components/common/EchoControlBar';
 
-import styles from '@/styles/profile/ContentForm.module.scss';
 import { getCookie } from '@/util/cookie';
+import styles from '@/styles/profile/ContentForm.module.scss';
 
 function ContentForm(props: { theme: string }) {
   const { theme } = props;
@@ -47,7 +47,6 @@ function ContentForm(props: { theme: string }) {
   const saveProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setNickname(nicknameValue));
-    console.log('저장');
   };
 
   const nicknameClass = classNames({
@@ -102,7 +101,6 @@ function ContentForm(props: { theme: string }) {
                   window.confirm('사용할 수 있는 닉네임입니다. 😎');
                 }
                 setIsChecked(res.data);
-                console.log(isChecked);
               });
           }}
         >
@@ -147,8 +145,7 @@ function ContentForm(props: { theme: string }) {
                   },
                 },
               )
-              .then(res => {
-                console.log(res);
+              .then(() => {
                 window.confirm('변경된 내용으로 저장되었습니다 🆕');
               });
           } else {

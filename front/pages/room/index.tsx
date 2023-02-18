@@ -62,7 +62,6 @@ function Index() {
   }, [storeTheme]);
 
   const getRoomDetail = async () => {
-    console.log(storeSessionState.sessionId);
     const roomDetail = await axios({
       method: 'GET',
       url: `api/v1/room/${storeSessionState.sessionId}`,
@@ -72,7 +71,6 @@ function Index() {
       },
     });
     setRoomInfo(roomDetail.data);
-    console.log('방 정보', roomDetail.data);
   };
 
   // api screen
@@ -134,7 +132,6 @@ function Index() {
   };
 
   const asyncOut = async () => {
-    console.log('사용자 떠날때, 1, 인덱스');
     dispatch(setSsari(1));
     dispatch(setReserv([]));
     dispatch(

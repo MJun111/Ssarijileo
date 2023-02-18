@@ -106,11 +106,14 @@ function OrderSong(props: {
     const fetchMusic = async () => {
       if (storeSsari.ssari === 6) return;
       const musicAudioCtx = new AudioContext();
+      const gainNode = musicAudioCtx.createGain();
       const response = await fetch(nextSong.file);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      gainNode.gain.value = 0.5;
+      musicSource.connect(gainNode);
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
@@ -123,7 +126,7 @@ function OrderSong(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current),
+            time: Math.floor(Date.now() - startTimeRef.current / 1000),
           },
         });
         dispatch(setSsari(7));
@@ -161,7 +164,7 @@ function OrderSong(props: {
         type="button"
         className={styles.btn}
         onClick={() => {
-          dispatch(setSsari(7));
+          musicRef.current?.stop(0);
         }}
       >
         다음 곡으로

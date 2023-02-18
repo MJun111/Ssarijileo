@@ -52,10 +52,6 @@ function Nomal(props: {
     const deltaTime = (Date.now() - startTimeRef.current) / 1000;
     setTime(Math.floor(deltaTime));
     if (nextSong.time < deltaTime) {
-      dispatch(setSsari(7));
-      recordStop();
-      // 예약목록 0번 인덱스 삭제...
-      musicRef.current?.stop(0);
       return;
     }
     if (lyrics.length > 1 && lyrics[1].time < deltaTime) {
@@ -107,11 +103,14 @@ function Nomal(props: {
     const fetchMusic = async () => {
       if (storeSsari.ssari === 6) return;
       const musicAudioCtx = new AudioContext();
+      const gainNode = musicAudioCtx.createGain();
       const response = await fetch(nextSong.file);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      gainNode.gain.value = 0.5;
+      musicSource.connect(gainNode);
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
@@ -124,7 +123,7 @@ function Nomal(props: {
           },
           data: {
             songId: nextSong.songId,
-            time: Math.floor(Date.now() - startTimeRef.current),
+            time: Math.floor(Date.now() - startTimeRef.current / 1000),
           },
         });
         dispatch(setSsari(7));
@@ -260,16 +259,6 @@ function Nomal(props: {
         <button
           type="button"
           onClick={async () => {
-            await axios.delete('api/v1/reservation/sing', {
-              data: {
-                songId: nextSong.songId,
-                time: nowtime,
-              },
-              headers: {
-                Authorization: `${getCookie('Authorization')}`,
-                refreshToken: `${getCookie('refreshToken')}`,
-              },
-            });
             musicRef.current?.stop(0);
             recordStop();
           }}
