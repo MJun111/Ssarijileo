@@ -265,7 +265,7 @@ function Nomal(props: {
           type="button"
           onClick={async () => {
             musicRef.current?.stop(0);
-            // await stopMusic();
+            await stopMusic();
           }}
           className={styles.nextBtn}
           disabled={!isPlay}

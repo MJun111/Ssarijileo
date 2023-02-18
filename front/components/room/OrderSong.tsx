@@ -169,7 +169,7 @@ function OrderSong(props: {
         className={styles.btn}
         onClick={async () => {
           musicRef.current?.stop(0);
-          // await stopMusic();
+          await stopMusic();
         }}
       >
         다음 곡으로
