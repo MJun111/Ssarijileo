@@ -107,11 +107,14 @@ function Nomal(props: {
     const fetchMusic = async () => {
       if (storeSsari.ssari === 6) return;
       const musicAudioCtx = new AudioContext();
+      const gainNode = musicAudioCtx.createGain();
       const response = await fetch(nextSong.file);
       const arrayBuffer = await response.arrayBuffer();
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
+      gainNode.gain.value = 0.5;
+      musicSource.connect(gainNode);
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
       musicSource.connect(mp3AudioDestination);
@@ -266,8 +269,8 @@ function Nomal(props: {
                 time: nowtime,
               },
               headers: {
-                Authorization: `${getCookie('Authorization')}`,
-                refreshToken: `${getCookie('refreshToken')}`,
+                Authorization: getCookie('Authorization'),
+                refreshToken: getCookie('refreshToken'),
               },
             });
             musicRef.current?.stop(0);

@@ -26,7 +26,6 @@ function Video() {
         },
       })
       .then(res => {
-        console.log(res.data);
         setRecordList(res.data);
         setFilteredRecordList(res.data);
       });
