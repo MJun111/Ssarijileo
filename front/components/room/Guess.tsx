@@ -58,9 +58,13 @@ function Guess(props: { session: Session; nextSong: NextSong; screen: any }) {
               });
             }}
           />
+<<<<<<< front/components/room/Guess.tsx
           <video className={styles.video} autoPlay ref={videoRef}>
             <track kind="captions" />
           </video>
+=======
+          <canvas id="screen-screen" />
+>>>>>>> front/components/room/Guess.tsx
         </div>
       </div>
     </div>
