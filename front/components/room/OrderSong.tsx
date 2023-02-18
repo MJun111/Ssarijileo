@@ -164,7 +164,7 @@ function OrderSong(props: {
         type="button"
         className={styles.btn}
         onClick={() => {
-          dispatch(setSsari(7));
+          musicRef.current?.stop(0);
         }}
       >
         다음 곡으로
