@@ -224,7 +224,6 @@ function Header() {
       };
       eventSource.onerror = (e: any) => {
         if (!e.error?.message.includes('No activity')) {
-          console.log('close');
           eventSource.close();
         }
       };

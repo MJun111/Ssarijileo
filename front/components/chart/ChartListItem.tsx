@@ -63,23 +63,19 @@ function ChartListItem(props: { item: ChartItem }) {
                 className={styles.okBtn}
                 type="button"
                 onClick={() => {
-                  axios
-                    .post(
-                      'api/v1/song/my',
-                      {
-                        songId: item.songId,
-                        isLike: likeMode ? 'N' : 'Y',
+                  axios.post(
+                    'api/v1/song/my',
+                    {
+                      songId: item.songId,
+                      isLike: likeMode ? 'N' : 'Y',
+                    },
+                    {
+                      headers: {
+                        Authorization: `${getCookie('Authorization')}`,
+                        refreshToken: `${getCookie('refreshToken')}`,
                       },
-                      {
-                        headers: {
-                          Authorization: `${getCookie('Authorization')}`,
-                          refreshToken: `${getCookie('refreshToken')}`,
-                        },
-                      },
-                    )
-                    .then(res => {
-                      console.log(res);
-                    });
+                    },
+                  );
                   setLikeMode(!likeMode);
                   setModalMode(false);
                 }}

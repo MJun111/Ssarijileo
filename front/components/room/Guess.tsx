@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import styles from '@/styles/room/Guess.module.scss';
 
 function Guess(props: { session: any; nextSong: any }) {
@@ -44,7 +45,7 @@ function Guess(props: { session: any; nextSong: any }) {
               });
             }}
           />
-          {/* <canvas id="screen-creen" /> */}
+          <canvas id="screen-screen" />
         </div>
       </div>
     </div>
