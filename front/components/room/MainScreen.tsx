@@ -143,33 +143,33 @@ export function MainScreen(props: {
 
   const videoRecorderRef = useRef<MediaRecorder>();
 
-  // const mergeAudioStreams = (
-  //   musicStream: MediaStream,
-  //   voiceStream: MediaStream,
-  // ) => {
-  //   // 비디오, 오디오스트림 연결
-  //   const context = new AudioContext();
-  //   const destination = context.createMediaStreamDestination();
-  //   let hasDesktop = false;
-  //   let hasVoice = false;
-  //   if (musicStream && musicStream.getAudioTracks().length > 0) {
-  //     const source1 = context.createMediaStreamSource(musicStream);
-  //     const desktopGain = context.createGain();
-  //     desktopGain.gain.value = 0.5;
-  //     source1.connect(desktopGain).connect(destination);
-  //     hasDesktop = true;
-  //   }
-  //
-  //   if (voiceStream && voiceStream.getAudioTracks().length > 0) {
-  //     const source2 = context.createMediaStreamSource(voiceStream);
-  //     const voiceGain = context.createGain();
-  //     voiceGain.gain.value = 1.0;
-  //     source2.connect(voiceGain).connect(destination);
-  //     hasVoice = true;
-  //   }
-  //
-  //   return hasDesktop || hasVoice ? destination.stream.getAudioTracks() : [];
-  // };
+  const mergeAudioStreams = (
+    musicStream: MediaStream,
+    voiceStream: MediaStream,
+  ) => {
+    // 비디오, 오디오스트림 연결
+    const context = new AudioContext();
+    const destination = context.createMediaStreamDestination();
+    let hasDesktop = false;
+    let hasVoice = false;
+    if (musicStream && musicStream.getAudioTracks().length > 0) {
+      const source1 = context.createMediaStreamSource(musicStream);
+      const desktopGain = context.createGain();
+      desktopGain.gain.value = 0.5;
+      source1.connect(desktopGain).connect(destination);
+      hasDesktop = true;
+    }
+
+    if (voiceStream && voiceStream.getAudioTracks().length > 0) {
+      const source2 = context.createMediaStreamSource(voiceStream);
+      const voiceGain = context.createGain();
+      voiceGain.gain.value = 1.0;
+      source2.connect(voiceGain).connect(destination);
+      hasVoice = true;
+    }
+
+    return hasDesktop || hasVoice ? destination.stream.getAudioTracks() : [];
+  };
 
   // 화면 공유
   const screenShare = (
@@ -190,12 +190,15 @@ export function MainScreen(props: {
           audio: true,
         });
 
-        const userContext = audioContext.createMediaStreamSource(userMicStream);
-        userContext.connect(mp3AudioDestination);
+        // const userContext = audioContext.createMediaStreamSource(userMicStream);
+        // userContext.connect(mp3AudioDestination);
 
         const tracks = [
           ...userMicStream.getVideoTracks(),
-          ...mp3AudioDestination.stream.getAudioTracks(),
+          ...(mergeAudioStreams(
+            mp3AudioDestination.stream,
+            userMicStream,
+          ) as MediaStreamTrack[]),
         ];
         const screenStream = new MediaStream(tracks);
         const testAudioTrack = screenStream.getAudioTracks()[0];
