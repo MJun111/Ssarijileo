@@ -127,15 +127,17 @@ function OrderSong(props: {
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
-      gainNode.gain.value = 0.1;
-      musicSource.connect(gainNode);
       musicSource.buffer = audioBuffer;
-      musicSource.connect(musicAudioCtx.destination);
-      musicSource.connect(mp3AudioDestination);
+      // musicSource.connect(musicAudioCtx.destination);
+      // musicSource.connect(mp3AudioDestination);
       musicRef.current = musicSource;
       musicRef.current.onended = () => {
         stopMusic();
       };
+      musicRef.current.connect(gainNode);
+      gainNode.connect(musicAudioCtx.destination);
+      gainNode.gain.value = 0.3;
+      gainNode.connect(mp3AudioDestination);
       musicRef.current.start();
       startTimeRef.current = Date.now();
       await axios.post(

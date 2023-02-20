@@ -133,7 +133,7 @@ function Nomal(props: {
       };
       musicRef.current.connect(gainNode);
       gainNode.connect(musicAudioCtx.destination);
-      gainNode.gain.value = 0.1;
+      gainNode.gain.value = 0.3;
       gainNode.connect(mp3AudioDestination);
       musicRef.current.start();
       startTimeRef.current = Date.now();
