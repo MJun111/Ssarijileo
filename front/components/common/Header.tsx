@@ -197,7 +197,7 @@ function Header() {
           const notify = () =>
             toast(`${msg.fromUserNickname}으로 부터의 친구요청`, {
               position: 'top-right',
-              autoClose: 3000,
+              autoClose: 7000,
               hideProgressBar: true,
               closeOnClick: true,
               draggable: true,
