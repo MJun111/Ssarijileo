@@ -124,7 +124,7 @@ function Nomal(props: {
       const audioBuffer = await musicAudioCtx.decodeAudioData(arrayBuffer);
       const musicSource = musicAudioCtx.createBufferSource();
       const mp3AudioDestination = musicAudioCtx.createMediaStreamDestination();
-      gainNode.gain.value = 0.5;
+      gainNode.gain.value = 0.3;
       musicSource.connect(gainNode);
       musicSource.buffer = audioBuffer;
       musicSource.connect(musicAudioCtx.destination);
