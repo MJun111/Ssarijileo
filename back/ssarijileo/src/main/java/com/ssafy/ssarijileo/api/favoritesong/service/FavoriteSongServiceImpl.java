@@ -10,6 +10,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -86,12 +89,17 @@ public class FavoriteSongServiceImpl implements FavoriteSongService {
             StringBuffer sb = new StringBuffer();
             String userId = key.split(":")[1];
 
-            Set<String> values = getUsersFavoriteSong(key);
+            Set<String> values = getUsersFavoriteSong(userId);
             for (String value : values) {
                 if (value.equals("0")) continue;
                 sb.append(value).append(" ");
             }
-            FavoriteSong favoriteSong = FavoriteSong.builder().userId(userId).songId(sb.toString()).build();
+
+            FavoriteSong favoriteSong = FavoriteSong.builder()
+                                        .userId(userId)
+                                        .songId(sb.toString())
+                                        .registerDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                                        .build();
             favoriteSongJpaRepository.save(favoriteSong);
         }
     }

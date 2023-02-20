@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface RankingService {
     List<RankingDto> findRanking(String userId, RankingType rankingType);
+    List<RankingDto> findRankingDB(String userId, RankingType rankingType);
     List<RankingDto> getRanking(RankingType rankingType);
 //    void dailyGetRanking();
 //    void weeklyGetRanking();

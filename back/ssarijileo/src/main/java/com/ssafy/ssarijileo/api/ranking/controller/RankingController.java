@@ -6,12 +6,7 @@ import com.ssafy.ssarijileo.api.ranking.service.RankingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,12 +19,12 @@ public class RankingController {
     private final RankingService rankingService;
 
     @GetMapping("/{rankingType}")
-    public List<RankingDto> getRanking(@RequestParam RankingType rankingType) {
+    public List<RankingDto> getRanking(@PathVariable RankingType rankingType) {
         return rankingService.getRanking(rankingType);
     }
 
     @PostMapping("/{rankingType}")
-    public void setRanking(@RequestParam RankingType rankingType, @RequestBody List<RankingDto> list) {
+    public void setRanking(@PathVariable RankingType rankingType, @RequestBody List<RankingDto> list) {
         rankingService.setRanking(rankingType, list);
     }
 

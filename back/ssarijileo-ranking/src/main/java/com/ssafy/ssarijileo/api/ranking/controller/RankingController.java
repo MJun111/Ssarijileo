@@ -6,10 +6,7 @@ import com.ssafy.ssarijileo.api.ranking.service.RankingService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +29,19 @@ public class RankingController {
     @GetMapping("/monthly")
     public ResponseEntity<List<RankingDto>> findMonthlyRanking(@RequestHeader Optional<String> userId) {
         return ResponseEntity.status(200).body(rankingService.findRanking(userId.orElse(new String()), RankingType.MONTH));
+    }
+
+    // Redis 안거치고 DB 정보로 바로 업데이트 테스트코드
+    @GetMapping("/db")
+    public ResponseEntity<List<RankingDto>> findRankingDB(@RequestParam String type, @RequestHeader Optional<String> userId) {
+        switch(type) {
+            case "DAY" :
+                return ResponseEntity.status(200).body(rankingService.findRankingDB(userId.orElse(new String()), RankingType.DAY));
+            case "WEEK" :
+                return ResponseEntity.status(200).body(rankingService.findRankingDB(userId.orElse(new String()), RankingType.WEEK));
+            case "MONTH" :
+                return ResponseEntity.status(200).body(rankingService.findRankingDB(userId.orElse(new String()), RankingType.MONTH));
+        }
+        return ResponseEntity.status(200).body(rankingService.findRankingDB(userId.orElse(new String()), RankingType.DAY));
     }
 }

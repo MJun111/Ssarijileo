@@ -9,6 +9,7 @@ import com.ssafy.ssarijileo.api.song.client.FavoriteSongClient;
 import com.ssafy.ssarijileo.api.song.entity.FavoriteSong;
 import com.ssafy.ssarijileo.api.song.entity.Song;
 import com.ssafy.ssarijileo.api.song.repository.FavoriteSongJpaRepository;
+import com.ssafy.ssarijileo.api.song.repository.SongJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,6 +28,7 @@ import java.util.*;
 @Slf4j
 public class RankingServiceImpl implements RankingService {
 
+    private final SongJpaRepository songJpaRepository;
     private final SingingJpaRepository singingJpaRepository;
     private final FavoriteSongJpaRepository favoriteSongJpaRepository;
     private final FavoriteSongClient favoriteSongClient;
@@ -94,6 +96,8 @@ public class RankingServiceImpl implements RankingService {
 
         ///////
 
+        // (임시) 노래 목록 불러오기
+        List<Song> songList = songJpaRepository.findAll();
         List<Singing> singingList = singingJpaRepository.findBySingingDateBetween(startDate, endDate);
         List<FavoriteSong> favoriteSongList = favoriteSongJpaRepository.findByRegisterDateBetween(startDate, endDate);
 
@@ -102,6 +106,12 @@ public class RankingServiceImpl implements RankingService {
         Map<Long, Song> songMap = new HashMap<>();
 
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("H:mm:ss");
+
+        // 노래 목록 랭킹 리스트업
+        for (Song song : songList) {
+            map.put(song.getSongId(), 0.001);
+            songMap.put(song.getSongId(), song);
+        }
 
         // 날짜간 부른 횟수 계산
         for (Singing singing : singingList) {
@@ -178,5 +188,17 @@ public class RankingServiceImpl implements RankingService {
 
         rankingClient.setRanking(rankingType, rankingList);
         return rankingList;
+    }
+
+    @Override
+    public List<RankingDto> findRankingDB(String userId, RankingType rankingType) {
+
+        List<RankingDto> list = rankingClient.getRanking(rankingType);
+
+        if (userId.isEmpty()) { return list; }
+
+        for (RankingDto dto : list) { dto.updateFavoriteSong(favoriteSongClient.isFavoriteSong(userId, dto.getSongId())); }
+
+        return list;
     }
 }
