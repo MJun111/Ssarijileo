@@ -47,7 +47,7 @@ function VideoItem(props: { info: RecordInfo }) {
                 });
               }}
             >
-              글작성
+              자랑하기
             </button>
             <button
               type="button"
