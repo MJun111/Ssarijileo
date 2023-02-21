@@ -10,6 +10,7 @@ import { useAnimation } from '@/hooks/useAnimation';
 import { getCookie } from '@/util/cookie';
 
 import * as data from '@/constants/PerfectScoreData';
+import { GAIN_VALUE } from '@/constants/RoomSetting';
 import { NextSong } from '@/components/room/MainScreen';
 
 import styles from '@/styles/room/PerfectScore.module.scss';
@@ -419,7 +420,7 @@ function PerfectScore(props: {
       setIsStarted(true);
       musicRef.current.connect(gainNode);
       gainNode.connect(musicAudioCtx.destination);
-      gainNode.gain.value = 0.3;
+      gainNode.gain.value = GAIN_VALUE;
       gainNode.connect(mp3AudioDestination);
       startTimeRef.current = Date.now();
       setTimeout(() => {

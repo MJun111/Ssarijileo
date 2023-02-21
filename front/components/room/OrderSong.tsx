@@ -8,6 +8,7 @@ import { setSsari } from '@/redux/store/ssariSlice';
 import { useCanvas } from '@/hooks/useCanvas';
 import { useAnimation } from '@/hooks/useAnimation';
 import { NextSong } from '@/components/room/MainScreen';
+import { GAIN_VALUE } from '@/constants/RoomSetting';
 
 import styles from '@/styles/room/OrderSong.module.scss';
 
@@ -136,7 +137,7 @@ function OrderSong(props: {
       };
       musicRef.current.connect(gainNode);
       gainNode.connect(musicAudioCtx.destination);
-      gainNode.gain.value = 0.3;
+      gainNode.gain.value = GAIN_VALUE;
       gainNode.connect(mp3AudioDestination);
       musicRef.current.start();
       startTimeRef.current = Date.now();
