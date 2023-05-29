@@ -1,8 +1,9 @@
-# 서예지와 아이들 👩‍💻
+# 싸리질러 🎤🎵
 
-<p>
 <img src='https://user-images.githubusercontent.com/55950992/216389512-d0db4776-f7e7-4e68-b8f8-e52b85878618.png' />
-</p>
+
+![제목을-입력해주세요_-001 (1)](https://user-images.githubusercontent.com/55950992/231802965-8b304c16-3bfe-47dd-bf86-1575bdd61ccf.png)
+
 <br />
 
 ## Notion
@@ -23,42 +24,83 @@ https://www.notion.so/7e19bc36f9f54413b33dc1a2f0d3ef46
 
 #### 프로젝트 기간 : 2023.01.03 ~ 2021.02.17
 
-#### 프로젝트 소개 : 집에서 즐기는 랜선 노래방 싸리질러 🎤🎵
+#### 프로젝트 소개 : 본 프로젝트는 webRTC를 활용해 온라인 화상 노래방 서비스를 제공하는 웹 사이트 제작을 목적으로 한다.
 
 #### 개발환경
 
 ## Back-end
 
-
-JAVA - zulu11.60.19 - JDK 11.0.17+8-LTS
-
-InteliJ - Ultimate v.2021.2.4
-
-MySQL 8.0.31
-
-Spring Boot 2.7.7
-
+<p align="center">
+<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
+<img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white">
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
+<img src="https://img.shields.io/badge/OAuth-000000?style=for-the-badge&logo=OAuth&logoColor=white">
+<img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white">
+</ p>
 
 ## Front-end
 
+<p align="center">
+<img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white">
+<img src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+<img src="https://img.shields.io/badge/sass-CC6699?style=for-the-badge&logo=sass&logoColor=white">
+<img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=white">
+<img src="https://img.shields.io/badge/OpenVidu-F2CA30?style=for-the-badge&logo=OpenVidu&logoColor=white">
+<img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white">
+</ p>
 
-Nextjs - 13.1.1
+## DB
 
-Typescript
+<p align="center">
+<img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> 
+<img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
+<img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white">
+</ p>
 
-Scss
 
-nodejs - 18.12.1 LTS
+## Dev-Ops
+
+<p align="center">
+<img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white">
+<img src="https://img.shields.io/badge/jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white">
+<img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white">
+<img src="https://img.shields.io/badge/ansible-EE0000?style=for-the-badge&logo=ansible&logoColor=white">
+<img src="https://img.shields.io/badge/vercel-000000?style=for-the-badge&logo=vercel&logoColor=white">
+<img src="https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white">
+</ p>
+
+## 협업 tool
+
+<p align="center">
+<img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white">
+<img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white">
+<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white">
+<img src="https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
+</ p>
+
 
 <br />
 
 ## 주요기능
 
-webRTC - openVidu
-
-실시간 알림 - SSE
-
-노래방 - web Audio API
+- 소셜 로그인
+- webRTC와 web Audio API를 활용한 실시간 화상 노래방 환경 제공
+- 3가지 노래방 모드
+    - 일반 노래방
+        - 예약한 노래에 대한 MR과 가사 제공
+        - 녹화 기능
+    - 가사 맞추기
+        - 예약자와 청자의 화면 분기를 나눠서 제공
+        - 예약자는 랜덤으로 배치된 가사를 보고 노래를 부름
+        - 청자는 노래의 가사를 제공받고 예약자의 정답 여부에 대한 버튼 클릭
+    - 퍼펙트 스코어
+        - 푸리에 변환을 활용해 사용자의 노래 음정 표출
+        - 실시간 음정 정확도를 스코어로 제공
+- 자체 랭킹
+- 노래 초성 검색
+- 다크모드
+- SSE를 활용한 실시간 알림
+- SSR과 SEO 최적화 적용
 
 <br />
 
